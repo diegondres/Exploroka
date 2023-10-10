@@ -21,6 +21,7 @@ public class TerrainAdministrator : MonoBehaviour
 
   private readonly Dictionary<Vector3, GameObject> terrainDict = new();
   static int countTerrain = 0;
+  
   void Awake()
   {
     SetNeighboorsReference();

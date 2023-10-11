@@ -12,6 +12,11 @@ public class Heroe : MonoBehaviour
   [SerializeField]
   private float minimumTime = 0.0f;
   [SerializeField]
+  private bool isRepeatedMovement = false;
+    [SerializeField]
+  private float moveDuration =  0.1f;
+  private bool isMoving = false;
+
  // private float longRayCast = 10f;
 
   private Camera camara;
@@ -69,37 +74,35 @@ public class Heroe : MonoBehaviour
 
   private void ArrowMoving()
   {
-    bool anyMove = false;
     rotation = 0.0f;
-    if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+    movement = Vector3.zero;
+    if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && !isMoving)
     {
       movement = new Vector3(0, 0, terrainAdministrator.sizeEscaque);
       rotation = 0.0f;
-      anyMove = true;
+      StartCoroutine(ContinuosMove(movement,rotation));
     }
-    if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+    if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && !isMoving)
     {
       movement = new Vector3(0, 0, -terrainAdministrator.sizeEscaque);
       rotation = 180f;
-      anyMove = true;
+      StartCoroutine(ContinuosMove(movement,rotation));
     }
-    if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+    if ((Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) && !isMoving)
     {
       movement = new Vector3(terrainAdministrator.sizeEscaque, 0, 0);
       rotation = 90f;
-      anyMove = true;
+      StartCoroutine(ContinuosMove(movement,rotation));    
     }
-    if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+    if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) && !isMoving)
     {
       movement = new Vector3(-terrainAdministrator.sizeEscaque, 0, 0);
       rotation = 270f;
-      anyMove = true;
+      StartCoroutine(ContinuosMove(movement,rotation));
     }
-    if (anyMove)
+    if (isMoving)
     {
-      MoveHero(movement, rotation);
       distanciaEnVector = Vector3.zero;
-
     }
   }
 
@@ -131,6 +134,26 @@ public class Heroe : MonoBehaviour
     MoveHero(movement, rotation);
   }
 
+  private IEnumerator ContinuosMove(Vector3 movement, float rotation){
+    isMoving = true;
+
+    Vector3 startPosition = transform.position;
+    Vector3 endPosition = transform.position + movement;
+
+    float elapsedTime = 0f;
+    while (elapsedTime < moveDuration){
+      elapsedTime += Time.deltaTime;
+      float percent = elapsedTime / moveDuration;
+      transform.position = Vector3.Lerp(startPosition, endPosition, percent);
+      
+      yield return null;
+    }
+
+    transform.position = endPosition;
+
+    MoveHero(Vector3.zero, rotation);
+    isMoving = false;
+  }
   /*
   private Terreno DetectTerrenoDown(){
     Vector3 origen = new(transform.position.x, 0.1f, transform.position.z);

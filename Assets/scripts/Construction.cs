@@ -8,11 +8,11 @@ public class Construction : MonoBehaviour
   [SerializeField]
   private GameObject prefabTest;
 
-  private Terreno tempPlanes;
+  private TerrainAdministrator tempPlanes;
   // Start is called before the first frame update
   void Start()
   {
-    tempPlanes = FindAnyObjectByType<Terreno>();
+    tempPlanes = FindAnyObjectByType<TerrainAdministrator>();
   }
 
   // Update is called once per frame
@@ -20,9 +20,9 @@ public class Construction : MonoBehaviour
   {
     if (Input.GetKeyDown(KeyCode.Space))
     {
-      //obtener posicion de adelante e instanciar
-      Vector3 buildingLocation = tempPlanes.GetPositionToBuildIn();
+      Vector3 buildingLocation = tempPlanes.GetBuildingLocation();
       Instantiate(prefabTest, buildingLocation, Quaternion.identity);
+      tempPlanes.isBuildingLocationSelected = false;
     }
 
   }

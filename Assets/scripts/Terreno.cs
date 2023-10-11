@@ -8,17 +8,11 @@ public class Terreno : MonoBehaviour
   private MeshRenderer tileRenderer;
   private Camera camara;
   public int sizeSquare = 10;
-  private Renderer rend;
-  private List<int> visitedEscaques = new();
   private Color32[] originalPixels;
-
   private Color32[] actualPixels;
+  private int pixsLength;
 
-  //Variables de construccion
-  private bool isBuildingLocationSelected = false;
-  private Vector3 positionToBuildIn;
-
-  //Variables de referencias cercanas
+  //TERRENOS VECINOS
   [SerializeField]
   public Terreno[] neighboors = new Terreno[8];
   
@@ -31,39 +25,10 @@ public class Terreno : MonoBehaviour
     camara = FindAnyObjectByType<Camera>();
     terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
   }
-
-  // Update is called once per frame
-  void Update()
-  {
-    if (Input.GetMouseButtonDown(0))
-    {
-      Vector3 posicionMouse = Input.mousePosition;
-      Plane plano = new(Vector3.up, transform.position);
-      Vector3 mousePosition;
-
-      Ray rayo = camara.ScreenPointToRay(posicionMouse);
-
-      if (plano.Raycast(rayo, out float distancia))
-      {
-        mousePosition = rayo.GetPoint(distancia);
-        Vector3 relativePosition = mousePosition - transform.parent.TransformPoint(transform.localPosition);
-        //Consideracion para cuando se salga del terreno
-
-        Vector3 centerPosition = CenterInEscaqueToGlobal(relativePosition / sizeSquare);
-        relativePosition = (centerPosition - transform.parent.TransformPoint(transform.localPosition)) / sizeSquare;
-
-        SelectEscaqueToBuildIn(relativePosition);
-      }
-    }
-
-
-  }
-
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////----------START-----------//////////////////////////////////////////////////////////////
   void EnCuadriculas()
   {
-    rend = GetComponent<Renderer>();
     tileRenderer = GetComponent<MeshRenderer>();
 
     Texture2D tileTexture = BuildTexture(sizeSquare * 2, sizeSquare * 2);
@@ -94,7 +59,6 @@ public class Terreno : MonoBehaviour
           color = 0;
         }
       }
-
     }
     // create a new texture and set its pixel colors
     Texture2D tileTexture = new(tileWidth, tileDepth)
@@ -103,6 +67,7 @@ public class Terreno : MonoBehaviour
       filterMode = FilterMode.Point
     };
     originalPixels = actualPixels;
+    pixsLength = actualPixels.Length;
     tileTexture.SetPixels32(actualPixels);
 
     tileTexture.Apply();
@@ -112,6 +77,29 @@ public class Terreno : MonoBehaviour
   //////////////////////////////----------START-----------//////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  // Update is called once per frame
+  void Update()
+  {
+    if (Input.GetMouseButtonDown(0))
+    {
+      Vector3 posicionMouse = Input.mousePosition;
+      Plane plano = new(Vector3.up, transform.position);
+      Vector3 mousePosition;
+
+      Ray rayo = camara.ScreenPointToRay(posicionMouse);
+
+      if (plano.Raycast(rayo, out float distancia))
+      {
+        mousePosition = rayo.GetPoint(distancia);
+        Vector3 relativePosition = mousePosition - transform.parent.TransformPoint(transform.localPosition);
+
+        Vector3 centerPosition = CenterInEscaqueToGlobal(relativePosition / sizeSquare);
+        relativePosition = (centerPosition - transform.parent.TransformPoint(transform.localPosition)) / sizeSquare;
+
+        SelectEscaqueToBuildIn(relativePosition);
+      }
+    }
+  }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////----------MOVIMIENTO-----------/////////////////////////////////////////////////////////
@@ -131,7 +119,7 @@ public class Terreno : MonoBehaviour
     else
     {
       PrintSorroundingEscaques(relativePositionInVertices);
-      isBuildingLocationSelected = false;
+      terrainAdministrator.isBuildingLocationSelected = false;
 
       return CenterInEscaqueToGlobal(relativePositionInVertices);
     }
@@ -193,31 +181,26 @@ public class Terreno : MonoBehaviour
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////----------CONSTRUCCION-----------///////////////////////////////////////////////////////
   
-  private void SelectEscaqueToBuildIn(Vector3 position)
+  private void SelectEscaqueToBuildIn(Vector3 relativePositionInVertices)
   {
-    Texture2D texture2D = (Texture2D)tileRenderer.material.mainTexture;
-    Color32[] pixs = texture2D.GetPixels32();
-
-    int pixsLength = pixs.Length;
-    int index = GetIndex(pixsLength, position);
-
-    if (IsThisEscaqueSelected(index) && !isBuildingLocationSelected)
+    int index = GetIndex(pixsLength, relativePositionInVertices);
+    Tuple<int, Terreno> globalIndex = GetIndexGlobal(pixsLength, relativePositionInVertices);
+   
+    if (IsThisEscaqueVisited(globalIndex) && !terrainAdministrator.isBuildingLocationSelected)
     {
-      isBuildingLocationSelected = true;
-      positionToBuildIn = CenterInEscaqueToGlobal(position);
-      pixs[index] = Color.green;
-
-      texture2D.SetPixels32(pixs);
-      texture2D.Apply();
+      terrainAdministrator.isBuildingLocationSelected = true;
+      terrainAdministrator.SetBuildingLocation(CenterInEscaqueToGlobal(relativePositionInVertices));
+      globalIndex.Item2.PaintPixelInfluence(globalIndex.Item1, Color.green);
+     
     }
-
   }
 
-  bool IsThisEscaqueSelected(int indexPosition)
+  bool IsThisEscaqueVisited(Tuple<int, Terreno> visitedEscaque)
   {
-    foreach (int escaque in visitedEscaques)
+    List<Tuple<int, Terreno>> visitedEscaques = terrainAdministrator.sorroundingEscaques;
+    foreach (Tuple<int, Terreno> escaque in visitedEscaques)
     {
-      if (indexPosition == escaque)
+      if (terrainAdministrator.CompareToEscaques(visitedEscaque, escaque))
       {
         return true;
       }
@@ -225,12 +208,6 @@ public class Terreno : MonoBehaviour
     return false;
   }
 
-  //Esto deberia irse al administrador probablemente
-  public Vector3 GetPositionToBuildIn()
-  {
-    isBuildingLocationSelected = false;
-    return positionToBuildIn;
-  }
 
   //////////////////////////////----------CONSTRUCCION-----------///////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

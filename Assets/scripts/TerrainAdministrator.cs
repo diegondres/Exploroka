@@ -6,26 +6,34 @@ using UnityEngine;
 
 public class TerrainAdministrator : MonoBehaviour
 {
+   //TERRENOS
+  Vector3 firstTerrainPosition = Vector3.zero;
+  private readonly Dictionary<Vector3, GameObject> terrainDict = new();
+  static int countTerrain = 0;
   [SerializeField]
   private GameObject Terreno;
   [SerializeField]
   private GameObject container;
+  
+  //HEROE
   [SerializeField]
   private Heroe heroe;
-  private Dictionary<int, Vector3> vecindario = new();
   private Terreno terrenoOfHero;
   public int sizeOfTerrain = 200;
   public float sizeEscaque = 10f;
-  Vector3 initialPosition = Vector3.zero;
+  private Dictionary<int, Vector3> vecindario = new();
   public List<Tuple<int, Terreno>> sorroundingEscaques = new();
-
-  private readonly Dictionary<Vector3, GameObject> terrainDict = new();
-  static int countTerrain = 0;
   
+  //CONSTRUCCION
+  private Vector3 buildingLocation;
+  public bool isBuildingLocationSelected = false;
+
+
   void Awake()
   {
     SetNeighboorsReference();
     CreateFirstTerrain();
+    
   }
 
   void SetNeighboorsReference(){
@@ -39,9 +47,9 @@ public class TerrainAdministrator : MonoBehaviour
     vecindario.Add(7, new Vector3(sizeOfTerrain, 0, sizeOfTerrain));
   }
 
-
   void Update()
   {
+    
   }
 
   /// <summary>
@@ -53,7 +61,7 @@ public class TerrainAdministrator : MonoBehaviour
     {
       for (int j = -1; j < 2; j++)
       {
-        CreateTerrain(new(initialPosition.x + i * sizeOfTerrain, 0, initialPosition.z + j * sizeOfTerrain));
+        CreateTerrain(new(firstTerrainPosition.x + i * sizeOfTerrain, 0, firstTerrainPosition.z + j * sizeOfTerrain));
       }
     }
   }
@@ -141,5 +149,24 @@ public class TerrainAdministrator : MonoBehaviour
     terrainDict.Add(position, newTerreno);
 
     countTerrain++;
+  }
+
+  public void SetBuildingLocation(Vector3 pos){
+    buildingLocation = pos;
+  }
+  public Vector3 GetBuildingLocation(){
+    isBuildingLocationSelected = false;
+
+    return buildingLocation;
+  }
+
+  public bool CompareToEscaques(Tuple<int, Terreno> tuple1,Tuple<int, Terreno> tuple2 ){
+    bool item1 = false;
+    bool item2 = false;
+    
+    if(tuple1.Item1 == tuple2.Item1) item1 = true;
+    if(tuple1.Item2.id == tuple1.Item2.id ) item2 = true;
+
+    return item1 && item2;
   }
 }

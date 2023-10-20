@@ -144,7 +144,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &202133881
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -247,7 +247,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minimumTime: 0.2
-  camara: {fileID: 0}
+  moveDuration: 0.25
 --- !u!54 &202133886
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -298,6 +298,7 @@ GameObject:
   m_Component:
   - component: {fileID: 247045837}
   - component: {fileID: 247045836}
+  - component: {fileID: 247045838}
   m_Layer: 0
   m_Name: Controlador de juego
   m_TagString: Untagged
@@ -319,9 +320,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Terreno: {fileID: 5626073509183861393, guid: f7fb85bb61f6e614d8148c0ef1d7ce99, type: 3}
   container: {fileID: 1931665749}
+  terrainTypes:
+  - name: water
+    height: 0.3
+    color: {r: 0.053800307, g: 0.20733821, b: 0.8773585, a: 0}
+  - name: grass
+    height: 0.7
+    color: {r: 0.23932172, g: 0.7169812, b: 0.09807763, a: 0}
+  - name: mountain
+    height: 1
+    color: {r: 0.5283019, g: 0.27140886, b: 0.042363837, a: 0}
+  heightMultiplier: 4
   heroe: {fileID: 202133885}
   sizeOfTerrain: 200
   sizeEscaque: 10
+  isBuildingLocationSelected: 0
 --- !u!4 &247045837
 Transform:
   m_ObjectHideFlags: 0
@@ -337,6 +350,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &247045838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 247045835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ec995b87f2376e43ba25a92dcb6d0cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scale: 7
 --- !u!1 &478111240
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,125 +564,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1 &820180556
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 820180558}
-  - component: {fileID: 820180557}
-  - component: {fileID: 820180560}
-  - component: {fileID: 820180559}
-  - component: {fileID: 820180561}
-  m_Layer: 0
-  m_Name: Level
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &820180557
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 820180556}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 472ecd36909c21605ba05cdedd851e8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mapWidthInTiles: 10
-  mapDepthInTiles: 10
-  tilePrefab: {fileID: 2705974213710125992, guid: 8b9ce5e15fc42d22b934add9008c1c2e, type: 3}
-  centerVertexZ: 70
-  maxDistanceZ: 50
-  treeGeneration: {fileID: 820180560}
-  riverGeneration: {fileID: 820180561}
---- !u!4 &820180558
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 820180556}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &820180559
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 820180556}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d3483f10cddbce9495e24a78793ee9a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &820180560
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 820180556}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4d363fb8e8a8b1e5b98f2bab58f785b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  noiseMapGeneration: {fileID: 820180559}
-  waves:
-  - seed: 7555
-    frequency: 1
-    amplitude: 1
-  - seed: 2541
-    frequency: 2
-    amplitude: 2
-  - seed: 8523
-    frequency: 4
-    amplitude: 4
-  levelScale: 3
-  neighborRadius:
-  - 1
-  - 1
-  - 1
-  - 1
-  - 0.1
-  - 0.5
-  treePrefab:
-  - {fileID: 4263922822445002727, guid: 3cdafb3c2f54d434894928d72d282874, type: 3}
-  - {fileID: 38335279662140195, guid: 34d3f526198dae440bb2ce6005d86055, type: 3}
-  - {fileID: 2222111361404534124, guid: 88f2fd29f58b9734683512546acec310, type: 3}
-  - {fileID: 6941765000743290380, guid: c60edd51c065ceb46b345849a03bc106, type: 3}
-  - {fileID: 9069115365609291303, guid: 60f79905accf3b24fa0114b941f1aac0, type: 3}
-  - {fileID: 2807449429036958551, guid: f0c16f0ea935ea64297ca1d4d55d9746, type: 3}
---- !u!114 &820180561
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 820180556}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce4f0458830714a42a1f87888ec62d1a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  numberOfRivers: 50
-  heightThreshold: 0.1
-  riverColor: {r: 0.6509434, g: 0.19958171, b: 0.5797772, a: 0}
 --- !u!1 &881544246
 GameObject:
   m_ObjectHideFlags: 0
@@ -1195,6 +1102,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1931665750}
     m_Modifications:
+    - target: {fileID: 659933798615689024, guid: f7fb85bb61f6e614d8148c0ef1d7ce99, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5626073509183861393, guid: f7fb85bb61f6e614d8148c0ef1d7ce99, type: 3}
       propertyPath: m_Name
       value: Plane
@@ -1243,10 +1154,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7905418932940375350, guid: f7fb85bb61f6e614d8148c0ef1d7ce99, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8168002653467355152, guid: f7fb85bb61f6e614d8148c0ef1d7ce99, type: 3}
       propertyPath: sizeSquare
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 8168002653467355152, guid: f7fb85bb61f6e614d8148c0ef1d7ce99, type: 3}
+      propertyPath: noiseGeneration
+      value: 
+      objectReference: {fileID: 247045838}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1258,7 +1177,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 1606570552}
   - {fileID: 705507995}
-  - {fileID: 820180558}
   - {fileID: 1455671843}
   - {fileID: 1931665750}
   - {fileID: 247045837}

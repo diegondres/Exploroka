@@ -14,13 +14,18 @@ public class TerrainAdministrator : MonoBehaviour
   private GameObject Terreno;
   [SerializeField]
   private GameObject container;
-  
+  [SerializeField]
+  private TerrainType[] terrainTypes;
+  public float heightMultiplier;
+  [SerializeField]
+  private AnimationCurve heightCurve;
+
   //HEROE
   [SerializeField]
   private Heroe heroe;
   private Terreno terrenoOfHero;
   public int sizeOfTerrain = 200;
-  public float sizeEscaque = 10f;
+  public int sizeEscaque = 10;
   private Dictionary<int, Vector3> vecindario = new();
   public List<Tuple<int, Terreno>> sorroundingEscaques = new();
   
@@ -32,6 +37,9 @@ public class TerrainAdministrator : MonoBehaviour
   void Awake()
   {
     SetNeighboorsReference();
+    //terrainTypes[0] = new TerrainType("water", 0.4f, Color.blue);
+    //terrainTypes[1] = new TerrainType("grass", 0.7f, Color.green);
+    //terrainTypes[2] = new TerrainType("mountain", 1, new Color(92, 64, 51));
     CreateFirstTerrain();
     
   }
@@ -148,6 +156,11 @@ public class TerrainAdministrator : MonoBehaviour
     scriptNewTerreno.id = countTerrain;
     terrainDict.Add(position, newTerreno);
 
+    TerrainGeneration scriptGeneration = newTerreno.GetComponent<TerrainGeneration>();
+    scriptGeneration.terrainTypes = terrainTypes;
+    scriptGeneration.heightMultiplier = heightMultiplier;
+    scriptGeneration.heightCurve = heightCurve;
+    
     countTerrain++;
   }
 

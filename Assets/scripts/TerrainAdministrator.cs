@@ -33,6 +33,7 @@ public class TerrainAdministrator : MonoBehaviour
   private Vector3 buildingLocation;
   public bool isBuildingLocationSelected = false;
 
+    public float multiplayer = 2f;
 
   void Awake()
   {
@@ -160,6 +161,7 @@ public class TerrainAdministrator : MonoBehaviour
     scriptGeneration.terrainTypes = terrainTypes;
     scriptGeneration.heightMultiplier = heightMultiplier;
     scriptGeneration.heightCurve = heightCurve;
+    scriptGeneration.wea1 = countTerrain*multiplayer;
     
     countTerrain++;
   }

@@ -35,6 +35,8 @@ public class TerrainGeneration : MonoBehaviour
     private MeshFilter meshFilter;
     private MeshCollider meshCollider;
 
+    public float wea1= 0f;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -56,9 +58,9 @@ public class TerrainGeneration : MonoBehaviour
         // calculate the offsets based on the tile position
         float offsetX = transform.position.x;
         float offsetZ = transform.position.z;
-
-        float[,] heightMap = noiseGeneration.GenerateNoiseMap(sizeSquare * 2, sizeSquare * 2, offsetX, offsetZ);
-
+        
+        float[,] heightMap = noiseGeneration.GenerateNoiseMap(sizeSquare * 2, sizeSquare * 2,offsetX / sizeSquare,offsetZ / sizeSquare);
+        
         Texture2D tileTexture = BuildTexture(heightMap);
         tileRenderer.material.mainTexture = tileTexture;
         UpdateMeshVertices(heightMap);

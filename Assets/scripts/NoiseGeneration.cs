@@ -21,7 +21,7 @@ public class NoiseGeneration : MonoBehaviour
         float sampleX = (xIndex + offsetX) / scale;
         float sampleZ = (zIndex + offsetZ) / scale;
         // generate noise value using PerlinNoise
-        float noise = Mathf.PerlinNoise(sampleX, sampleZ);
+        float noise = Mathf.PerlinNoise(sampleZ, sampleX);
 
         noiseMap[zIndex, xIndex] = noise;
       }

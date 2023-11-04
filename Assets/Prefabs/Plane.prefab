@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 4685202239919152356}
   - component: {fileID: 659933798615689024}
   - component: {fileID: 8168002653467355152}
-  - component: {fileID: 7905418932940375350}
   - component: {fileID: 7961761775673465301}
   m_Layer: 6
   m_Name: Plane
@@ -121,28 +120,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7004ea7d359ea254aa11b5a5b420243e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  neighboors:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   id: 0
---- !u!65 &7905418932940375350
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5626073509183861393}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 10, y: 0.000001, z: 10}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7961761775673465301
 MonoBehaviour:
   m_ObjectHideFlags: 0

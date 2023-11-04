@@ -6,47 +6,66 @@ using UnityEngine;
 
 public class TerrainAdministrator : MonoBehaviour
 {
-   //TERRENOS
-  Vector3 firstTerrainPosition = Vector3.zero;
+  //TERRENOS
   private readonly Dictionary<Vector3, GameObject> terrainDict = new();
   static int countTerrain = 0;
+  [SerializeField]
+  private BiomeRow[] biomes;
   [SerializeField]
   private GameObject Terreno;
   [SerializeField]
   private GameObject container;
   [SerializeField]
   private TerrainType[] terrainTypes;
+  [SerializeField]
+  private TerrainType[] heatTerrainTypes;
+  [SerializeField]
+  private TerrainType[] moistureTerrainTypes;
   public float heightMultiplier;
   [SerializeField]
   private AnimationCurve heightCurve;
+  [SerializeField]
+  private AnimationCurve heatCurve;
+  [SerializeField]
+  private AnimationCurve moistureCurve;
+  [SerializeField]
+  private Wave[] waves;
+  [SerializeField]
+  private Wave[] heatWaves;
 
-  //HEROE
+  [SerializeField]
+  private Wave[] moistureWaves;
+  
+  //////////////  HEROE   /////////////////////////////
   [SerializeField]
   private Heroe heroe;
   private Terreno terrenoOfHero;
   public int sizeOfTerrain = 200;
-  public int sizeEscaque = 10;
+  private int sizeEscaque;
+  private int sizeTerrainInVertices;
   private Dictionary<int, Vector3> vecindario = new();
   public List<Tuple<int, Terreno>> sorroundingEscaques = new();
-  
+
   //CONSTRUCCION
   private Vector3 buildingLocation;
   public bool isBuildingLocationSelected = false;
 
-    public float multiplayer = 2f;
 
   void Awake()
   {
+    sizeEscaque = sizeOfTerrain / 20;
+    sizeTerrainInVertices = sizeOfTerrain / 20;
     SetNeighboorsReference();
     //terrainTypes[0] = new TerrainType("water", 0.4f, Color.blue);
     //terrainTypes[1] = new TerrainType("grass", 0.7f, Color.green);
     //terrainTypes[2] = new TerrainType("mountain", 1, new Color(92, 64, 51));
     CreateFirstTerrain();
-    
+
   }
 
-  void SetNeighboorsReference(){
-    vecindario.Add(0, new Vector3(-sizeOfTerrain, 0 , -sizeOfTerrain));
+  void SetNeighboorsReference()
+  {
+    vecindario.Add(0, new Vector3(-sizeOfTerrain, 0, -sizeOfTerrain));
     vecindario.Add(1, new Vector3(-sizeOfTerrain, 0, 0));
     vecindario.Add(2, new Vector3(-sizeOfTerrain, 0, sizeOfTerrain));
     vecindario.Add(3, new Vector3(0, 0, -sizeOfTerrain));
@@ -58,7 +77,7 @@ public class TerrainAdministrator : MonoBehaviour
 
   void Update()
   {
-    
+
   }
 
   /// <summary>
@@ -70,11 +89,11 @@ public class TerrainAdministrator : MonoBehaviour
     {
       for (int j = -1; j < 2; j++)
       {
-        CreateTerrain(new(firstTerrainPosition.x + i * sizeOfTerrain, 0, firstTerrainPosition.z + j * sizeOfTerrain));
+        CreateTerrain(new(0 + i * sizeOfTerrain, 0, 0 + j * sizeOfTerrain));
       }
     }
   }
-
+  
   /// <summary>
   /// Funcion que retorna el terreno en el que esta parado el objeto que llamo a la funcion 
   /// </summary>
@@ -82,11 +101,12 @@ public class TerrainAdministrator : MonoBehaviour
   /// <returns></returns>
   public Terreno InWhatTerrenoAmI(Vector3 position)
   {
-    Vector3 relativePosition = position / 200;
+    Vector3 relativePosition = position / sizeOfTerrain;
+    Vector3 terrainPosition = new ((int)relativePosition.x * sizeOfTerrain, 0, (int)relativePosition.z * sizeOfTerrain);
 
-    if (terrainDict.ContainsKey(new Vector3((int)relativePosition.x, 0, (int)relativePosition.z)))
+    if (terrainDict.ContainsKey(terrainPosition))
     {
-      terrenoOfHero = terrainDict[new Vector3((int)relativePosition.x, 0, (int)relativePosition.z)].GetComponent<Terreno>();
+      terrenoOfHero = terrainDict[terrainPosition].GetComponent<Terreno>();
       return terrenoOfHero;
     }
 
@@ -102,17 +122,17 @@ public class TerrainAdministrator : MonoBehaviour
   private void ConnectWithNeighboors(Terreno scripTerreno, Vector3 posNewTerreno)
   {
     Terreno[] terr = scripTerreno.neighboors;
-    
+
     for (int i = 0; i < terr.Length; i++)
     {
       if (terr[i] == null)
+      {
+        if (terrainDict.ContainsKey(posNewTerreno + vecindario[i]))
         {
-          if (terrainDict.ContainsKey(posNewTerreno + vecindario[i]))
-          {
-            Terreno temp = terrainDict[posNewTerreno + vecindario[i]].GetComponent<Terreno>();
-            terr[i] = temp;
-            temp.neighboors[7 - i] = scripTerreno;
-          }
+          Terreno temp = terrainDict[posNewTerreno + vecindario[i]].GetComponent<Terreno>();
+          terr[i] = temp;
+          temp.neighboors[7 - i] = scripTerreno;
+        }
       }
     }
   }
@@ -137,7 +157,7 @@ public class TerrainAdministrator : MonoBehaviour
   {
     Terreno[] terr = terreno.neighboors;
     Vector3 position = terreno.GetPosition();
- 
+
     for (int i = 0; i < terr.Length; i++)
     {
       if (terr[i] == null)
@@ -145,12 +165,13 @@ public class TerrainAdministrator : MonoBehaviour
         CreateTerrain(position + vecindario[i]);
       }
     }
-
   }
 
-  private void CreateTerrain(Vector3 position){
+  private void CreateTerrain(Vector3 position)
+  {
     GameObject newTerreno = Instantiate(Terreno, position, Quaternion.identity);
     newTerreno.transform.SetParent(container.transform);
+    newTerreno.transform.localScale = new Vector3(sizeTerrainInVertices, sizeTerrainInVertices, sizeTerrainInVertices);
 
     Terreno scriptNewTerreno = newTerreno.GetComponent<Terreno>();
     ConnectWithNeighboors(scriptNewTerreno, position);
@@ -158,30 +179,51 @@ public class TerrainAdministrator : MonoBehaviour
     terrainDict.Add(position, newTerreno);
 
     TerrainGeneration scriptGeneration = newTerreno.GetComponent<TerrainGeneration>();
-    scriptGeneration.terrainTypes = terrainTypes;
+    scriptGeneration.heightTerrainTypes = terrainTypes;
     scriptGeneration.heightMultiplier = heightMultiplier;
     scriptGeneration.heightCurve = heightCurve;
-    scriptGeneration.wea1 = countTerrain*multiplayer;
+    scriptGeneration.waves = waves;
+
+    
+   scriptGeneration.heatCurve = heatCurve;
+   scriptGeneration.heatWaves = heatWaves;
+   scriptGeneration.heatTerrainTypes = heatTerrainTypes;
+
+   scriptGeneration.moistureTerrainTypes = moistureTerrainTypes;
+   scriptGeneration.moistureCurve = moistureCurve;
+   scriptGeneration.moistureWaves = moistureWaves;
+
+   scriptGeneration.biomes = biomes;
     
     countTerrain++;
   }
 
-  public void SetBuildingLocation(Vector3 pos){
+  public void SetBuildingLocation(Vector3 pos)
+  {
     buildingLocation = pos;
   }
-  public Vector3 GetBuildingLocation(){
+  public Vector3 GetBuildingLocation()
+  {
     isBuildingLocationSelected = false;
 
     return buildingLocation;
   }
 
-  public bool CompareToEscaques(Tuple<int, Terreno> tuple1,Tuple<int, Terreno> tuple2 ){
+  public bool CompareToEscaques(Tuple<int, Terreno> tuple1, Tuple<int, Terreno> tuple2)
+  {
     bool item1 = false;
     bool item2 = false;
-    
-    if(tuple1.Item1 == tuple2.Item1) item1 = true;
-    if(tuple1.Item2.id == tuple1.Item2.id ) item2 = true;
+
+    if (tuple1.Item1 == tuple2.Item1) item1 = true;
+    if (tuple1.Item2.id == tuple1.Item2.id) item2 = true;
 
     return item1 && item2;
   }
+  public int GetSizeEscaque(){
+    return sizeEscaque;
+  }
+  public int GetSizeTerrainInVertices(){
+    return sizeTerrainInVertices;
+  }
+
 }

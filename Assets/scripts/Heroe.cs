@@ -26,13 +26,14 @@ public class Heroe : MonoBehaviour
   private float rotation;
   private Vector3 distanciaEnVector = Vector3.zero;
   private float acumulatedTime = 0.0f;
-
+  private int sizeEscaque;
 
   void Start()
   {
     destino = transform.position;
     terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
     terrainAdministrator.InWhatTerrenoAmI(transform.position);
+    sizeEscaque = terrainAdministrator.GetSizeEscaque();
     camara = FindAnyObjectByType<Camera>();
     //MoveHero(movement, 0.0f);
   }
@@ -68,6 +69,7 @@ public class Heroe : MonoBehaviour
 
   private void MoveHero(Vector3 movement, float rotation)
   {
+    //TODO: cuando se solucione el movimiento con el mouse, esta funcion deberia desaparecer y solo dejar la corutina.
     transform.position = terrainAdministrator.MoveHero(transform.position, movement);
     transform.eulerAngles = new Vector3(0, rotation, 0);
   }
@@ -78,25 +80,25 @@ public class Heroe : MonoBehaviour
     movement = Vector3.zero;
     if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && !isMoving)
     {
-      movement = new Vector3(0, 0, terrainAdministrator.sizeEscaque);
+      movement = new Vector3(0, 0, sizeEscaque);
       rotation = 0.0f;
       StartCoroutine(ContinuosMove(movement, rotation));
     }
     if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && !isMoving)
     {
-      movement = new Vector3(0, 0, -terrainAdministrator.sizeEscaque);
+      movement = new Vector3(0, 0, -sizeEscaque);
       rotation = 180f;
       StartCoroutine(ContinuosMove(movement, rotation));
     }
     if ((Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) && !isMoving)
     {
-      movement = new Vector3(terrainAdministrator.sizeEscaque, 0, 0);
+      movement = new Vector3(sizeEscaque, 0, 0);
       rotation = 90f;
       StartCoroutine(ContinuosMove(movement, rotation));
     }
     if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) && !isMoving)
     {
-      movement = new Vector3(-terrainAdministrator.sizeEscaque, 0, 0);
+      movement = new Vector3(-sizeEscaque, 0, 0);
       rotation = 270f;
       StartCoroutine(ContinuosMove(movement, rotation));
     }
@@ -112,12 +114,12 @@ public class Heroe : MonoBehaviour
     {
       if (distance.x < 0)
       {
-        movement = new Vector3(terrainAdministrator.sizeEscaque, 0, 0);
+        movement = new Vector3(sizeEscaque, 0, 0);
         rotation = 90f;
       }
       else
       {
-        movement = new Vector3(-terrainAdministrator.sizeEscaque, 0, 0);
+        movement = new Vector3(-sizeEscaque, 0, 0);
         rotation = 270f;
       }
     }
@@ -125,12 +127,12 @@ public class Heroe : MonoBehaviour
     {
       if (distance.z < 0)
       {
-        movement = new Vector3(0, 0, terrainAdministrator.sizeEscaque);
+        movement = new Vector3(0, 0, sizeEscaque);
         rotation = 0.0f;
       }
       else
       {
-        movement = new Vector3(0, 0, -terrainAdministrator.sizeEscaque);
+        movement = new Vector3(0, 0, -sizeEscaque);
         rotation = 180f;
       }
     }

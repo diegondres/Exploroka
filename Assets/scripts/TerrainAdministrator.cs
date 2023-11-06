@@ -56,9 +56,7 @@ public class TerrainAdministrator : MonoBehaviour
     sizeEscaque = sizeOfTerrain / 20;
     sizeTerrainInVertices = sizeOfTerrain / 20;
     SetNeighboorsReference();
-    //terrainTypes[0] = new TerrainType("water", 0.4f, Color.blue);
-    //terrainTypes[1] = new TerrainType("grass", 0.7f, Color.green);
-    //terrainTypes[2] = new TerrainType("mountain", 1, new Color(92, 64, 51));
+ 
     CreateFirstTerrain();
 
   }
@@ -182,18 +180,7 @@ public class TerrainAdministrator : MonoBehaviour
     scriptGeneration.heightTerrainTypes = terrainTypes;
     scriptGeneration.heightMultiplier = heightMultiplier;
     scriptGeneration.heightCurve = heightCurve;
-    scriptGeneration.waves = waves;
-
-    
-   scriptGeneration.heatCurve = heatCurve;
-   scriptGeneration.heatWaves = heatWaves;
-   scriptGeneration.heatTerrainTypes = heatTerrainTypes;
-
-   scriptGeneration.moistureTerrainTypes = moistureTerrainTypes;
-   scriptGeneration.moistureCurve = moistureCurve;
-   scriptGeneration.moistureWaves = moistureWaves;
-
-   scriptGeneration.biomes = biomes;
+    scriptGeneration.waves = waves;  
     
     countTerrain++;
   }

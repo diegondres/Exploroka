@@ -11,17 +11,12 @@ public class Terreno : MonoBehaviour
   //TERRENOS VECINOS
   public Terreno[] neighboors = new Terreno[8];
   private TerrainAdministrator terrainAdministrator;
+  private TerrainGeneration terrainGeneration;
   public int id;
 
   //GENERACION PROCEDURAL
   [NonSerialized]
   public Color32[] originalPixels;
-  [NonSerialized]
-  public float[,] heights;
-  [NonSerialized]
-  public float heightMultiplier;
-  [NonSerialized]
-  public AnimationCurve heightCurve;
   private MeshRenderer tileRenderer;
 
 
@@ -43,6 +38,7 @@ public class Terreno : MonoBehaviour
     terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
     sizeEscaque = terrainAdministrator.GetSizeEscaque();
     sizeTerrainInVertices = terrainAdministrator.GetSizeTerrainInVertices();
+    terrainGeneration = GetComponent<TerrainGeneration>();
 
     worldPositionTerrain = transform.parent.TransformPoint(transform.localPosition);
   }
@@ -81,10 +77,9 @@ public class Terreno : MonoBehaviour
   {
     position += movement;
     Vector3 relativePositionInVertices = GetRelativePositionInVertices(position);
-    Debug.Log(relativePositionInVertices);
     
     if (GetTerrain(relativePositionInVertices) != null)
-    {
+    {                                                                                                       
       Terreno neighboor = GetTerrain(relativePositionInVertices);
       terrainAdministrator.SetTerrenoOfHero(neighboor);
 
@@ -92,22 +87,29 @@ public class Terreno : MonoBehaviour
     }
     else
     {
-     // PrintSorroundingEscaques(relativePositionInVertices);
+      PrintSorroundingEscaques(relativePositionInVertices);
       terrainAdministrator.isBuildingLocationSelected = false;
 
       return CenterInEscaqueToGlobal(relativePositionInVertices);
     }
   }
-  private Vector3 CenterInEscaqueToGlobal(Vector3 position)
+  private Vector3 CenterInEscaqueToGlobal(Vector3 relativePositionInVertices)
   {
-    float sizeSquareX = position.x >= 0 ? sizeEscaque /2 : -sizeEscaque /2;
-    float sizeSquareZ = position.z >= 0 ? sizeEscaque /2 : -sizeEscaque /2;
-    float bodyHeight = 4f;
+    float sizeSquareX = relativePositionInVertices.x >= 0 ? sizeEscaque /2 : -sizeEscaque /2;
+    float sizeSquareZ = relativePositionInVertices.z >= 0 ? sizeEscaque /2 : -sizeEscaque /2;
+    float bodyHeight = 6f;
 
-    //return new Vector3((int)position.x * sizeEscaque + worldPositionTerrain.x + sizeSquareX, GetHeightInRelativePosition(position) + bodyHeight, (int)position.z * sizeEscaque + worldPositionTerrain.z + sizeSquareZ);
-    return new Vector3((int)position.x * sizeEscaque + worldPositionTerrain.x + sizeSquareX, 50, (int)position.z * sizeEscaque + worldPositionTerrain.z + sizeSquareZ);
+    return new Vector3((int)relativePositionInVertices.x * sizeEscaque + worldPositionTerrain.x + sizeSquareX, terrainGeneration.GetHeight(relativePositionInVertices) + bodyHeight, (int)relativePositionInVertices.z * sizeEscaque + worldPositionTerrain.z + sizeSquareZ);
   }
 
+  private Vector3 GetGlobalPositionFromRelative(Vector3 relativePositionInVertices)
+  {
+    float sizeSquareX = relativePositionInVertices.x >= 0 ? sizeEscaque /2 : -sizeEscaque /2;
+    float sizeSquareZ = relativePositionInVertices.z >= 0 ? sizeEscaque /2 : -sizeEscaque /2;
+    
+    return new Vector3((int)relativePositionInVertices.x * sizeEscaque + worldPositionTerrain.x + sizeSquareX, 0, (int)relativePositionInVertices.z * sizeEscaque + worldPositionTerrain.z + sizeSquareZ);
+  }
+  
   public Vector3 CalculateDistance(Vector3 actualPosition, Vector3 destiny)
   {
     Vector3 relativeActualPosition = actualPosition - transform.parent.TransformPoint(transform.localPosition);
@@ -121,7 +123,6 @@ public class Terreno : MonoBehaviour
 
   private void PrintSorroundingEscaques(Vector3 relativePositionInVertices)
   {
-    int pixsLength = 400;
 
     CleanVisitedEscaques(terrainAdministrator.sorroundingEscaques);
 
@@ -131,10 +132,11 @@ public class Terreno : MonoBehaviour
       {
         if (i != 0 || j != 0)
         {
-          terrainAdministrator.sorroundingEscaques.Add(GetIndexGlobal(pixsLength, new(relativePositionInVertices.x + i, relativePositionInVertices.y, relativePositionInVertices.z + j)));
+          terrainAdministrator.sorroundingEscaques.Add(GetIndexGlobal(new(relativePositionInVertices.x + i, relativePositionInVertices.y, relativePositionInVertices.z + j)));
         }
       }
     }
+
     foreach (Tuple<int, Terreno> escaque in terrainAdministrator.sorroundingEscaques)
     {
       escaque.Item2.PaintPixelInfluence(escaque.Item1, Color.red);
@@ -157,8 +159,8 @@ public class Terreno : MonoBehaviour
 
   private void SelectEscaqueToBuildIn(Vector3 relativePositionInVertices)
   {
-    int index = GetIndex(pixsLength, relativePositionInVertices);
-    Tuple<int, Terreno> globalIndex = GetIndexGlobal(pixsLength, relativePositionInVertices);
+    int index = GetIndex(relativePositionInVertices);
+    Tuple<int, Terreno> globalIndex = GetIndexGlobal(relativePositionInVertices);
 
     if (IsThisEscaqueVisited(globalIndex) && !terrainAdministrator.isBuildingLocationSelected)
     {
@@ -190,17 +192,17 @@ public class Terreno : MonoBehaviour
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////----------UTILES-----------///////////////////////////////////////////////////////
 
-  public int GetIndex(int pixsLength, Vector3 relativePosition)
+  public int GetIndex(Vector3 relativePosition)
   {
-    return pixsLength - (int)((relativePosition.z + sizeTerrainInVertices / 2) * sizeTerrainInVertices + relativePosition.x) - 1;
+    return  (int)((relativePosition.z + sizeTerrainInVertices / 2) * sizeTerrainInVertices + relativePosition.x);
   }
 
-  Tuple<int, Terreno> GetIndexGlobal(int pixsLength, Vector3 relativePositionInVertices)
+  Tuple<int, Terreno> GetIndexGlobal(Vector3 relativePositionInVertices)
   {
     Terreno terreno = GetTerrain(relativePositionInVertices) != null ? GetTerrain(relativePositionInVertices) : this;
-    Vector3 globalPosition = CenterInEscaqueToGlobal(relativePositionInVertices);
-    Vector3 relativePositionIV = terreno.GetRelativePositionInVertices(globalPosition);
-    int index = terreno.GetIndex(pixsLength, relativePositionIV);
+    Vector3 globalPosition = GetGlobalPositionFromRelative(relativePositionInVertices);
+    Vector3 relativePositionInVerticesInTerrain = terreno.GetRelativePositionInVertices(globalPosition);
+    int index = terreno.GetIndex(relativePositionInVerticesInTerrain);
 
     return new Tuple<int, Terreno>(index, terreno);
   }
@@ -245,15 +247,7 @@ public class Terreno : MonoBehaviour
     return transform.position;
   }
 
-  private float GetHeightInRelativePosition(Vector3 relativePositionInVertices)
-  {
-    //TODO: arreglar esta parte porque creo que esta mal
-    int posX = (int)relativePositionInVertices.x + sizeEscaque;
-    int posZ = (int)relativePositionInVertices.z + sizeEscaque;
-    //float[] prom = {heightCurve.Evaluate(heights[posZ, posX]), heightCurve.Evaluate(heights[posZ, posX + 1]), heightCurve.Evaluate(heights[posZ + 1, posX]) };
 
-    return heightCurve.Evaluate(heights[posZ, posX]) * heightMultiplier * 20f;
-  }
   //////////////////////////////----------UTILES-----------///////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

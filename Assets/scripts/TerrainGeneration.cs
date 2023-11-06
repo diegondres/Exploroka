@@ -51,12 +51,15 @@ public class TerrainGeneration : MonoBehaviour
     private NoiseGeneration noiseGeneration;
     private MeshRenderer tileRenderer;
     private int sizeTerrainInVertices;
-    
+
+    //COSITAS INTERNAS
+
     private TerrainAdministrator terrainAdministrator;
     private MeshFilter meshFilter;
     private MeshCollider meshCollider;
-
     private Color waterColor = Color.blue;
+    private float[,] heightMap;
+    private int tileDepth, tileWidth;
 
     // Start is called before the first frame update
     void Start()
@@ -73,40 +76,25 @@ public class TerrainGeneration : MonoBehaviour
         noiseGeneration = FindAnyObjectByType<NoiseGeneration>();
         sizeTerrainInVertices = terrainAdministrator.GetSizeTerrainInVertices();
 
-        int tileDepth = sizeTerrainInVertices, tileWidth = sizeTerrainInVertices;
+        tileDepth = sizeTerrainInVertices; tileWidth = sizeTerrainInVertices;
 
         meshFilter.mesh = CrearPlanoConDivisiones(tileDepth, tileWidth, tileDepth, tileWidth);
-//        meshFilter.mesh.RecalculateBounds();
-//        meshFilter.mesh.RecalculateNormals();
-//        meshCollider.sharedMesh = meshFilter.mesh;
 
-        Debug.Log("cantidad de vertices: " + meshFilter.mesh.vertices.Length);
-        Debug.Log("tamaño del uv: " + meshFilter.mesh.uv.Length);
+        GetHeightMap(waves);
 
-        // calculate the offsets based on the tile position
-        float offsetX = transform.position.x;
-        float offsetZ = transform.position.z;
-
-        float[,] heightMap = noiseGeneration.GenerateNoiseMap(tileDepth + 1, tileWidth + 1, offsetX / sizeTerrainInVertices, offsetZ / sizeTerrainInVertices, waves);
-        Debug.Log("Tamaño del heightMap: " + heightMap.Length);
-
-        
         TerrainType[,] chosenHeightTerrainTypes = new TerrainType[tileDepth, tileWidth];
-        Texture2D heightTexture = BuildTexture(heightMap, heightTerrainTypes, chosenHeightTerrainTypes);
-        
+        Texture2D heightTexture = BuildTexture(heightTerrainTypes, chosenHeightTerrainTypes);
+
         tileRenderer.material.mainTexture = heightTexture;
 
-        UpdateMeshVertices(heightMap);
+        UpdateMeshVertices();
     }
 
-    private Texture2D BuildTexture(float[,] heightMap, TerrainType[] terrainTypes, TerrainType[,] chosenTerrainTypes)
+    private Texture2D BuildTexture(TerrainType[] terrainTypes, TerrainType[,] chosenTerrainTypes)
     {
-        int tileDepth = heightMap.GetLength(0) -1;
-        int tileWidth = heightMap.GetLength(1) -1;
-
         Color32[] colorMap = new Color32[tileDepth * tileWidth];
 
-        for (int zIndex = 0; zIndex < tileDepth ; zIndex++)
+        for (int zIndex = 0; zIndex < tileDepth; zIndex++)
         {
             for (int xIndex = 0; xIndex < tileWidth; xIndex++)
             {
@@ -122,12 +110,8 @@ public class TerrainGeneration : MonoBehaviour
                 chosenTerrainTypes[zIndex, xIndex] = terrainType;
             }
         }
-        Debug.Log("Color map!!!: " + colorMap.Length);
-        // create a new texture and set its pixel colors
+
         terreno.originalPixels = colorMap;
-        terreno.heights = heightMap;
-        terreno.heightMultiplier = heightMultiplier;
-        terreno.heightCurve = heightCurve;
         Texture2D tileTexture = new(tileWidth, tileDepth)
         {
             wrapMode = TextureWrapMode.Clamp,
@@ -195,18 +179,46 @@ public class TerrainGeneration : MonoBehaviour
         return terrainTypes[^1];
     }
 
-    private void UpdateMeshVertices(float[,] heightMap)
+    private void GetHeightMap(Wave[] waves){
+        int heightMapDepth = tileDepth + 1;
+        int heightMapWidth = tileWidth + 1;
+        heightMap = new float[heightMapDepth,heightMapWidth];
+
+        Vector3[] meshVertices = meshFilter.mesh.vertices;
+
+        int offsetX = (int)(transform.position.x / 20);
+        int offsetZ = (int)(transform.position.z / 20);
+
+        // iterate through all the heightMap coordinates, updating the vertex index
+        int vertexIndex = 0;
+        for (int xIndex = 0; xIndex < heightMapDepth; xIndex++)
+        {
+            for (int zIndex = 0; zIndex < heightMapWidth; zIndex++)
+            {
+                Vector3 vertex = meshVertices[vertexIndex];
+                
+                int vertexX = (int)vertex.x + sizeTerrainInVertices /2 + offsetX; 
+                int vertexZ = (int)vertex.z + sizeTerrainInVertices /2 + offsetZ; 
+              // Debug.Log("vertexX: "+vertexX+" vertexZ: "+vertexZ);
+                heightMap[xIndex, zIndex] = noiseGeneration.GetHeight(vertexX, vertexZ, waves);
+                
+                vertexIndex++;
+            }
+        }
+    }
+
+    private void UpdateMeshVertices()
     {
-        int tileDepth = heightMap.GetLength(0);
-        int tileWidth = heightMap.GetLength(1);
+        int heightMapDepth = heightMap.GetLength(0);
+        int heightMapWidth = heightMap.GetLength(1);
 
         Vector3[] meshVertices = meshFilter.mesh.vertices;
 
         // iterate through all the heightMap coordinates, updating the vertex index
         int vertexIndex = 0;
-        for (int zIndex = 0; zIndex < tileDepth; zIndex++)
+        for (int zIndex = 0; zIndex < heightMapDepth; zIndex++)
         {
-            for (int xIndex = 0; xIndex < tileWidth; xIndex++)
+            for (int xIndex = 0; xIndex < heightMapWidth; xIndex++)
             {
                 float height = heightMap[zIndex, xIndex];
                 Vector3 vertex = meshVertices[vertexIndex];
@@ -280,6 +292,16 @@ public class TerrainGeneration : MonoBehaviour
         mesh.normals = normals;
 
         return mesh;
+    }
+
+    public float GetHeight(Vector3 relativePositionInVertices)
+    {
+        int xIndex = (int)(relativePositionInVertices.x + sizeTerrainInVertices / 2);
+        int zIndex = (int)(relativePositionInVertices.z + sizeTerrainInVertices / 2);
+
+        float meanHeight = (heightMap[zIndex, xIndex] + heightMap[zIndex + 1, xIndex] + heightMap[zIndex, xIndex + 1] + heightMap[zIndex + 1, xIndex + 1]) / 4;
+
+        return heightCurve.Evaluate(meanHeight) * heightMultiplier * gameObject.transform.localScale.y;
     }
 }
 

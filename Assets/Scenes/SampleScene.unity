@@ -404,7 +404,7 @@ MonoBehaviour:
     threshold: 1
     color: {r: 0.057493754, g: 0.10024926, b: 0.6415094, a: 0}
     index: 3
-  heightMultiplier: 4
+  heightMultiplier: 7
   heightCurve:
     serializedVersion: 2
     m_Curve:

@@ -71,86 +71,48 @@ public class TerrainGeneration : MonoBehaviour
         terreno = GetComponent<Terreno>();
         terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
         noiseGeneration = FindAnyObjectByType<NoiseGeneration>();
-        
         sizeTerrainInVertices = terrainAdministrator.GetSizeTerrainInVertices();
 
-        int tileDepth = sizeTerrainInVertices;
-        int tileWidth = sizeTerrainInVertices;
+        int tileDepth = sizeTerrainInVertices, tileWidth = sizeTerrainInVertices;
 
         meshFilter.mesh = CrearPlanoConDivisiones(tileDepth, tileWidth, tileDepth, tileWidth);
-        meshFilter.mesh.RecalculateBounds();
-        meshFilter.mesh.RecalculateNormals();
-        // update the mesh collider
-        meshCollider.sharedMesh = meshFilter.mesh;
+//        meshFilter.mesh.RecalculateBounds();
+//        meshFilter.mesh.RecalculateNormals();
+//        meshCollider.sharedMesh = meshFilter.mesh;
+
+        Debug.Log("cantidad de vertices: " + meshFilter.mesh.vertices.Length);
+        Debug.Log("tamaño del uv: " + meshFilter.mesh.uv.Length);
 
         // calculate the offsets based on the tile position
         float offsetX = transform.position.x;
         float offsetZ = transform.position.z;
 
-        float[,] heightMap = noiseGeneration.GenerateNoiseMap(tileDepth, tileWidth, offsetX / sizeTerrainInVertices, offsetZ / sizeTerrainInVertices, waves);
+        float[,] heightMap = noiseGeneration.GenerateNoiseMap(tileDepth + 1, tileWidth + 1, offsetX / sizeTerrainInVertices, offsetZ / sizeTerrainInVertices, waves);
+        Debug.Log("Tamaño del heightMap: " + heightMap.Length);
 
-        Vector3 tileDimensions = meshFilter.mesh.bounds.size;
-        float distanceBetweenVertices = tileDimensions.z / (float)tileDepth;
-        float vertexOffsetZ = gameObject.transform.position.z / distanceBetweenVertices;
         
-        float[,] uniformHeatMap = noiseGeneration.GenerateUniformNoiseMap(tileWidth, tileDepth, 200, 200, vertexOffsetZ);
-        float[,] randomHeatMap = noiseGeneration.GenerateNoiseMap(tileWidth, tileWidth, offsetX / sizeTerrainInVertices, offsetZ / sizeTerrainInVertices, heatWaves);
-        float[,] heatMap = new float[tileWidth, tileDepth];
-
-        for (int zIndex = 0; zIndex < tileDepth; zIndex++)
-        {
-            for (int xIndex = 0; xIndex < tileWidth; xIndex++)
-            {
-                // mix both heat maps together by multiplying their values
-                heatMap[zIndex, xIndex] = uniformHeatMap[zIndex, xIndex] * randomHeatMap[zIndex, xIndex];
-                // makes higher regions colder, by adding the height value to the heat map
-                heatMap[zIndex, xIndex] += heatCurve.Evaluate(heightMap[zIndex, xIndex]) * heightMap[zIndex, xIndex];
-            }
-        }
-        // generate a moistureMap using Perlin Noise
-        float[,] moistureMap = noiseGeneration.GenerateNoiseMap(tileDepth, tileWidth, offsetX, offsetZ, moistureWaves);
-        for (int zIndex = 0; zIndex < tileDepth; zIndex++)
-        {
-            for (int xIndex = 0; xIndex < tileWidth; xIndex++)
-            {
-                // makes higher regions dryer, by reducing the height value from the heat map
-                moistureMap[zIndex, xIndex] -= moistureCurve.Evaluate(heightMap[zIndex, xIndex]) * heightMap[zIndex, xIndex];
-            }
-        }
         TerrainType[,] chosenHeightTerrainTypes = new TerrainType[tileDepth, tileWidth];
-        Texture2D heightTexture = BuildTexture(heightMap, this.heightTerrainTypes, chosenHeightTerrainTypes);
-        TerrainType[,] chosenHeatTerrainTypes = new TerrainType[tileDepth, tileWidth];
-        Texture2D heatTexture = BuildTexture(heatMap, this.heatTerrainTypes, chosenHeatTerrainTypes);
-        // build a Texture2D from the moisture map
-        TerrainType[,] chosenMoistureTerrainTypes = new TerrainType[tileDepth, tileWidth];
-        Texture2D moistureTexture = BuildTexture(moistureMap, this.moistureTerrainTypes, chosenMoistureTerrainTypes);
-        // build a biomes Texture2D from the three other noise variables
-        Texture2D biomeTexture = BuildBiomeTexture(chosenHeightTerrainTypes, chosenHeatTerrainTypes, chosenMoistureTerrainTypes);
-
+        Texture2D heightTexture = BuildTexture(heightMap, heightTerrainTypes, chosenHeightTerrainTypes);
         
+        tileRenderer.material.mainTexture = heightTexture;
 
-        //TerrainType[,] chosenHeightTerrainTypes = new TerrainType[tileDepth, tileWidth];
-        //Texture2D heightTexture = BuildTexture(heightMap, heightTerrainTypes, chosenHeightTerrainTypes);
-        
-        tileRenderer.material.mainTexture = biomeTexture;
-
-       // UpdateMeshVertices(heightMap);
+        UpdateMeshVertices(heightMap);
     }
 
     private Texture2D BuildTexture(float[,] heightMap, TerrainType[] terrainTypes, TerrainType[,] chosenTerrainTypes)
     {
-        int tileDepth = heightMap.GetLength(0);
-        int tileWidth = heightMap.GetLength(1);
+        int tileDepth = heightMap.GetLength(0) -1;
+        int tileWidth = heightMap.GetLength(1) -1;
 
         Color32[] colorMap = new Color32[tileDepth * tileWidth];
 
-        for (int zIndex = 0; zIndex < tileDepth; zIndex++)
+        for (int zIndex = 0; zIndex < tileDepth ; zIndex++)
         {
             for (int xIndex = 0; xIndex < tileWidth; xIndex++)
             {
                 // transform the 2D map index is an Array index
                 int colorIndex = zIndex * tileWidth + xIndex;
-                float height = heightMap[zIndex, xIndex];
+                float height = (heightMap[zIndex, xIndex] + heightMap[zIndex + 1, xIndex] + heightMap[zIndex, xIndex + 1] + heightMap[zIndex + 1, xIndex + 1]) / 4;
                 // choose a terrain type according to the height value
                 TerrainType terrainType = ChooseTerrainType(height, terrainTypes);
                 // assign as color a shade of grey proportional to the height value
@@ -160,7 +122,7 @@ public class TerrainGeneration : MonoBehaviour
                 chosenTerrainTypes[zIndex, xIndex] = terrainType;
             }
         }
-
+        Debug.Log("Color map!!!: " + colorMap.Length);
         // create a new texture and set its pixel colors
         terreno.originalPixels = colorMap;
         terreno.heights = heightMap;

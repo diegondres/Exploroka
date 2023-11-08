@@ -18,7 +18,7 @@ public class Construction : MonoBehaviour
   // Update is called once per frame
   void Update()
   {
-    if (Input.GetKeyDown(KeyCode.Space))
+    if (Input.GetKeyDown(KeyCode.Space) && tempPlanes.isBuildingLocationSelected)
     {
       Vector3 buildingLocation = tempPlanes.GetBuildingLocation();
       Instantiate(prefabTest, buildingLocation, Quaternion.identity);

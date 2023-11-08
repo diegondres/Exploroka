@@ -35,7 +35,7 @@ public class TerrainAdministrator : MonoBehaviour
 
   [SerializeField]
   private Wave[] moistureWaves;
-  
+
   //////////////  HEROE   /////////////////////////////
   [SerializeField]
   private Heroe heroe;
@@ -47,7 +47,7 @@ public class TerrainAdministrator : MonoBehaviour
   public List<Tuple<int, Terreno>> sorroundingEscaques = new();
 
   //CONSTRUCCION
-  private Vector3 buildingLocation;
+  private Tuple<int, Terreno> buildingGlobalIndex;
   public bool isBuildingLocationSelected = false;
 
 
@@ -56,7 +56,7 @@ public class TerrainAdministrator : MonoBehaviour
     sizeEscaque = sizeOfTerrain / 20;
     sizeTerrainInVertices = sizeOfTerrain / 20;
     SetNeighboorsReference();
- 
+
     CreateFirstTerrain();
 
   }
@@ -91,7 +91,7 @@ public class TerrainAdministrator : MonoBehaviour
       }
     }
   }
-  
+
   /// <summary>
   /// Funcion que retorna el terreno en el que esta parado el objeto que llamo a la funcion 
   /// </summary>
@@ -100,7 +100,7 @@ public class TerrainAdministrator : MonoBehaviour
   public Terreno InWhatTerrenoAmI(Vector3 position)
   {
     Vector3 relativePosition = position / sizeOfTerrain;
-    Vector3 terrainPosition = new ((int)relativePosition.x * sizeOfTerrain, 0, (int)relativePosition.z * sizeOfTerrain);
+    Vector3 terrainPosition = new((int)relativePosition.x * sizeOfTerrain, 0, (int)relativePosition.z * sizeOfTerrain);
 
     if (terrainDict.ContainsKey(terrainPosition))
     {
@@ -164,6 +164,44 @@ public class TerrainAdministrator : MonoBehaviour
       }
     }
   }
+  public bool IsTerrainActive(Terreno terreno)
+  {
+    return terrenoOfHero.id == terreno.id;
+  }
+
+  public bool IsThisEscaqueVisited(Tuple<int, Terreno> visitedEscaque)
+  {
+    List<Tuple<int, Terreno>> visitedEscaques = sorroundingEscaques;
+    foreach (Tuple<int, Terreno> escaque in visitedEscaques)
+    {
+      if (CompareToEscaques(visitedEscaque, escaque))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+   public void SelectEscaqueToBuildIn(Tuple<int, Terreno> globalIndex)
+  {
+    
+    if (IsThisEscaqueVisited(globalIndex))
+    {
+      if(isBuildingLocationSelected){
+        if (globalIndex.Item1 == buildingGlobalIndex.Item1 ){
+          buildingGlobalIndex.Item2.PaintPixelInfluence(buildingGlobalIndex.Item1, Color.red);
+          isBuildingLocationSelected = false;
+          return;        
+        }
+        buildingGlobalIndex.Item2.PaintPixelInfluence(buildingGlobalIndex.Item1, Color.red);
+        
+      }
+
+      isBuildingLocationSelected = true;
+      SetBuildingLocation(globalIndex);
+      globalIndex.Item2.PaintPixelInfluence(globalIndex.Item1, Color.gray);    
+    }
+  }
 
   private void CreateTerrain(Vector3 position)
   {
@@ -180,20 +218,21 @@ public class TerrainAdministrator : MonoBehaviour
     scriptGeneration.heightTerrainTypes = terrainTypes;
     scriptGeneration.heightMultiplier = heightMultiplier;
     scriptGeneration.heightCurve = heightCurve;
-    scriptGeneration.waves = waves;  
-    
+    scriptGeneration.waves = waves;
+
     countTerrain++;
   }
 
-  public void SetBuildingLocation(Vector3 pos)
+  public void SetBuildingLocation(Tuple<int, Terreno> pos)
   {
-    buildingLocation = pos;
+    buildingGlobalIndex = pos;
   }
   public Vector3 GetBuildingLocation()
   {
     isBuildingLocationSelected = false;
+    buildingGlobalIndex.Item2.PaintPixelInfluence(buildingGlobalIndex.Item1, Color.red);
 
-    return buildingLocation;
+    return buildingGlobalIndex.Item2.GetGlobalPositionFromGlobalIndex(buildingGlobalIndex);
   }
 
   public bool CompareToEscaques(Tuple<int, Terreno> tuple1, Tuple<int, Terreno> tuple2)
@@ -206,10 +245,12 @@ public class TerrainAdministrator : MonoBehaviour
 
     return item1 && item2;
   }
-  public int GetSizeEscaque(){
+  public int GetSizeEscaque()
+  {
     return sizeEscaque;
   }
-  public int GetSizeTerrainInVertices(){
+  public int GetSizeTerrainInVertices()
+  {
     return sizeTerrainInVertices;
   }
 

@@ -35,6 +35,7 @@ public class Heroe : MonoBehaviour
     terrainAdministrator.InWhatTerrenoAmI(transform.position);
     sizeEscaque = terrainAdministrator.GetSizeEscaque();
     camara = FindAnyObjectByType<Camera>();
+    //TODO: se tiene que hacer un arreglo para que el personaje inicie en una referencia correcta del terreno
     //MoveHero(movement, 0.0f);
   }
 
@@ -46,8 +47,7 @@ public class Heroe : MonoBehaviour
 
     if (Input.GetMouseButtonDown(1))
     {
-      Vector3 posicionMouse = Input.mousePosition;
-      Ray rayo = camara.ScreenPointToRay(posicionMouse);
+      Ray rayo = camara.ScreenPointToRay(Input.mousePosition);
       Plane plano = new(Vector3.up, transform.position);
       distancia = 0.0f;
 
@@ -58,7 +58,7 @@ public class Heroe : MonoBehaviour
       distanciaEnVector = terrainAdministrator.CalculateDistance(transform.position, destino);
     }
 
-    if (Vector3.Magnitude(distanciaEnVector) > 0.1f && acumulatedTime >= minimumTime)
+    if (Vector3.Magnitude(distanciaEnVector) > 2.8f && acumulatedTime >= minimumTime)
     {
       MouseMoving(distanciaEnVector);
       distanciaEnVector = terrainAdministrator.CalculateDistance(transform.position, destino);

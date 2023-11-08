@@ -21,17 +21,13 @@ public class TerrainAdministrator : MonoBehaviour
   private Wave[] waves;
  
   //////////////  HEROE   /////////////////////////////
-  private Terreno terrenoOfHero;
+  [NonSerialized]
+  public Terreno terrenoOfHero;
   public int sizeOfTerrain = 200;
   private int sizeEscaque;
   private int sizeTerrainInVertices;
   private Dictionary<int, Vector3> vecindario = new();
   public List<Tuple<int, Terreno>> sorroundingEscaques = new();
-
-  //CONSTRUCCION
-  private Tuple<int, Terreno> buildingGlobalIndex;
-  public bool isBuildingLocationSelected = false;
-
 
   void Awake()
   {
@@ -40,7 +36,6 @@ public class TerrainAdministrator : MonoBehaviour
     SetNeighboorsReference();
 
     CreateFirstTerrain();
-
   }
 
   void SetNeighboorsReference()
@@ -53,11 +48,6 @@ public class TerrainAdministrator : MonoBehaviour
     vecindario.Add(5, new Vector3(sizeOfTerrain, 0, -sizeOfTerrain));
     vecindario.Add(6, new Vector3(sizeOfTerrain, 0, 0));
     vecindario.Add(7, new Vector3(sizeOfTerrain, 0, sizeOfTerrain));
-  }
-
-  void Update()
-  {
-
   }
 
   /// <summary>
@@ -156,33 +146,12 @@ public class TerrainAdministrator : MonoBehaviour
     List<Tuple<int, Terreno>> visitedEscaques = sorroundingEscaques;
     foreach (Tuple<int, Terreno> escaque in visitedEscaques)
     {
-      if (CompareToEscaques(visitedEscaque, escaque))
+      if (CompareTwoEscaques(visitedEscaque, escaque))
       {
         return true;
       }
     }
     return false;
-  }
-
-   public void SelectEscaqueToBuildIn(Tuple<int, Terreno> globalIndex)
-  {
-    
-    if (IsThisEscaqueVisited(globalIndex))
-    {
-      if(isBuildingLocationSelected){
-        if (globalIndex.Item1 == buildingGlobalIndex.Item1 ){
-          buildingGlobalIndex.Item2.PaintPixelInfluence(buildingGlobalIndex.Item1, Color.red);
-          isBuildingLocationSelected = false;
-          return;        
-        }
-        buildingGlobalIndex.Item2.PaintPixelInfluence(buildingGlobalIndex.Item1, Color.red);
-        
-      }
-
-      isBuildingLocationSelected = true;
-      SetBuildingLocation(globalIndex);
-      globalIndex.Item2.PaintPixelInfluence(globalIndex.Item1, Color.gray);    
-    }
   }
 
   private void CreateTerrain(Vector3 position)
@@ -205,25 +174,13 @@ public class TerrainAdministrator : MonoBehaviour
     countTerrain++;
   }
 
-  public void SetBuildingLocation(Tuple<int, Terreno> pos)
-  {
-    buildingGlobalIndex = pos;
-  }
-  public Vector3 GetBuildingLocation()
-  {
-    isBuildingLocationSelected = false;
-    buildingGlobalIndex.Item2.PaintPixelInfluence(buildingGlobalIndex.Item1, Color.red);
-
-    return buildingGlobalIndex.Item2.GetGlobalPositionFromGlobalIndex(buildingGlobalIndex);
-  }
-
-  public bool CompareToEscaques(Tuple<int, Terreno> tuple1, Tuple<int, Terreno> tuple2)
+  public bool CompareTwoEscaques(Tuple<int, Terreno> escaque1, Tuple<int, Terreno> escaque2)
   {
     bool item1 = false;
     bool item2 = false;
 
-    if (tuple1.Item1 == tuple2.Item1) item1 = true;
-    if (tuple1.Item2.id == tuple1.Item2.id) item2 = true;
+    if (escaque1.Item1 == escaque2.Item1) item1 = true;
+    if (escaque1.Item2.id == escaque1.Item2.id) item2 = true;
 
     return item1 && item2;
   }

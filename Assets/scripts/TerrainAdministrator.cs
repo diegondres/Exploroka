@@ -1,44 +1,26 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using UnityEngine;
 
 public class TerrainAdministrator : MonoBehaviour
 {
+  [SerializeField]
+  private GameObject container;
   //TERRENOS
   private readonly Dictionary<Vector3, GameObject> terrainDict = new();
-  static int countTerrain = 0;
-  [SerializeField]
-  private BiomeRow[] biomes;
+  int countTerrain = 0;
   [SerializeField]
   private GameObject Terreno;
   [SerializeField]
-  private GameObject container;
-  [SerializeField]
   private TerrainType[] terrainTypes;
-  [SerializeField]
-  private TerrainType[] heatTerrainTypes;
-  [SerializeField]
-  private TerrainType[] moistureTerrainTypes;
   public float heightMultiplier;
   [SerializeField]
   private AnimationCurve heightCurve;
   [SerializeField]
-  private AnimationCurve heatCurve;
-  [SerializeField]
-  private AnimationCurve moistureCurve;
-  [SerializeField]
   private Wave[] waves;
-  [SerializeField]
-  private Wave[] heatWaves;
-
-  [SerializeField]
-  private Wave[] moistureWaves;
-
+ 
   //////////////  HEROE   /////////////////////////////
-  [SerializeField]
-  private Heroe heroe;
   private Terreno terrenoOfHero;
   public int sizeOfTerrain = 200;
   private int sizeEscaque;

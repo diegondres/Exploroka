@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,8 @@ using UnityEngine;
 /// </summary>
 public class ObjetsAdministrator : MonoBehaviour
 {
-
+    private List<Tuple<int, Terreno>> constructions;
+    private List<Tuple<int, Terreno>> resources;
     // Start is called before the first frame update
     void Start()
     {

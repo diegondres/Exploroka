@@ -61,7 +61,14 @@ public class Terreno : MonoBehaviour
       {
         mousePosition = rayo.GetPoint(distancia);
         Vector3 relativePosition = GetRelativePositionInVertices(mousePosition);
-        objetsAdministrator.SelectEscaqueToBuildIn(GetIndexGlobal(relativePosition));
+        Tuple<int, Terreno> globalIndex = GetIndexGlobal(relativePosition);
+        GameObject building = objetsAdministrator.IsSomethingBuiltInHere(globalIndex); 
+        if(building != null && building.GetComponent<Building>() != null){
+          building.GetComponent<Building>().PrintBuildingValues();
+        }
+        else {
+          objetsAdministrator.SelectEscaqueToBuildIn(globalIndex);
+        }
       }
     }
   }

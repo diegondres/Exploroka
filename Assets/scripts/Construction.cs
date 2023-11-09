@@ -23,10 +23,13 @@ public class Construction : MonoBehaviour
     if (Input.GetKeyDown(KeyCode.Space) && objetsAdministrator.isBuildingLocationSelected)
     {
       Vector3 buildingLocation = objetsAdministrator.GetBuildingLocation();
-      GameObject construction = Instantiate(prefabTest, buildingLocation, Quaternion.identity);
+      GameObject building = Instantiate(prefabTest, buildingLocation, Quaternion.identity);
+
+      Building buildingScript = building.GetComponent<Building>();
+      buildingScript.SetInitialValues("Casita", 100, 250, 1, 5, true); 
 
       objetsAdministrator.isBuildingLocationSelected = false;
-      objetsAdministrator.AddBuilding(construction);
+      objetsAdministrator.AddBuilding(building);
     }
 
   }

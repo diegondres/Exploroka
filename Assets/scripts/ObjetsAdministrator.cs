@@ -8,9 +8,9 @@ using UnityEngine;
 public class ObjetsAdministrator : MonoBehaviour
 {
     //LAS LISTAS DE OBJETOS Y LA LISTA DE LISTAS
-    private List<List<Tuple<int, Terreno, GameObject>>> allObjects = new();
-    private List<Tuple<int, Terreno, GameObject>> constructions = new();
-    private List<Tuple<int, Terreno, GameObject>> resources = new();
+    private readonly List<Dictionary<int, GameObject>> allObjects = new();
+    private readonly Dictionary<int, GameObject> constructions = new();
+    private readonly Dictionary<int, GameObject> resources = new();
 
     //CONSTRUCCION
     private Tuple<int, Terreno> buildingGlobalIndex;
@@ -62,6 +62,15 @@ public class ObjetsAdministrator : MonoBehaviour
         Vector3 relativePositionBuilding = terreno.GetRelativePositionInVertices(building.transform.position);
         Tuple<int, Terreno> indexBuilding = terreno.GetIndexGlobal(relativePositionBuilding);
         
-        constructions.Add(new Tuple<int, Terreno, GameObject>(indexBuilding.Item1, indexBuilding.Item2, building));
+        int indexBuildingDict = indexBuilding.Item1 + indexBuilding.Item2.id * 1000;
+        constructions.Add(indexBuildingDict, building);
+
+    }
+
+    public GameObject IsSomethingBuiltInHere(Tuple<int, Terreno> globalIndex){
+        int indexDict = globalIndex.Item2.id*1000 + globalIndex.Item1;
+
+        if(constructions.ContainsKey(indexDict)) return constructions[indexDict];
+        return null;
     }
 }

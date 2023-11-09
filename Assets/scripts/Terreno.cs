@@ -25,6 +25,9 @@ public class Terreno : MonoBehaviour
   //tamaño del terreno en cantidad de escaques
   private float sizeTerrainInVertices;
 
+  //RECURSOS
+  bool canConsumeResource = false;
+  Resource resourceSelected;
 
   void Start()
   {
@@ -62,14 +65,23 @@ public class Terreno : MonoBehaviour
         mousePosition = rayo.GetPoint(distancia);
         Vector3 relativePosition = GetRelativePositionInVertices(mousePosition);
         Tuple<int, Terreno> globalIndex = GetIndexGlobal(relativePosition);
-        GameObject building = objetsAdministrator.IsSomethingBuiltInHere(globalIndex); 
-        if(building != null && building.GetComponent<Building>() != null){
-          building.GetComponent<Building>().PrintBuildingValues();
+        GameObject thing = objetsAdministrator.IsSomethingBuiltInHere(globalIndex); 
+        if(thing != null ){
+          if(thing.GetComponent<Building>() != null) thing.GetComponent<Building>().PrintBuildingValues();
+          else if (thing.GetComponent<Resource>() != null) {
+            resourceSelected = thing.GetComponent<Resource>();
+            resourceSelected.PrintResourceValues();
+            canConsumeResource = true;
+            }
         }
         else {
           objetsAdministrator.SelectEscaqueToBuildIn(globalIndex);
         }
       }
+    }
+    if(canConsumeResource && Input.GetKeyDown(KeyCode.E)){
+      canConsumeResource = false;
+      resourceSelected.Consume();
     }
   }
 
@@ -80,7 +92,7 @@ public class Terreno : MonoBehaviour
   {
     position += movement;
     Vector3 relativePositionInVertices = GetRelativePositionInVertices(position);
-    Debug.Log(relativePositionInVertices);
+
     if (GetTerrain(relativePositionInVertices) != null)
     {
       Terreno neighboor = GetTerrain(relativePositionInVertices);

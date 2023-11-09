@@ -23,6 +23,8 @@ public class ObjetsAdministrator : MonoBehaviour
     void Start()
     {
         terrainAdministrator = GetComponent<TerrainAdministrator>();
+        allObjects.Add(constructions);
+        allObjects.Add(resources);
     }
 
     public void SelectEscaqueToBuildIn(Tuple<int, Terreno> globalIndex)
@@ -64,13 +66,23 @@ public class ObjetsAdministrator : MonoBehaviour
         
         int indexBuildingDict = indexBuilding.Item1 + indexBuilding.Item2.id * 1000;
         constructions.Add(indexBuildingDict, building);
+    }
 
+    public void AddResource(GameObject resource){
+        Terreno terreno = terrainAdministrator.terrenoOfHero;
+        Vector3 relativePositionBuilding = terreno.GetRelativePositionInVertices(resource.transform.position);
+        Tuple<int, Terreno> indexBuilding = terreno.GetIndexGlobal(relativePositionBuilding);
+        
+        int indexBuildingDict = indexBuilding.Item1 + indexBuilding.Item2.id * 1000;
+        resources.Add(indexBuildingDict, resource);
     }
 
     public GameObject IsSomethingBuiltInHere(Tuple<int, Terreno> globalIndex){
         int indexDict = globalIndex.Item2.id*1000 + globalIndex.Item1;
-
-        if(constructions.ContainsKey(indexDict)) return constructions[indexDict];
+       
+        foreach(Dictionary<int, GameObject> dict in allObjects){
+            if(dict.ContainsKey(indexDict)) return dict[indexDict];
+        }
         return null;
     }
 }

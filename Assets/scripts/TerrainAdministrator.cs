@@ -1,15 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using UnityEngine;
 
 public class TerrainAdministrator : MonoBehaviour
 {
   [SerializeField]
   private GameObject container;
-  //TERRENOS
-  private readonly Dictionary<Vector3, GameObject> terrainDict = new();
-  int countTerrain = 0;
+  private ObjetsAdministrator objetsAdministrator;
+
+  [Header("Generacion Procedural")]
   [SerializeField]
   private GameObject Terreno;
   [SerializeField]
@@ -19,23 +21,45 @@ public class TerrainAdministrator : MonoBehaviour
   private AnimationCurve heightCurve;
   [SerializeField]
   private Wave[] waves;
+  private readonly Dictionary<Vector3, GameObject> terrainDict = new();
+  private int countTerrain = 0;
  
-  //////////////  HEROE   /////////////////////////////
+  [Header("Heroe")]
+  public int sizeOfTerrain = 200;
   [NonSerialized]
   public Terreno terrenoOfHero;
-  public int sizeOfTerrain = 200;
   private int sizeEscaque;
   private int sizeTerrainInVertices;
   private Dictionary<int, Vector3> vecindario = new();
   public List<Tuple<int, Terreno>> sorroundingEscaques = new();
 
+  [Header("Recursos")]
+  public int probabilidadRecursos = 50;
+  [SerializeField]
+  private GameObject resourcePrefab;
+
+  private List<Terreno> terrenosWithoutResources = new();
+  
+
   void Awake()
   {
+    objetsAdministrator = GetComponent<ObjetsAdministrator>();
+
     sizeEscaque = sizeOfTerrain / 20;
     sizeTerrainInVertices = sizeOfTerrain / 20;
     SetNeighboorsReference();
 
     CreateFirstTerrain();
+  }
+
+  void Update(){
+   if(terrenosWithoutResources.Count > 0){
+     foreach (Terreno terreno in terrenosWithoutResources)
+    {
+      GenerateRandomResource(terreno);
+    }
+    terrenosWithoutResources.Clear();
+   } 
   }
 
   void SetNeighboorsReference()
@@ -172,6 +196,25 @@ public class TerrainAdministrator : MonoBehaviour
     scriptGeneration.waves = waves;
 
     countTerrain++;
+
+    terrenosWithoutResources.Add(scriptNewTerreno);
+  }
+
+  public void GenerateRandomResource(Terreno terreno){
+
+    List<float> probs = new();
+    do
+    {
+      int location = UnityEngine.Random.Range(0,400);
+
+      Vector3 position = terreno.GetGlobalPositionFromGlobalIndex(new Tuple<int, Terreno>(location, terreno));
+      GameObject resource = Instantiate(resourcePrefab, position, Quaternion.identity);
+      objetsAdministrator.AddResource(resource);
+      Resource resourceScript = resource.GetComponent<Resource>();
+      resourceScript.SetInitialValues("Cosita", 30, false, false);
+      probs.Add(UnityEngine.Random.Range(0,100));
+    } while (probs.Average() > probabilidadRecursos);
+
   }
 
   public bool CompareTwoEscaques(Tuple<int, Terreno> escaque1, Tuple<int, Terreno> escaque2)

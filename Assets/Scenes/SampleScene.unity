@@ -387,6 +387,8 @@ MonoBehaviour:
     frequency: 0.25
     amplitude: 4
   sizeOfTerrain: 400
+  probabilidadRecursos: 75
+  resourcePrefab: {fileID: 2414270832215534975, guid: 8fe0b0087cdd18846afffeee60293ea0, type: 3}
 --- !u!4 &247045837
 Transform:
   m_ObjectHideFlags: 0

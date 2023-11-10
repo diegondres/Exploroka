@@ -8,23 +8,24 @@ public class Resource : MonoBehaviour
     private List<string> tags;
 
     //AGOTAMIENTO
-    private int quantiity;
+    private int quantity;
     private bool canRunOut = false;
+    public int indexDict;
 
     //EXTRACCION
     private bool extractionInInfluenceZone = false;
 
-    public void SetInitialValues(string ResourceName, int quantiity, bool canRunOut, bool extractionInInfluenceZone)
+    public void SetInitialValues(string ResourceName, int quantity, bool canRunOut, bool extractionInInfluenceZone)
     {
         this.ResourceName = ResourceName;
-        this.quantiity = quantiity;
+        this.quantity = quantity;
         this.canRunOut = canRunOut;
         this.extractionInInfluenceZone = extractionInInfluenceZone;
     }
 
     public void PrintResourceValues()
     {
-        Debug.Log("Name: " + ResourceName + ";\n" + "quantity: " + quantiity + ";\n" + "Can Run Out?: " + canRunOut);
+        Debug.Log("Name: " + ResourceName + ";\n" + "quantity: " + quantity + ";\n" + "Can Run Out?: " + canRunOut);
     }
 
     public void Consume()

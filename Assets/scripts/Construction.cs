@@ -7,7 +7,8 @@ public class Construction : MonoBehaviour
 
   [SerializeField]
   private GameObject prefabTest;
-
+  [SerializeField]
+  private GameObject containerConstructions;
   private TerrainAdministrator terrainAdministrator;
   private ObjetsAdministrator objetsAdministrator;
   // Start is called before the first frame update
@@ -24,6 +25,7 @@ public class Construction : MonoBehaviour
     {
       Vector3 buildingLocation = objetsAdministrator.GetBuildingLocation();
       GameObject building = Instantiate(prefabTest, buildingLocation, Quaternion.identity);
+      building.transform.SetParent(containerConstructions.transform);
 
       Building buildingScript = building.GetComponent<Building>();
       buildingScript.SetInitialValues("Casita", 100, 250, 1, 5, true); 

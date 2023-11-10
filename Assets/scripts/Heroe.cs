@@ -144,7 +144,7 @@ public class Heroe : MonoBehaviour
     isMoving = true;
 
     Vector3 startPosition = transform.position;
-    Vector3 endPosition = transform.position + movement;
+    Vector3 endPosition =  terrainAdministrator.MoveHero(transform.position, movement);
 
     float elapsedTime = 0f;
     while (elapsedTime < moveDuration)
@@ -161,27 +161,5 @@ public class Heroe : MonoBehaviour
     MoveHero(Vector3.zero, rotation);
     isMoving = false;
   }
-  /*
-  private Terreno DetectTerrenoDown(){
-    Vector3 origen = new(transform.position.x, 0.1f, transform.position.z);
-    Ray rayito = new(origen, Vector3.down);
-
-    if (Physics.Raycast(rayito, out RaycastHit hitInfo, longRayCast))
-    {
-      if (hitInfo.collider.gameObject.TryGetComponent<Terreno>(out var terreno))
-      {
-        return terreno;
-      }
-      else
-      {
-        return null;
-      }
-    }
-    return null;
-  }
-
-  public void UpdateTerrainReference(){
-    tempPlanes = DetectTerrenoDown();
-  }
-  */
+ 
 }

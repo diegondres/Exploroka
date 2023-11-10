@@ -260,6 +260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabTest: {fileID: 7297524597540266947, guid: 16bf2e9e322f20f4d934482431881ba9, type: 3}
+  containerConstructions: {fileID: 1636852927}
 --- !u!1 &247045835
 GameObject:
   m_ObjectHideFlags: 0
@@ -291,7 +292,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d3864b8b07f2fc4ca518098bf7eaec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  container: {fileID: 1931665749}
+  containerTerrenos: {fileID: 1931665749}
+  containerResources: {fileID: 1581138136}
   Terreno: {fileID: 5626073509183861393, guid: f7fb85bb61f6e614d8148c0ef1d7ce99, type: 3}
   terrainTypes:
   - name: water
@@ -429,7 +431,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d79386c42bdfcfa448ffc691fcd1f19f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isBuildingLocationSelected: 0
 --- !u!1 &478111240
 GameObject:
   m_ObjectHideFlags: 0
@@ -1002,7 +1003,7 @@ Camera:
   m_GameObject: {fileID: 1455671842}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -1057,8 +1058,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   protagonista: {fileID: 202133884}
-  offset: {x: 0, y: 180, z: 0}
+  offset: {x: 0, y: 300, z: 0}
   suavidad: 5
+--- !u!1 &1581138136
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1581138137}
+  m_Layer: 0
+  m_Name: Recursos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1581138137
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1581138136}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1606570552
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1124,6 +1156,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
+--- !u!1 &1636852927
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1636852928}
+  m_Layer: 0
+  m_Name: Constructions
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1636852928
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1636852927}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1814963408 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6287154971356572514, guid: f7fb85bb61f6e614d8148c0ef1d7ce99, type: 3}
@@ -1244,3 +1307,5 @@ SceneRoots:
   - {fileID: 1931665750}
   - {fileID: 247045837}
   - {fileID: 202133884}
+  - {fileID: 1581138137}
+  - {fileID: 1636852928}

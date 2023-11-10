@@ -14,10 +14,12 @@ public class ObjetsAdministrator : MonoBehaviour
 
     //CONSTRUCCION
     private Tuple<int, Terreno> buildingGlobalIndex;
+    [NonSerialized]
     public bool isBuildingLocationSelected = false;
 
     //COSAS
     private TerrainAdministrator terrainAdministrator;
+    public int multiplier = 10000;
 
     // Start is called before the first frame update
     void Start()
@@ -64,21 +66,21 @@ public class ObjetsAdministrator : MonoBehaviour
         Vector3 relativePositionBuilding = terreno.GetRelativePositionInVertices(building.transform.position);
         Tuple<int, Terreno> indexBuilding = terreno.GetIndexGlobal(relativePositionBuilding);
         
-        int indexBuildingDict = indexBuilding.Item1 + indexBuilding.Item2.id * 1000;
+        int indexBuildingDict = indexBuilding.Item1 + indexBuilding.Item2.id * multiplier;
         constructions.Add(indexBuildingDict, building);
     }
 
-    public void AddResource(GameObject resource){
-        Terreno terreno = terrainAdministrator.terrenoOfHero;
+    public void AddResource(GameObject resource, Terreno terreno){
         Vector3 relativePositionBuilding = terreno.GetRelativePositionInVertices(resource.transform.position);
         Tuple<int, Terreno> indexBuilding = terreno.GetIndexGlobal(relativePositionBuilding);
         
-        int indexBuildingDict = indexBuilding.Item1 + indexBuilding.Item2.id * 1000;
+        int indexBuildingDict = indexBuilding.Item1 + indexBuilding.Item2.id * multiplier;
+        resource.GetComponent<Resource>().indexDict = indexBuildingDict;
         resources.Add(indexBuildingDict, resource);
     }
 
     public GameObject IsSomethingBuiltInHere(Tuple<int, Terreno> globalIndex){
-        int indexDict = globalIndex.Item2.id*1000 + globalIndex.Item1;
+        int indexDict = globalIndex.Item2.id*multiplier + globalIndex.Item1;
        
         foreach(Dictionary<int, GameObject> dict in allObjects){
             if(dict.ContainsKey(indexDict)) return dict[indexDict];

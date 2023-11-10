@@ -3,12 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
 public class TerrainAdministrator : MonoBehaviour
 {
   [SerializeField]
-  private GameObject container;
+  private GameObject containerTerrenos;
+  [SerializeField]
+  private GameObject containerResources;
   private ObjetsAdministrator objetsAdministrator;
 
   [Header("Generacion Procedural")]
@@ -53,14 +56,19 @@ public class TerrainAdministrator : MonoBehaviour
   }
 
   void Update(){
+
    if(terrenosWithoutResources.Count > 0){
      foreach (Terreno terreno in terrenosWithoutResources)
     {
-      GenerateRandomResource(terreno);
+      StartCoroutine(InvokeBueno(terreno));
     }
     terrenosWithoutResources.Clear();
    } 
   }
+  private IEnumerator InvokeBueno(Terreno terreno){
+      yield return new WaitForSeconds(1f);
+      GenerateRandomResource(terreno);
+    }
 
   void SetNeighboorsReference()
   {
@@ -79,9 +87,9 @@ public class TerrainAdministrator : MonoBehaviour
   /// </summary>
   private void CreateFirstTerrain()
   {
-    for (int i = -1; i < 2; i++)
+    for (int i = -2; i < 3; i++)
     {
-      for (int j = -1; j < 2; j++)
+      for (int j = -2; j < 3; j++)
       {
         CreateTerrain(new(0 + i * sizeOfTerrain, 0, 0 + j * sizeOfTerrain));
       }
@@ -145,20 +153,28 @@ public class TerrainAdministrator : MonoBehaviour
   {
     terrenoOfHero = terreno;
     FillNeighborhood(terreno);
+
+    foreach (Terreno item in terreno.neighboors)
+    {
+      FillNeighborhood(item);
+    }
+
+
   }
 
   private void FillNeighborhood(Terreno terreno)
   {
-    Terreno[] terr = terreno.neighboors;
+    Terreno[] neighboor = terreno.neighboors;
     Vector3 position = terreno.GetPosition();
 
-    for (int i = 0; i < terr.Length; i++)
+    for (int i = 0; i < neighboor.Length; i++)
     {
-      if (terr[i] == null)
+      if (neighboor[i] == null)
       {
         CreateTerrain(position + vecindario[i]);
       }
     }
+   
   }
   public bool IsTerrainActive(Terreno terreno)
   {
@@ -181,7 +197,7 @@ public class TerrainAdministrator : MonoBehaviour
   private void CreateTerrain(Vector3 position)
   {
     GameObject newTerreno = Instantiate(Terreno, position, Quaternion.identity);
-    newTerreno.transform.SetParent(container.transform);
+    newTerreno.transform.SetParent(containerTerrenos.transform);
     newTerreno.transform.localScale = new Vector3(sizeTerrainInVertices, sizeTerrainInVertices, sizeTerrainInVertices);
 
     Terreno scriptNewTerreno = newTerreno.GetComponent<Terreno>();
@@ -206,12 +222,15 @@ public class TerrainAdministrator : MonoBehaviour
     do
     {
       int location = UnityEngine.Random.Range(0,400);
-
       Vector3 position = terreno.GetGlobalPositionFromGlobalIndex(new Tuple<int, Terreno>(location, terreno));
+      
       GameObject resource = Instantiate(resourcePrefab, position, Quaternion.identity);
-      objetsAdministrator.AddResource(resource);
+      resource.transform.SetParent(containerResources.transform);
+      objetsAdministrator.AddResource(resource, terreno);
+      
       Resource resourceScript = resource.GetComponent<Resource>();
-      resourceScript.SetInitialValues("Cosita", 30, false, false);
+      resourceScript.SetInitialValues("Cosita", location, false, false);
+      
       probs.Add(UnityEngine.Random.Range(0,100));
     } while (probs.Average() > probabilidadRecursos);
 

@@ -63,23 +63,30 @@ public class Terreno : MonoBehaviour
       if (plano.Raycast(rayo, out float distancia))
       {
         mousePosition = rayo.GetPoint(distancia);
+
         Vector3 relativePosition = GetRelativePositionInVertices(mousePosition);
         Tuple<int, Terreno> globalIndex = GetIndexGlobal(relativePosition);
-        GameObject thing = objetsAdministrator.IsSomethingBuiltInHere(globalIndex); 
-        if(thing != null ){
-          if(thing.GetComponent<Building>() != null) thing.GetComponent<Building>().PrintBuildingValues();
-          else if (thing.GetComponent<Resource>() != null) {
+        Debug.DrawRay(camara.transform.position, GetGlobalPositionFromGlobalIndex(globalIndex) - camara.transform.position, Color.red, 2);
+
+        GameObject thing = objetsAdministrator.IsSomethingBuiltInHere(globalIndex);
+        if (thing != null)
+        {
+          if (thing.GetComponent<Building>() != null) thing.GetComponent<Building>().PrintBuildingValues();
+          else if (thing.GetComponent<Resource>() != null)
+          {
             resourceSelected = thing.GetComponent<Resource>();
             resourceSelected.PrintResourceValues();
             canConsumeResource = true;
-            }
+          }
         }
-        else {
+        else
+        {
           objetsAdministrator.SelectEscaqueToBuildIn(globalIndex);
         }
       }
     }
-    if(canConsumeResource && Input.GetKeyDown(KeyCode.E)){
+    if (canConsumeResource && Input.GetKeyDown(KeyCode.E))
+    {
       canConsumeResource = false;
       resourceSelected.Consume();
     }
@@ -102,11 +109,26 @@ public class Terreno : MonoBehaviour
     }
     else
     {
-      PrintSorroundingEscaques(relativePositionInVertices);
-      objetsAdministrator.isBuildingLocationSelected = false;
+      if (IsWalkable(relativePositionInVertices))
+      {
 
-      return CenterInEscaqueToGlobal(relativePositionInVertices, 6f);
+        PrintSorroundingEscaques(relativePositionInVertices);
+        objetsAdministrator.isBuildingLocationSelected = false;
+
+        return CenterInEscaqueToGlobal(relativePositionInVertices, 6f);
+      }
+      else
+      {
+        relativePositionInVertices = GetRelativePositionInVertices(position - movement);
+        return CenterInEscaqueToGlobal(relativePositionInVertices, 6f);
+      }
     }
+
+  }
+
+  public bool IsWalkable(Vector3 relativePositionInVertices)
+  {
+    return terrainGeneration.GetTerrainType(relativePositionInVertices) != "water";
   }
 
   public Vector3 CalculateDistance(Vector3 actualPosition, Vector3 destiny)
@@ -194,7 +216,7 @@ public class Terreno : MonoBehaviour
     float relativePositionX = globalIndex.Item1 % 200 > 0 ? ejeX - sizeTerrainInVertices / 2 + 0.5f : ejeX - sizeTerrainInVertices / 2 + 1 - 0.5f;
     float relativePositionZ = wea2 % 2 == 0 ? globalIndex.Item1 - ejeX * sizeTerrainInVertices - (sizeTerrainInVertices / 2 - 1) - 0.5f : globalIndex.Item1 - ejeX * sizeTerrainInVertices - sizeTerrainInVertices / 2 + 0.5f;
 
-    return globalIndex.Item2.CenterInEscaqueToGlobal(new Vector3(relativePositionZ, 0, relativePositionX), 5);
+    return globalIndex.Item2.CenterInEscaqueToGlobal(new Vector3(relativePositionZ, 0f, relativePositionX), 5f);
   }
 
   public Terreno GetTerrain(Vector3 relativePositionInVertices)

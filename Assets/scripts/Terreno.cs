@@ -55,19 +55,13 @@ public class Terreno : MonoBehaviour
   {
     if (Input.GetMouseButtonDown(0) && terrainAdministrator.IsTerrainActive(this))
     {
-      Plane plano = new(Vector3.up, transform.position);
-      Vector3 mousePosition;
-
       Ray rayo = camara.ScreenPointToRay(Input.mousePosition);
 
-      if (plano.Raycast(rayo, out float distancia))
-      {
-        mousePosition = rayo.GetPoint(distancia);
-
-        Vector3 relativePosition = GetRelativePositionInVertices(mousePosition);
+      if (Physics.Raycast(rayo, out RaycastHit hit, 1000)) {
+        Vector3 destino = hit.point;
+        Vector3 relativePosition = GetRelativePositionInVertices(destino);
         Tuple<int, Terreno> globalIndex = GetIndexGlobal(relativePosition);
-        Debug.DrawRay(camara.transform.position, GetGlobalPositionFromGlobalIndex(globalIndex) - camara.transform.position, Color.red, 2);
-
+     
         GameObject thing = objetsAdministrator.IsSomethingBuiltInHere(globalIndex);
         if (thing != null)
         {

@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using UnityEngine;
 
 public class Terreno : MonoBehaviour
@@ -11,6 +8,7 @@ public class Terreno : MonoBehaviour
   //TERRENOS VECINOS
   public Terreno[] neighboors = new Terreno[8];
   private TerrainAdministrator terrainAdministrator;
+  private ObjetsAdministrator objetsAdministrator;
   private TerrainGeneration terrainGeneration;
   public int id;
   private Camera camara;
@@ -27,6 +25,9 @@ public class Terreno : MonoBehaviour
   //tamaño del terreno en cantidad de escaques
   private float sizeTerrainInVertices;
 
+  //RECURSOS
+  bool canConsumeResource = false;
+  Resource resourceSelected;
 
   void Start()
   {
@@ -36,10 +37,11 @@ public class Terreno : MonoBehaviour
   //////////////////////////////----------START-----------//////////////////////////////////////////////////////////////
   void Inicialization()
   {
-    tileRenderer = GetComponent<MeshRenderer>();
     terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
+    objetsAdministrator = FindAnyObjectByType<ObjetsAdministrator>();
     sizeEscaque = terrainAdministrator.GetSizeEscaque();
     sizeTerrainInVertices = terrainAdministrator.GetSizeTerrainInVertices();
+    tileRenderer = GetComponent<MeshRenderer>();
     terrainGeneration = GetComponent<TerrainGeneration>();
     camara = FindAnyObjectByType<Camera>();
 
@@ -53,17 +55,34 @@ public class Terreno : MonoBehaviour
   {
     if (Input.GetMouseButtonDown(0) && terrainAdministrator.IsTerrainActive(this))
     {
-      Plane plano = new(Vector3.up, transform.position);
-      Vector3 mousePosition;
-
       Ray rayo = camara.ScreenPointToRay(Input.mousePosition);
 
-      if (plano.Raycast(rayo, out float distancia))
-      {
-        mousePosition = rayo.GetPoint(distancia);
-        Vector3 relativePosition = GetRelativePositionInVertices(mousePosition);
-        terrainAdministrator.SelectEscaqueToBuildIn(GetIndexGlobal(relativePosition));
+      if (Physics.Raycast(rayo, out RaycastHit hit, 1000)) {
+        Vector3 destino = hit.point;
+        Vector3 relativePosition = GetRelativePositionInVertices(destino);
+        Tuple<int, Terreno> globalIndex = GetIndexGlobal(relativePosition);
+     
+        GameObject thing = objetsAdministrator.IsSomethingBuiltInHere(globalIndex);
+        if (thing != null)
+        {
+          if (thing.GetComponent<Building>() != null) thing.GetComponent<Building>().PrintBuildingValues();
+          else if (thing.GetComponent<Resource>() != null)
+          {
+            resourceSelected = thing.GetComponent<Resource>();
+            resourceSelected.PrintResourceValues();
+            canConsumeResource = true;
+          }
+        }
+        else
+        {
+          objetsAdministrator.SelectEscaqueToBuildIn(globalIndex);
+        }
       }
+    }
+    if (canConsumeResource && Input.GetKeyDown(KeyCode.E))
+    {
+      canConsumeResource = false;
+      resourceSelected.Consume();
     }
   }
 
@@ -74,7 +93,7 @@ public class Terreno : MonoBehaviour
   {
     position += movement;
     Vector3 relativePositionInVertices = GetRelativePositionInVertices(position);
-    Debug.Log(relativePositionInVertices);
+
     if (GetTerrain(relativePositionInVertices) != null)
     {
       Terreno neighboor = GetTerrain(relativePositionInVertices);
@@ -84,13 +103,28 @@ public class Terreno : MonoBehaviour
     }
     else
     {
-      PrintSorroundingEscaques(relativePositionInVertices);
-      terrainAdministrator.isBuildingLocationSelected = false;
+      if (IsWalkable(relativePositionInVertices))
+      {
 
-      return CenterInEscaqueToGlobal(relativePositionInVertices, 6f);
+        PrintSorroundingEscaques(relativePositionInVertices);
+        objetsAdministrator.isBuildingLocationSelected = false;
+
+        return CenterInEscaqueToGlobal(relativePositionInVertices, 6f);
+      }
+      else
+      {
+        relativePositionInVertices = GetRelativePositionInVertices(position - movement);
+        return CenterInEscaqueToGlobal(relativePositionInVertices, 6f);
+      }
     }
+
   }
- 
+
+  public bool IsWalkable(Vector3 relativePositionInVertices)
+  {
+    return terrainGeneration.GetTerrainType(relativePositionInVertices) != "water";
+  }
+
   public Vector3 CalculateDistance(Vector3 actualPosition, Vector3 destiny)
   {
     Vector3 relativeActualPositionInVertices = GetRelativePositionInVertices(actualPosition);
@@ -143,7 +177,7 @@ public class Terreno : MonoBehaviour
   {
     return (int)((relativePosition.z + sizeTerrainInVertices / 2) * sizeTerrainInVertices + relativePosition.x);
   }
-  Tuple<int, Terreno> GetIndexGlobal(Vector3 relativePositionInVertices)
+  public Tuple<int, Terreno> GetIndexGlobal(Vector3 relativePositionInVertices)
   {
     Terreno terreno = GetTerrain(relativePositionInVertices) != null ? GetTerrain(relativePositionInVertices) : this;
     Vector3 globalPosition = GetGlobalPositionFromRelative(relativePositionInVertices);
@@ -153,7 +187,7 @@ public class Terreno : MonoBehaviour
     return new Tuple<int, Terreno>(index, terreno);
   }
 
-   public Vector3 CenterInEscaqueToGlobal(Vector3 relativePositionInVertices, float offsetY)
+  public Vector3 CenterInEscaqueToGlobal(Vector3 relativePositionInVertices, float offsetY)
   {
     float sizeSquareX = relativePositionInVertices.x >= 0 ? sizeEscaque / 2 : -sizeEscaque / 2;
     float sizeSquareZ = relativePositionInVertices.z >= 0 ? sizeEscaque / 2 : -sizeEscaque / 2;
@@ -176,7 +210,7 @@ public class Terreno : MonoBehaviour
     float relativePositionX = globalIndex.Item1 % 200 > 0 ? ejeX - sizeTerrainInVertices / 2 + 0.5f : ejeX - sizeTerrainInVertices / 2 + 1 - 0.5f;
     float relativePositionZ = wea2 % 2 == 0 ? globalIndex.Item1 - ejeX * sizeTerrainInVertices - (sizeTerrainInVertices / 2 - 1) - 0.5f : globalIndex.Item1 - ejeX * sizeTerrainInVertices - sizeTerrainInVertices / 2 + 0.5f;
 
-    return globalIndex.Item2.CenterInEscaqueToGlobal(new Vector3(relativePositionZ, 0, relativePositionX), 5);
+    return globalIndex.Item2.CenterInEscaqueToGlobal(new Vector3(relativePositionZ, 0f, relativePositionX), 5f);
   }
 
   public Terreno GetTerrain(Vector3 relativePositionInVertices)

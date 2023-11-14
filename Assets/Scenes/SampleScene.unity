@@ -260,6 +260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabTest: {fileID: 7297524597540266947, guid: 16bf2e9e322f20f4d934482431881ba9, type: 3}
+  containerConstructions: {fileID: 1636852927}
 --- !u!1 &247045835
 GameObject:
   m_ObjectHideFlags: 0
@@ -271,6 +272,7 @@ GameObject:
   - component: {fileID: 247045837}
   - component: {fileID: 247045836}
   - component: {fileID: 247045838}
+  - component: {fileID: 247045839}
   m_Layer: 0
   m_Name: Controlador de juego
   m_TagString: Untagged
@@ -290,45 +292,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d3864b8b07f2fc4ca518098bf7eaec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  biomes:
-  - biomes:
-    - name: desert
-      color: {r: 1, g: 0.69752777, b: 0.1462264, a: 0}
-    - name: grassland
-      color: {r: 0.69747025, g: 0.8962264, b: 0.12259703, a: 0}
-    - name: tundra
-      color: {r: 0.24448201, g: 0.5931091, b: 0.7735849, a: 0}
-    - name: tundra
-      color: {r: 0.24448201, g: 0.5931091, b: 0.7735849, a: 0}
-  - biomes:
-    - name: savanna
-      color: {r: 0.9472873, g: 1, b: 0, a: 0}
-    - name: savanna
-      color: {r: 0.9490197, g: 1, b: 0, a: 0}
-    - name: boreal forest
-      color: {r: 0.31455985, g: 1, b: 0.24056602, a: 0}
-    - name: tundra
-      color: {r: 0.24448201, g: 0.5931091, b: 0.7735849, a: 0}
-  - biomes:
-    - name: tropical rainforest
-      color: {r: 0.15659839, g: 0.46226418, b: 0.04579032, a: 0}
-    - name: boreal forest
-      color: {r: 0.9490197, g: 1, b: 0, a: 0}
-    - name: boreal forest
-      color: {r: 0.31455985, g: 1, b: 0.24056602, a: 0}
-    - name: tundra
-      color: {r: 0.24448201, g: 0.5931091, b: 0.7735849, a: 0}
-  - biomes:
-    - name: tropical rainforest
-      color: {r: 0.15659839, g: 0.46226418, b: 0.04579032, a: 0}
-    - name: tropical rainforest
-      color: {r: 0.15686275, g: 0.46274513, b: 0.04705883, a: 0}
-    - name: tundra
-      color: {r: 0.24313727, g: 0.5921569, b: 0.7725491, a: 0}
-    - name: tundra
-      color: {r: 0.24448201, g: 0.5931091, b: 0.7735849, a: 0}
+  containerTerrenos: {fileID: 1931665749}
+  containerResources: {fileID: 1581138136}
   Terreno: {fileID: 5626073509183861393, guid: f7fb85bb61f6e614d8148c0ef1d7ce99, type: 3}
-  container: {fileID: 1931665749}
   terrainTypes:
   - name: water
     threshold: 0.3
@@ -342,40 +308,6 @@ MonoBehaviour:
     threshold: 1
     color: {r: 0.5283019, g: 0.27140886, b: 0.042363837, a: 0}
     index: 2
-  heatTerrainTypes:
-  - name: hottest
-    threshold: 0.25
-    color: {r: 1, g: 0.10849059, b: 0.10849059, a: 0}
-    index: 0
-  - name: hot
-    threshold: 0.5
-    color: {r: 1, g: 0.93181515, b: 0.1462264, a: 0}
-    index: 1
-  - name: cold
-    threshold: 0.75
-    color: {r: 0.019579919, g: 0.14206071, b: 0.8301887, a: 0}
-    index: 2
-  - name: coldest
-    threshold: 1
-    color: {r: 0.12691349, g: 0.64752257, b: 0.8679245, a: 0}
-    index: 3
-  moistureTerrainTypes:
-  - name: dryest
-    threshold: 0.25
-    color: {r: 0.9528302, g: 0.049439307, b: 0.049439307, a: 0}
-    index: 0
-  - name: dry
-    threshold: 0.5
-    color: {r: 0.8860281, g: 0.9529412, b: 0.050980363, a: 0}
-    index: 1
-  - name: wet
-    threshold: 0.75
-    color: {r: 0.050980363, g: 0.85297143, b: 0.9529412, a: 0}
-    index: 2
-  - name: wettest
-    threshold: 1
-    color: {r: 0.057493754, g: 0.10024926, b: 0.6415094, a: 0}
-    index: 3
   heightMultiplier: 250
   heightCurve:
     serializedVersion: 2
@@ -437,54 +369,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  heatCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  moistureCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
   waves:
   - seed: 5931
     frequency: 1
@@ -504,29 +388,9 @@ MonoBehaviour:
   - seed: 96358
     frequency: 0.25
     amplitude: 4
-  heatWaves:
-  - seed: 3215
-    frequency: 1
-    amplitude: 1
-  - seed: 63254
-    frequency: 0.5
-    amplitude: 0.25
-  - seed: 4125
-    frequency: 0.25
-    amplitude: 4
-  moistureWaves:
-  - seed: 3698
-    frequency: 1
-    amplitude: 1
-  - seed: 3625
-    frequency: 0.5
-    amplitude: 0.25
-  - seed: 123123
-    frequency: 0.25
-    amplitude: 4
-  heroe: {fileID: 202133885}
   sizeOfTerrain: 400
-  isBuildingLocationSelected: 0
+  probabilidadRecursos: 75
+  resourcePrefab: {fileID: 2414270832215534975, guid: 8fe0b0087cdd18846afffeee60293ea0, type: 3}
 --- !u!4 &247045837
 Transform:
   m_ObjectHideFlags: 0
@@ -554,7 +418,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ec995b87f2376e43ba25a92dcb6d0cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: 10
+  scale: 15
+--- !u!114 &247045839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 247045835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d79386c42bdfcfa448ffc691fcd1f19f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &478111240
 GameObject:
   m_ObjectHideFlags: 0
@@ -1127,7 +1003,7 @@ Camera:
   m_GameObject: {fileID: 1455671842}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -1182,8 +1058,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   protagonista: {fileID: 202133884}
-  offset: {x: 0, y: 180, z: 0}
+  offset: {x: 0, y: 300, z: 0}
   suavidad: 5
+--- !u!1 &1581138136
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1581138137}
+  m_Layer: 0
+  m_Name: Recursos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1581138137
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1581138136}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1606570552
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1249,6 +1156,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
+--- !u!1 &1636852927
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1636852928}
+  m_Layer: 0
+  m_Name: Constructions
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1636852928
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1636852927}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1814963408 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6287154971356572514, guid: f7fb85bb61f6e614d8148c0ef1d7ce99, type: 3}
@@ -1369,3 +1307,5 @@ SceneRoots:
   - {fileID: 1931665750}
   - {fileID: 247045837}
   - {fileID: 202133884}
+  - {fileID: 1581138137}
+  - {fileID: 1636852928}

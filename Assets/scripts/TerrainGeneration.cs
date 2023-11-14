@@ -60,6 +60,7 @@ public class TerrainGeneration : MonoBehaviour
     private Color waterColor = Color.blue;
     private float[,] heightMap;
     private int tileDepth, tileWidth;
+    TerrainType[,] chosenHeightTerrainTypes;
 
     // Start is called before the first frame update
     void Start()
@@ -82,7 +83,7 @@ public class TerrainGeneration : MonoBehaviour
 
         GetHeightMap(waves);
 
-        TerrainType[,] chosenHeightTerrainTypes = new TerrainType[tileDepth, tileWidth];
+        chosenHeightTerrainTypes = new TerrainType[tileDepth, tileWidth];
         Texture2D heightTexture = BuildTexture(heightTerrainTypes, chosenHeightTerrainTypes);
 
         tileRenderer.material.mainTexture = heightTexture;
@@ -302,6 +303,13 @@ public class TerrainGeneration : MonoBehaviour
         float meanHeight = (heightMap[zIndex, xIndex] + heightMap[zIndex + 1, xIndex] + heightMap[zIndex, xIndex + 1] + heightMap[zIndex + 1, xIndex + 1]) / 4;
 
         return heightCurve.Evaluate(meanHeight) * heightMultiplier * gameObject.transform.localScale.y;
+    }
+
+    public string GetTerrainType(Vector3 relativePositionInVertices){
+        int xIndex = (int)(relativePositionInVertices.x + sizeTerrainInVertices / 2);
+        int zIndex = (int)(relativePositionInVertices.z + sizeTerrainInVertices / 2);
+
+        return chosenHeightTerrainTypes[zIndex, xIndex].name;
     }
 }
 

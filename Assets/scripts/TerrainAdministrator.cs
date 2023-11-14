@@ -1,15 +1,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
 public class TerrainAdministrator : MonoBehaviour
 {
   [SerializeField]
-  private GameObject container;
-  //TERRENOS
-  private readonly Dictionary<Vector3, GameObject> terrainDict = new();
-  int countTerrain = 0;
+  private GameObject containerTerrenos;
+  [SerializeField]
+  private GameObject containerResources;
+  private ObjetsAdministrator objetsAdministrator;
+
+  [Header("Generacion Procedural")]
   [SerializeField]
   private GameObject Terreno;
   [SerializeField]
@@ -19,29 +24,51 @@ public class TerrainAdministrator : MonoBehaviour
   private AnimationCurve heightCurve;
   [SerializeField]
   private Wave[] waves;
+  private readonly Dictionary<Vector3, GameObject> terrainDict = new();
+  private int countTerrain = 0;
  
-  //////////////  HEROE   /////////////////////////////
-  private Terreno terrenoOfHero;
+  [Header("Heroe")]
   public int sizeOfTerrain = 200;
+  [NonSerialized]
+  public Terreno terrenoOfHero;
   private int sizeEscaque;
   private int sizeTerrainInVertices;
   private Dictionary<int, Vector3> vecindario = new();
   public List<Tuple<int, Terreno>> sorroundingEscaques = new();
 
-  //CONSTRUCCION
-  private Tuple<int, Terreno> buildingGlobalIndex;
-  public bool isBuildingLocationSelected = false;
+  [Header("Recursos")]
+  public int probabilidadRecursos = 50;
+  [SerializeField]
+  private GameObject resourcePrefab;
 
+  private List<Terreno> terrenosWithoutResources = new();
+  
 
   void Awake()
   {
+    objetsAdministrator = GetComponent<ObjetsAdministrator>();
+
     sizeEscaque = sizeOfTerrain / 20;
     sizeTerrainInVertices = sizeOfTerrain / 20;
     SetNeighboorsReference();
 
     CreateFirstTerrain();
-
   }
+
+  void Update(){
+
+   if(terrenosWithoutResources.Count > 0){
+     foreach (Terreno terreno in terrenosWithoutResources)
+    {
+      StartCoroutine(InvokeBueno(terreno));
+    }
+    terrenosWithoutResources.Clear();
+   } 
+  }
+  private IEnumerator InvokeBueno(Terreno terreno){
+      yield return new WaitForSeconds(1f);
+      GenerateRandomResource(terreno);
+    }
 
   void SetNeighboorsReference()
   {
@@ -55,19 +82,14 @@ public class TerrainAdministrator : MonoBehaviour
     vecindario.Add(7, new Vector3(sizeOfTerrain, 0, sizeOfTerrain));
   }
 
-  void Update()
-  {
-
-  }
-
   /// <summary>
   /// Creacion del primer grupo de planos que entregan la formacion inicial de terreno
   /// </summary>
   private void CreateFirstTerrain()
   {
-    for (int i = -1; i < 2; i++)
+    for (int i = -2; i < 3; i++)
     {
-      for (int j = -1; j < 2; j++)
+      for (int j = -2; j < 3; j++)
       {
         CreateTerrain(new(0 + i * sizeOfTerrain, 0, 0 + j * sizeOfTerrain));
       }
@@ -131,20 +153,28 @@ public class TerrainAdministrator : MonoBehaviour
   {
     terrenoOfHero = terreno;
     FillNeighborhood(terreno);
+
+    foreach (Terreno item in terreno.neighboors)
+    {
+      FillNeighborhood(item);
+    }
+
+
   }
 
   private void FillNeighborhood(Terreno terreno)
   {
-    Terreno[] terr = terreno.neighboors;
+    Terreno[] neighboor = terreno.neighboors;
     Vector3 position = terreno.GetPosition();
 
-    for (int i = 0; i < terr.Length; i++)
+    for (int i = 0; i < neighboor.Length; i++)
     {
-      if (terr[i] == null)
+      if (neighboor[i] == null)
       {
         CreateTerrain(position + vecindario[i]);
       }
     }
+   
   }
   public bool IsTerrainActive(Terreno terreno)
   {
@@ -156,7 +186,7 @@ public class TerrainAdministrator : MonoBehaviour
     List<Tuple<int, Terreno>> visitedEscaques = sorroundingEscaques;
     foreach (Tuple<int, Terreno> escaque in visitedEscaques)
     {
-      if (CompareToEscaques(visitedEscaque, escaque))
+      if (CompareTwoEscaques(visitedEscaque, escaque))
       {
         return true;
       }
@@ -164,31 +194,10 @@ public class TerrainAdministrator : MonoBehaviour
     return false;
   }
 
-   public void SelectEscaqueToBuildIn(Tuple<int, Terreno> globalIndex)
-  {
-    
-    if (IsThisEscaqueVisited(globalIndex))
-    {
-      if(isBuildingLocationSelected){
-        if (globalIndex.Item1 == buildingGlobalIndex.Item1 ){
-          buildingGlobalIndex.Item2.PaintPixelInfluence(buildingGlobalIndex.Item1, Color.red);
-          isBuildingLocationSelected = false;
-          return;        
-        }
-        buildingGlobalIndex.Item2.PaintPixelInfluence(buildingGlobalIndex.Item1, Color.red);
-        
-      }
-
-      isBuildingLocationSelected = true;
-      SetBuildingLocation(globalIndex);
-      globalIndex.Item2.PaintPixelInfluence(globalIndex.Item1, Color.gray);    
-    }
-  }
-
   private void CreateTerrain(Vector3 position)
   {
     GameObject newTerreno = Instantiate(Terreno, position, Quaternion.identity);
-    newTerreno.transform.SetParent(container.transform);
+    newTerreno.transform.SetParent(containerTerrenos.transform);
     newTerreno.transform.localScale = new Vector3(sizeTerrainInVertices, sizeTerrainInVertices, sizeTerrainInVertices);
 
     Terreno scriptNewTerreno = newTerreno.GetComponent<Terreno>();
@@ -203,27 +212,37 @@ public class TerrainAdministrator : MonoBehaviour
     scriptGeneration.waves = waves;
 
     countTerrain++;
+
+    terrenosWithoutResources.Add(scriptNewTerreno);
   }
 
-  public void SetBuildingLocation(Tuple<int, Terreno> pos)
-  {
-    buildingGlobalIndex = pos;
-  }
-  public Vector3 GetBuildingLocation()
-  {
-    isBuildingLocationSelected = false;
-    buildingGlobalIndex.Item2.PaintPixelInfluence(buildingGlobalIndex.Item1, Color.red);
+  public void GenerateRandomResource(Terreno terreno){
 
-    return buildingGlobalIndex.Item2.GetGlobalPositionFromGlobalIndex(buildingGlobalIndex);
+    List<float> probs = new();
+    do
+    {
+      int location = UnityEngine.Random.Range(0,400);
+      Vector3 position = terreno.GetGlobalPositionFromGlobalIndex(new Tuple<int, Terreno>(location, terreno));
+      
+      GameObject resource = Instantiate(resourcePrefab, position, Quaternion.identity);
+      resource.transform.SetParent(containerResources.transform);
+      objetsAdministrator.AddResource(resource, terreno);
+      
+      Resource resourceScript = resource.GetComponent<Resource>();
+      resourceScript.SetInitialValues("Cosita", location, false, false);
+      
+      probs.Add(UnityEngine.Random.Range(0,100));
+    } while (probs.Average() > probabilidadRecursos);
+
   }
 
-  public bool CompareToEscaques(Tuple<int, Terreno> tuple1, Tuple<int, Terreno> tuple2)
+  public bool CompareTwoEscaques(Tuple<int, Terreno> escaque1, Tuple<int, Terreno> escaque2)
   {
     bool item1 = false;
     bool item2 = false;
 
-    if (tuple1.Item1 == tuple2.Item1) item1 = true;
-    if (tuple1.Item2.id == tuple1.Item2.id) item2 = true;
+    if (escaque1.Item1 == escaque2.Item1) item1 = true;
+    if (escaque1.Item2.id == escaque1.Item2.id) item2 = true;
 
     return item1 && item2;
   }

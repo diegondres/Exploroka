@@ -10,8 +10,6 @@ public class TerrainAdministrator : MonoBehaviour
 {
   [SerializeField]
   private GameObject containerTerrenos;
-  [SerializeField]
-  private GameObject containerResources;
   private ObjetsAdministrator objetsAdministrator;
 
   [Header("Generacion Procedural")]
@@ -36,13 +34,9 @@ public class TerrainAdministrator : MonoBehaviour
   private Dictionary<int, Vector3> vecindario = new();
   public List<Tuple<int, Terreno>> sorroundingEscaques = new();
 
-  [Header("Recursos")]
-  public int probabilidadRecursos = 50;
-  [SerializeField]
-  private GameObject resourcePrefab;
-
-  private List<Terreno> terrenosWithoutResources = new();
   
+  private List<Terreno> terrenosWithoutResources = new();
+  public List<Tuple<Tuple<int, Terreno>, City>> influencedEscaques = new();
 
   void Awake()
   {
@@ -67,9 +61,17 @@ public class TerrainAdministrator : MonoBehaviour
   }
   private IEnumerator InvokeBueno(Terreno terreno){
       yield return new WaitForSeconds(1f);
-      GenerateRandomResource(terreno);
+      objetsAdministrator.GenerateRandomResource(terreno);
     }
 
+
+  public void PaintInfluence(){
+    Debug.Log("tamaño de esta wea influenciada: " + influencedEscaques.Count);
+    foreach (Tuple<Tuple<int, Terreno>, City> item in influencedEscaques)
+    {
+      item.Item1.Item2.PaintPixelInfluence(item.Item1.Item1, Color.magenta);
+    }
+  }
   void SetNeighboorsReference()
   {
     vecindario.Add(0, new Vector3(-sizeOfTerrain, 0, -sizeOfTerrain));
@@ -216,25 +218,6 @@ public class TerrainAdministrator : MonoBehaviour
     terrenosWithoutResources.Add(scriptNewTerreno);
   }
 
-  public void GenerateRandomResource(Terreno terreno){
-
-    List<float> probs = new();
-    do
-    {
-      int location = UnityEngine.Random.Range(0,400);
-      Vector3 position = terreno.GetGlobalPositionFromGlobalIndex(new Tuple<int, Terreno>(location, terreno));
-      
-      GameObject resource = Instantiate(resourcePrefab, position, Quaternion.identity);
-      resource.transform.SetParent(containerResources.transform);
-      objetsAdministrator.AddResource(resource, terreno);
-      
-      Resource resourceScript = resource.GetComponent<Resource>();
-      resourceScript.SetInitialValues("Cosita", location, false, false);
-      
-      probs.Add(UnityEngine.Random.Range(0,100));
-    } while (probs.Average() > probabilidadRecursos);
-
-  }
 
   public bool CompareTwoEscaques(Tuple<int, Terreno> escaque1, Tuple<int, Terreno> escaque2)
   {

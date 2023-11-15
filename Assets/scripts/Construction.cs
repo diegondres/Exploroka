@@ -14,8 +14,9 @@ public class Construction : MonoBehaviour
   // Start is called before the first frame update
   void Start()
   {
-    terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
-    objetsAdministrator = FindAnyObjectByType<ObjetsAdministrator>();
+    //terrainAdministrator = this.gameObject.FindAnyObjectByType<TerrainAdministrator>();
+    terrainAdministrator = GameObject.FindGameObjectWithTag("Respawn").GetComponent<TerrainAdministrator>();
+    objetsAdministrator = GameObject.FindGameObjectWithTag("Respawn").GetComponent<ObjetsAdministrator>(); //FindAnyObjectByType<ObjetsAdministrator>();
   }
 
   // Update is called once per frame

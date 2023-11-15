@@ -31,10 +31,10 @@ public class Heroe : MonoBehaviour
   void Start()
   {
     destino = transform.position;
-    terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
-    terrainAdministrator.InWhatTerrenoAmI(transform.position);
+    terrainAdministrator = GameObject.FindGameObjectWithTag("Respawn").GetComponent<TerrainAdministrator>();
+        terrainAdministrator.InWhatTerrenoAmI(transform.position);
     sizeEscaque = terrainAdministrator.GetSizeEscaque();
-    camara = FindAnyObjectByType<Camera>();
+    camara = GameObject.FindGameObjectWithTag("Finish").GetComponent<Camera>();
     //TODO: se tiene que hacer un arreglo para que el personaje inicie en una referencia correcta del terreno
     //MoveHero(movement, 0.0f);
   }

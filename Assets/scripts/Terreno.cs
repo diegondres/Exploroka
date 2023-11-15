@@ -37,15 +37,15 @@ public class Terreno : MonoBehaviour
   //////////////////////////////----------START-----------//////////////////////////////////////////////////////////////
   void Inicialization()
   {
-    terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
-    objetsAdministrator = FindAnyObjectByType<ObjetsAdministrator>();
-    sizeEscaque = terrainAdministrator.GetSizeEscaque();
+    terrainAdministrator = GameObject.FindGameObjectWithTag("Respawn").GetComponent<TerrainAdministrator>();
+        objetsAdministrator = GameObject.FindGameObjectWithTag("Respawn").GetComponent<ObjetsAdministrator>();
+        sizeEscaque = terrainAdministrator.GetSizeEscaque();
     sizeTerrainInVertices = terrainAdministrator.GetSizeTerrainInVertices();
     tileRenderer = GetComponent<MeshRenderer>();
     terrainGeneration = GetComponent<TerrainGeneration>();
-    camara = FindAnyObjectByType<Camera>();
+    camara = GameObject.FindGameObjectWithTag("Finish").GetComponent<Camera>();
 
-    worldPositionTerrain = transform.parent.TransformPoint(transform.localPosition);
+        worldPositionTerrain = transform.parent.TransformPoint(transform.localPosition);
   }
 
   //////////////////////////////----------START-----------//////////////////////////////////////////////////////////////

@@ -19,6 +19,11 @@ public class NoiseGeneration : MonoBehaviour
     public float escalaMontanhoso = 4;
     public float escalaCadenaMontanha = 3;
     public float escalaMontanha = 3;
+    public float escalaPantanoso;
+    public float escalaCadenaPantano;
+    public float escalaBiomas;
+
+    public float xColoracion;
 
     [SerializeField]
     private float scale = 10;
@@ -42,21 +47,63 @@ public class NoiseGeneration : MonoBehaviour
         float nAgua = 0.3f;
         Color32 color = new Color32(0,100,255,0);
         Color32 rojo = new Color32(255, 70, 70, 0);
+        Color32 montanhos = new Color32(180, 80, 0, 0);
+        Color32 nieve = new Color32(255, 255, 255, 0);
+        Color32 pantano = new Color32(0, 155, 255, 0);
+
+
+        Color32 desierto = new Color32(255, 255, 0, 0);
+        Color32 bosque = new Color32(0, 80, 0, 0);
+        Color32 tundra = new Color32(0, 200, 200, 0);
+        Color32 jungla = new Color32(0, 80, 0, 0);
+
 
 
         float h = Perlinazo(x, y, 1, 0);
         float montanhaMisma = Perlinazo(x, y, escalaMontanha, 7);
         float montanhaCadena = EvaluarSpline(Perlinazo(x, y, escalaCadenaMontanha, 6), "cadena");
         float zonaMontanhosa = EvaluarSpline(Perlinazo(x, y, escalaMontanhoso, 8), "montañaDonde");
-        h += montanhaMisma * montanhaCadena * zonaMontanhosa;
+
+        float zonaCarcavosa = EvaluarSpline(Perlinazo(x, y, escalaPantanoso, 9), "carcavasDonde");
+        float carcavasCadena = EvaluarSpline(Perlinazo(x, y, escalaCadenaPantano, 10), "carcavas");
+
+        float pp = Perlinazo(x, y, escalaBiomas, 11);
+        float temp = Perlinazo(x, y, escalaBiomas, 12);
+
+        h += montanhaMisma * montanhaCadena * zonaMontanhosa - zonaCarcavosa*carcavasCadena;
         if (h > nAgua) {
             color = new Color32((byte)((h-nAgua)*155), 215, 0, 0);
             if(zonaMontanhosa > 0.3f) {
-                color = rojo;
+                color = montanhos;
+            } else if (zonaMontanhosa > 0.25f) {
+                color = Color.Lerp(montanhos, color, 0.5f);
+            } else if (zonaCarcavosa > 0.3f) {
+                color = Color.Lerp(pantano, color, 0.5f);
+                if (carcavasCadena > 0.25f) {
+                    color = pantano;
+                }
+            } else {
+                if(pp>0.5f) {
+                    color = Color.Lerp(color, bosque, (pp - 0.5f) * xColoracion);
+                } else {
+                    color = Color.Lerp(color, desierto, (0.5f - pp)* xColoracion);
+                }
+                /*
+                if (temp > 0.5f) {
+                    color = Color.Lerp(color, jungla, (temp - 0.5f)* xColoracion);
+                } else {
+                    color = Color.Lerp(color, tundra, (0.5f - temp)* xColoracion);
+                }
+                */
             }
-            if (montanhaCadena > 0.3f) {
-                color = new Color32(255, 200, 70, 0);
+            
+            
+            
+            if (h > 0.85f) {
+                color = nieve;
             }
+
+
         } else {
             h = nAgua;
         }

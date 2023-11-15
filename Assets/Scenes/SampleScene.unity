@@ -413,6 +413,10 @@ MonoBehaviour:
   escalaMontanhoso: 0.7
   escalaCadenaMontanha: 2
   escalaMontanha: 2
+  escalaPantanoso: 0.3
+  escalaCadenaPantano: 2
+  escalaBiomas: 0.7
+  xColoracion: 5
   scale: 15
   semilla: 0
   Esplines:
@@ -538,6 +542,125 @@ MonoBehaviour:
         value: 0
         inSlope: -0.03262376
         outSlope: -0.03262376
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  - nombre: carcavas
+    inputStart: 0
+    inputEnd: 1
+    escala: 1
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0.020832062
+        value: 0.0047187805
+        inSlope: 0.014919713
+        outSlope: 0.014919713
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.3667127
+        value: 0.00987922
+        inSlope: -0.007928476
+        outSlope: -0.007928476
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.6740926
+        outWeight: 1
+      - serializedVersion: 3
+        time: 0.41218394
+        value: 0.09038472
+        inSlope: 2.268805
+        outSlope: 2.268805
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.36368138
+      - serializedVersion: 3
+        time: 0.47330144
+        value: 0.9118041
+        inSlope: -0.014761389
+        outSlope: -0.014761389
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 1
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.507186
+        value: 0.2957911
+        inSlope: -0.27744478
+        outSlope: -0.27744478
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 1
+      - serializedVersion: 3
+        time: 0.57556015
+        value: 0.011555782
+        inSlope: 0.0049009947
+        outSlope: 0.0049009947
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.73358023
+        outWeight: 0.47123542
+      - serializedVersion: 3
+        time: 0.9791565
+        value: 0
+        inSlope: -0.028632028
+        outSlope: -0.028632028
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  - nombre: carcavasDonde
+    inputStart: 0
+    inputEnd: 1
+    escala: 1
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: -0.051216125
+        value: -0.0001296997
+        inSlope: 0.01179505
+        outSlope: 0.01179505
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.45366266
+        value: 0.0058253706
+        inSlope: 0.028327148
+        outSlope: 0.028327148
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.594177
+      - serializedVersion: 3
+        time: 0.8031281
+        value: 0.9944784
+        inSlope: 0.08991722
+        outSlope: 0.08991722
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0.028046643
+        outSlope: 0.028046643
         tangentMode: 34
         weightedMode: 0
         inWeight: 0.33333334

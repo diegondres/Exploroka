@@ -157,6 +157,9 @@ public class TerrainAdministrator : MonoBehaviour
     foreach (Terreno item in terreno.neighboors)
     {
       FillNeighborhood(item);
+        foreach (Terreno item2 in item.neighboors) {
+            FillNeighborhood(item2);
+        }
     }
 
 

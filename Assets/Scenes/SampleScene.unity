@@ -239,6 +239,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minimumTime: 0.2
   moveDuration: 0.02
+  vel: 20
 --- !u!114 &202133887
 MonoBehaviour:
   m_ObjectHideFlags: 0

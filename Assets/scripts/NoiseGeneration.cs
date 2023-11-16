@@ -68,15 +68,15 @@ public class NoiseGeneration : MonoBehaviour
         float carcavasCadena = EvaluarSpline(Perlinazo(x, y, escalaCadenaPantano, 10), "carcavas");
 
         float pp = Perlinazo(x, y, escalaBiomas, 11);
-        float temp = Perlinazo(x, y, escalaBiomas, 12);
+        float temp = Perlinazo(x, y, escalaBiomas, 120);
 
         h += montanhaMisma * montanhaCadena * zonaMontanhosa - zonaCarcavosa*carcavasCadena;
         if (h > nAgua) {
             color = new Color32((byte)((h-nAgua)*155), 215, 0, 0);
-            if(zonaMontanhosa > 0.3f) {
+            if(zonaMontanhosa > 0.5f) {
                 color = montanhos;
-            } else if (zonaMontanhosa > 0.25f) {
-                color = Color.Lerp(montanhos, color, 0.5f);
+            } else if (zonaMontanhosa > 0.1f) {
+                color = Color.Lerp(color,montanhos, 0.5f);
             } else if (zonaCarcavosa > 0.3f) {
                 color = Color.Lerp(pantano, color, 0.5f);
                 if (carcavasCadena > 0.25f) {
@@ -88,6 +88,11 @@ public class NoiseGeneration : MonoBehaviour
                 } else {
                     color = Color.Lerp(color, desierto, (0.5f - pp)* xColoracion);
                 }
+
+                if(temp>0.5f) {
+                    //color = rojo;
+                }
+
                 /*
                 if (temp > 0.5f) {
                     color = Color.Lerp(color, jungla, (temp - 0.5f)* xColoracion);

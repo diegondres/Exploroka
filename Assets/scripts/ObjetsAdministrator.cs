@@ -75,7 +75,7 @@ public class ObjetsAdministrator : MonoBehaviour
         Vector3 relativePositionBuilding = terreno.GetRelativePositionInVertices(building.transform.position);
         Tuple<int, Terreno> indexBuilding = terreno.GetIndexGlobal(relativePositionBuilding);
 
-        int indexBuildingDict = indexBuilding.Item1 + indexBuilding.Item2.id * multiplier;
+        int indexBuildingDict = GetNumericIndex(indexBuilding);
         constructions.Add(indexBuildingDict, building);
     }
 
@@ -84,14 +84,14 @@ public class ObjetsAdministrator : MonoBehaviour
         Vector3 relativePositionBuilding = terreno.GetRelativePositionInVertices(resource.transform.position);
         Tuple<int, Terreno> indexBuilding = terreno.GetIndexGlobal(relativePositionBuilding);
 
-        int indexBuildingDict = indexBuilding.Item1 + indexBuilding.Item2.id * multiplier;
+        int indexBuildingDict = GetNumericIndex(indexBuilding);
         resource.GetComponent<Resource>().indexDict = indexBuildingDict;
         resources.Add(indexBuildingDict, resource);
     }
 
     public GameObject IsSomethingBuiltInHere(Tuple<int, Terreno> globalIndex)
     {
-        int indexDict = globalIndex.Item2.id * multiplier + globalIndex.Item1;
+        int indexDict = GetNumericIndex(globalIndex);
 
         foreach (Dictionary<int, GameObject> dict in allObjects)
         {
@@ -119,5 +119,17 @@ public class ObjetsAdministrator : MonoBehaviour
 
             probs.Add(UnityEngine.Random.Range(0, 100));
         } while (probs.Average() > probabilidadRecursos);
+    }
+
+    public int GetNumericIndex(Tuple<int, Terreno> index){
+        return index.Item2.id * multiplier + index.Item1;
+    }
+
+    public Tuple<int, Terreno> GetIndexFromNumeric(int num){
+        int id = num / multiplier;
+        int index = num - id* multiplier;
+        Terreno terreno = terrainAdministrator.idTerrainDict[id];
+
+        return new Tuple<int, Terreno>(index, terreno);
     }
 }

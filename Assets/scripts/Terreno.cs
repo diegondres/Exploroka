@@ -1,24 +1,29 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Terreno : MonoBehaviour
 {
+
+  private const float limitTime = 0.3f;
+  private float acumulatedTime = 0f;
+  bool isSorroundingEscaquesPainted = false;
   private Vector3 worldPositionTerrain;
   //TERRENOS VECINOS
+  [NonSerialized]
   public Terreno[] neighboors = new Terreno[8];
+  [NonSerialized]
+  public int id;
   private TerrainAdministrator terrainAdministrator;
   private ObjetsAdministrator objetsAdministrator;
   private TerrainGeneration terrainGeneration;
-  public int id;
   private Camera camara;
-
 
   //GENERACION PROCEDURAL
   [NonSerialized]
   public Color32[] originalPixels;
   private MeshRenderer tileRenderer;
-
 
   //Tamaño de cada uno de los escaques
   private int sizeEscaque;
@@ -48,41 +53,63 @@ public class Terreno : MonoBehaviour
     worldPositionTerrain = transform.parent.TransformPoint(transform.localPosition);
   }
 
+  private void IdleTime(float num)
+  {
+    acumulatedTime = num;
+  }
   //////////////////////////////----------START-----------//////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   void Update()
   {
-    if (Input.GetMouseButtonDown(0) && terrainAdministrator.IsTerrainActive(this))
+    if (terrainAdministrator.IsTerrainActive(this))
     {
-      Ray rayo = camara.ScreenPointToRay(Input.mousePosition);
-
-      if (Physics.Raycast(rayo, out RaycastHit hit, 1000)) {
-        Vector3 destino = hit.point;
-        Vector3 relativePosition = GetRelativePositionInVertices(destino);
-        Tuple<int, Terreno> globalIndex = GetIndexGlobal(relativePosition);
-     
-        GameObject thing = objetsAdministrator.IsSomethingBuiltInHere(globalIndex);
-        if (thing != null)
+      if (acumulatedTime > limitTime && !isSorroundingEscaquesPainted)
+      {
+        foreach (Tuple<int, Terreno> escaque in terrainAdministrator.sorroundingEscaques)
         {
-          if (thing.GetComponent<Building>() != null) thing.GetComponent<Building>().PrintBuildingValues();
-          else if (thing.GetComponent<Resource>() != null)
+          escaque.Item2.PaintPixelInfluence(escaque.Item1, Color.red);
+        }
+        isSorroundingEscaquesPainted = true;
+      }
+      else if(acumulatedTime <= limitTime)
+      {
+        IdleTime(acumulatedTime + Time.deltaTime);
+        isSorroundingEscaquesPainted = false;
+      }
+
+      if (Input.GetMouseButtonDown(0))
+      {
+        Ray rayo = camara.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(rayo, out RaycastHit hit, 1000))
+        {
+          Vector3 destino = hit.point;
+          Vector3 relativePosition = GetRelativePositionInVertices(destino);
+          Tuple<int, Terreno> globalIndex = GetIndexGlobal(relativePosition);
+
+          GameObject thing = objetsAdministrator.IsSomethingBuiltInHere(globalIndex);
+          if (thing != null)
           {
-            resourceSelected = thing.GetComponent<Resource>();
-            resourceSelected.PrintResourceValues();
-            canConsumeResource = true;
+            if (thing.GetComponent<Building>() != null) thing.GetComponent<Building>().PrintBuildingValues();
+            else if (thing.GetComponent<Resource>() != null)
+            {
+              resourceSelected = thing.GetComponent<Resource>();
+              resourceSelected.PrintResourceValues();
+              canConsumeResource = true;
+            }
+          }
+          else
+          {
+            objetsAdministrator.SelectEscaqueToBuildIn(globalIndex);
           }
         }
-        else
-        {
-          objetsAdministrator.SelectEscaqueToBuildIn(globalIndex);
-        }
       }
-    }
-    if (canConsumeResource && Input.GetKeyDown(KeyCode.E))
-    {
-      canConsumeResource = false;
-      resourceSelected.Consume();
+      if (canConsumeResource && Input.GetKeyDown(KeyCode.E))
+      {
+        canConsumeResource = false;
+        resourceSelected.Consume();
+      }
     }
   }
 
@@ -91,6 +118,7 @@ public class Terreno : MonoBehaviour
 
   public Vector3 Move(Vector3 position, Vector3 movement)
   {
+    IdleTime(0);
     position += movement;
     Vector3 relativePositionInVertices = GetRelativePositionInVertices(position);
 
@@ -106,7 +134,7 @@ public class Terreno : MonoBehaviour
       if (IsWalkable(relativePositionInVertices))
       {
 
-        PrintSorroundingEscaques(relativePositionInVertices);
+        AddSorroundingEscaques(relativePositionInVertices);
         objetsAdministrator.isBuildingLocationSelected = false;
 
         return CenterInEscaqueToGlobal(relativePositionInVertices, 6f);
@@ -136,10 +164,9 @@ public class Terreno : MonoBehaviour
     return CenterInEscaqueToGlobal(relativeActualPositionInVertices, 6f) - GetGlobalPositionFromGlobalIndex(destinyGlobalIndex);
   }
 
-  private void PrintSorroundingEscaques(Vector3 relativePositionInVertices)
+  private void AddSorroundingEscaques(Vector3 relativePositionInVertices)
   {
-
-    CleanVisitedEscaques(terrainAdministrator.sorroundingEscaques);
+    CleanVisitedEscaques();
 
     for (int i = -1; i < 2; i++)
     {
@@ -151,20 +178,16 @@ public class Terreno : MonoBehaviour
         }
       }
     }
-
-    foreach (Tuple<int, Terreno> escaque in terrainAdministrator.sorroundingEscaques)
-    {
-      escaque.Item2.PaintPixelInfluence(escaque.Item1, Color.red);
-    }
   }
 
-  void CleanVisitedEscaques(List<Tuple<int, Terreno>> terreno)
+  void CleanVisitedEscaques()
   {
-    foreach (Tuple<int, Terreno> escaque in terreno)
+    List<Tuple<int, Terreno>> globalIndex = terrainAdministrator.sorroundingEscaques;
+    foreach (Tuple<int, Terreno> escaque in globalIndex)
     {
       escaque.Item2.ReturnPixelToOriginal(escaque.Item1);
     }
-    terreno.Clear();
+    globalIndex.Clear();
   }
   //////////////////////////////----------MOVIMIENTO-----------/////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -263,7 +286,7 @@ public class Terreno : MonoBehaviour
     Texture2D texture2D = (Texture2D)tileRenderer.material.mainTexture;
     Color32[] pixs = texture2D.GetPixels32();
 
-    pixs[index] = Color.Lerp(originalPixels[index], color, 0.45f);
+    pixs[index] = Color.Lerp(originalPixels[index], color, 0.35f);
 
     texture2D.SetPixels32(pixs);
     texture2D.Apply();
@@ -278,6 +301,10 @@ public class Terreno : MonoBehaviour
 
     texture2D.SetPixels32(pixs);
     texture2D.Apply();
+  }
+  public void UpdateOriginalPixel(int index, Color32 color)
+  {
+    originalPixels[index] = Color.Lerp(originalPixels[index], color, 0.35f); ;
   }
 
   public void PaintAll(Color32[] pixs)

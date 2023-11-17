@@ -7,26 +7,23 @@ using UnityEngine.UIElements;
 
 public class Heroe : MonoBehaviour
 {
-  //[SerializeField]
-  //private float velocidad = 5f; // Velocidad de movimiento del personaje
+  [Header("Movilidad")]
   [SerializeField]
   private float minimumTime = 0.0f;
-
   [SerializeField]
   private float moveDuration = 0.1f;
   private bool isMoving = false;
-
-  // private float longRayCast = 10f;
-
-  private Camera camara;
-  private Vector3 destino;
   private float distancia = 0.0f;
-  private TerrainAdministrator terrainAdministrator;
-  private Vector3 movement = Vector3.zero;
-  private float rotation;
-  private Vector3 distanciaEnVector = Vector3.zero;
   private float acumulatedTime = 0.0f;
   private int sizeEscaque;
+  private float rotation;
+  
+  //REFERENCIAS
+  private Camera camara;
+  private Vector3 destino;
+  private TerrainAdministrator terrainAdministrator;
+  private Vector3 distanciaEnVector = Vector3.zero;
+  private Vector3 movement = Vector3.zero;
 
   void Start()
   {

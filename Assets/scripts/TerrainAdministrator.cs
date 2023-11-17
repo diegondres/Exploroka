@@ -23,6 +23,7 @@ public class TerrainAdministrator : MonoBehaviour
   [SerializeField]
   private Wave[] waves;
   private readonly Dictionary<Vector3, GameObject> terrainDict = new();
+  public readonly Dictionary<int, Terreno> idTerrainDict = new();
   private int countTerrain = 0;
  
   [Header("Heroe")]
@@ -31,12 +32,13 @@ public class TerrainAdministrator : MonoBehaviour
   public Terreno terrenoOfHero;
   private int sizeEscaque;
   private int sizeTerrainInVertices;
-  private Dictionary<int, Vector3> vecindario = new();
+  private readonly Dictionary<int, Vector3> vecindario = new();
   public List<Tuple<int, Terreno>> sorroundingEscaques = new();
 
   
-  private List<Terreno> terrenosWithoutResources = new();
-  public List<Tuple<Tuple<int, Terreno>, City>> influencedEscaques = new();
+  [NonSerialized]
+  public Dictionary<int, City> influencedEscaques = new();
+  private readonly List<Terreno> terrenosWithoutResources = new();
 
   void Awake()
   {
@@ -63,13 +65,17 @@ public class TerrainAdministrator : MonoBehaviour
       yield return new WaitForSeconds(1f);
       objetsAdministrator.GenerateRandomResource(terreno);
     }
-
+  private IEnumerator ReturnToOriginal(Tuple<int, Terreno> tuple){
+      yield return new WaitForSeconds(1f);
+      tuple.Item2.ReturnPixelToOriginal(tuple.Item1);
+    }
 
   public void PaintInfluence(){
-    Debug.Log("tamaño de esta wea influenciada: " + influencedEscaques.Count);
-    foreach (Tuple<Tuple<int, Terreno>, City> item in influencedEscaques)
+    foreach (var pair in influencedEscaques)
     {
-      item.Item1.Item2.PaintPixelInfluence(item.Item1.Item1, Color.magenta);
+      Tuple<int, Terreno> globalIndex = objetsAdministrator.GetIndexFromNumeric(pair.Key);
+      globalIndex.Item2.PaintPixelInfluence(globalIndex.Item1, Color.magenta);
+      StartCoroutine(ReturnToOriginal(globalIndex));
     }
   }
   void SetNeighboorsReference()
@@ -148,9 +154,10 @@ public class TerrainAdministrator : MonoBehaviour
 
   public Vector3 MoveHero(Vector3 position, Vector3 movement)
   {
+
     return terrenoOfHero.Move(position, movement);
   }
-
+ 
   public void SetTerrenoOfHero(Terreno terreno)
   {
     terrenoOfHero = terreno;
@@ -206,6 +213,7 @@ public class TerrainAdministrator : MonoBehaviour
     ConnectWithNeighboors(scriptNewTerreno, position);
     scriptNewTerreno.id = countTerrain;
     terrainDict.Add(position, newTerreno);
+    idTerrainDict.Add(countTerrain, scriptNewTerreno);
 
     TerrainGeneration scriptGeneration = newTerreno.GetComponent<TerrainGeneration>();
     scriptGeneration.heightTerrainTypes = terrainTypes;

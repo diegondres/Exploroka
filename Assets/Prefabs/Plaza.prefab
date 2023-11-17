@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2563940510925156426}
   - component: {fileID: 6831309716872105286}
   - component: {fileID: 7265587789232787049}
-  - component: {fileID: 4175970829688320702}
+  - component: {fileID: 1954380357822723493}
   m_Layer: 0
   m_Name: Plaza
   m_TagString: Untagged
@@ -107,7 +107,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4175970829688320702
+--- !u!114 &1954380357822723493
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -116,11 +116,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 37515049012196937}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9db51714182232b41976e6cb901082fd, type: 3}
+  m_Script: {fileID: 11500000, guid: b264a6e3871885947bf0ab205482c8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 0
-  cost: 5
 --- !u!1001 &7142326389181587572
 PrefabInstance:
   m_ObjectHideFlags: 0

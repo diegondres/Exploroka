@@ -37,7 +37,7 @@ public class TerrainAdministrator : MonoBehaviour
 
   
   [NonSerialized]
-  public Dictionary<int, City> influencedEscaques = new();
+  public Dictionary<int, Town> influencedEscaques = new();
   private readonly List<Terreno> terrenosWithoutResources = new();
 
   void Awake()

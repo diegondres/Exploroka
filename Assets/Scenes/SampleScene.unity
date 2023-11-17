@@ -246,7 +246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minimumTime: 0.2
-  moveDuration: 0.25
+  moveDuration: 0.1
 --- !u!114 &202133887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -261,6 +261,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabTest: {fileID: 7297524597540266947, guid: 16bf2e9e322f20f4d934482431881ba9, type: 3}
   prefabTown: {fileID: 37515049012196937, guid: 01f7e4de64d24c741a1947788e12fb5d, type: 3}
+  prefabCity: {fileID: 1795672414065558527, guid: 045e28d6bf9e5c94ea3beec75920bcae, type: 3}
   containerConstructions: {fileID: 1636852927}
 --- !u!1 &247045835
 GameObject:
@@ -274,6 +275,7 @@ GameObject:
   - component: {fileID: 247045836}
   - component: {fileID: 247045838}
   - component: {fileID: 247045839}
+  - component: {fileID: 247045840}
   m_Layer: 0
   m_Name: Controlador de juego
   m_TagString: Untagged
@@ -432,6 +434,18 @@ MonoBehaviour:
   containerResources: {fileID: 1581138136}
   resourcePrefab: {fileID: 2414270832215534975, guid: 8fe0b0087cdd18846afffeee60293ea0, type: 3}
   probabilidadRecursos: 75
+--- !u!114 &247045840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 247045835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0326e1b30a9b0ce41b7fd3924f45e682, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &478111240
 GameObject:
   m_ObjectHideFlags: 0

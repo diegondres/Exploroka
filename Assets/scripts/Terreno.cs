@@ -315,4 +315,17 @@ public class Terreno : MonoBehaviour
     texture2D.Apply();
   }
 
+  public Town DetectCity(Vector3 relativePosition, Terreno terreno, int radio){
+    for (int i = -radio; i < radio; i++)
+    {
+      for (int j = -radio; j < radio; j++)
+      {
+        Tuple<int, Terreno> indexGlobal = terreno.GetIndexGlobal(new Vector3(relativePosition.x + i, relativePosition.y, relativePosition.z +j));
+        int numericIndex = objetsAdministrator.GetNumericIndex(indexGlobal);
+        if(terrainAdministrator.influencedEscaques.ContainsKey(numericIndex)) return terrainAdministrator.influencedEscaques[numericIndex];
+      }
+    }
+
+    return null;
+  }
 }

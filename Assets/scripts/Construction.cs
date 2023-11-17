@@ -10,10 +10,12 @@ public class Construction : MonoBehaviour
   [SerializeField]
   private GameObject prefabTown;
   [SerializeField]
+  private GameObject prefabCity;
+  [SerializeField]
   private GameObject containerConstructions;
   private TerrainAdministrator terrainAdministrator;
   private ObjetsAdministrator objetsAdministrator;
-  private int cityCounter = 0;
+  private int townCounter = 0;
 
   // Start is called before the first frame update
   void Start()
@@ -37,11 +39,24 @@ public class Construction : MonoBehaviour
 
       if (Input.GetKeyDown(KeyCode.F))
       {
-        GameObject city = InstanciateObject(prefabTown);
-        City cityScript = city.GetComponent<City>();
-        cityScript.id = cityCounter;
+        GameObject town = InstanciateObject(prefabTown);
+        Town townScript = town.GetComponent<Town>();
+        townScript.id = townCounter;
 
-        cityCounter++;
+        Terreno terreno = terrainAdministrator.terrenoOfHero;
+        Town detectedCity = terreno.DetectCity(terreno.GetRelativePositionInVertices(town.transform.position), terreno, 60);
+
+        if (detectedCity == null)
+        {
+          GameObject city = Instantiate(prefabCity, transform.position, Quaternion.identity);
+          town.transform.SetParent(city.transform);
+          townScript.city = city.GetComponent<City>();
+        }else{
+          townScript.city = detectedCity.city;
+          town.transform.SetParent(detectedCity.city.transform);
+        }
+
+        townCounter++;
       }
     }
   }

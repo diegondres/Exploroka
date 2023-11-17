@@ -56,7 +56,7 @@ public class TerrainAdministrator : MonoBehaviour
   }
 
   void Update(){
-
+        /*
    if(terrenosWithoutResources.Count > 0){
      foreach (Terreno terreno in terrenosWithoutResources)
     {
@@ -64,6 +64,7 @@ public class TerrainAdministrator : MonoBehaviour
     }
     terrenosWithoutResources.Clear();
    } 
+        */
   }
   private IEnumerator InvokeBueno(Terreno terreno){
       yield return new WaitForSeconds(1f);

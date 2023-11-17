@@ -77,23 +77,22 @@ public class Heroe : MonoBehaviour
         rotation = 0.0f;
         movement = Vector3.zero;
         if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && !isMoving) {
-            movement = new Vector3(0, 0, sizeEscaque* vel);
+            movement+= new Vector3(0, 0, sizeEscaque* vel);
             rotation = 0.0f;
-            StartCoroutine(ContinuosMove(movement, rotation));
         }
         if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && !isMoving) {
-            movement = new Vector3(0, 0, -sizeEscaque * vel);
+            movement+= new Vector3(0, 0, -sizeEscaque * vel);
             rotation = 180f;
-            StartCoroutine(ContinuosMove(movement, rotation));
         }
         if ((Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) && !isMoving) {
-            movement = new Vector3(sizeEscaque * vel, 0, 0);
+            movement+= new Vector3(sizeEscaque * vel, 0, 0);
             rotation = 90f;
-            StartCoroutine(ContinuosMove(movement, rotation));
         }
         if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) && !isMoving) {
-            movement = new Vector3(-sizeEscaque * vel, 0, 0);
+            movement+= new Vector3(-sizeEscaque * vel, 0, 0);
             rotation = 270f;
+        }
+        if (movement.magnitude > 0) {
             StartCoroutine(ContinuosMove(movement, rotation));
         }
         if (isMoving) {

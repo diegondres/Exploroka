@@ -19,7 +19,7 @@ GameObject:
   m_TagString: Terreno
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &6287154971356572514
 Transform:
@@ -120,16 +120,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7004ea7d359ea254aa11b5a5b420243e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  neighboors:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  id: 0
 --- !u!114 &7961761775673465301
 MonoBehaviour:
   m_ObjectHideFlags: 0

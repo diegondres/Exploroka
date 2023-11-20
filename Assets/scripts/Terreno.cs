@@ -6,7 +6,7 @@ using UnityEngine;
 public class Terreno : MonoBehaviour
 {
 
-  private const float limitTime = 0.3f;
+  private const float limitTime = 0.2f;
   private float acumulatedTime = 0f;
   bool isSorroundingEscaquesPainted = false;
   private Vector3 worldPositionTerrain;
@@ -72,12 +72,11 @@ public class Terreno : MonoBehaviour
         }
         isSorroundingEscaquesPainted = true;
       }
-      else if(acumulatedTime <= limitTime)
+      else if (acumulatedTime <= limitTime)
       {
         IdleTime(acumulatedTime + Time.deltaTime);
         isSorroundingEscaquesPainted = false;
       }
-
       if (Input.GetMouseButtonDown(0))
       {
         Ray rayo = camara.ScreenPointToRay(Input.mousePosition);
@@ -99,10 +98,9 @@ public class Terreno : MonoBehaviour
               canConsumeResource = true;
             }
           }
-          else
-          {
-            objetsAdministrator.SelectEscaqueToBuildIn(globalIndex);
-          }
+
+          objetsAdministrator.SelectEscaqueToBuildIn(globalIndex);
+
         }
       }
       if (canConsumeResource && Input.GetKeyDown(KeyCode.E))
@@ -315,14 +313,15 @@ public class Terreno : MonoBehaviour
     texture2D.Apply();
   }
 
-  public Town DetectCity(Vector3 relativePosition, Terreno terreno, int radio){
+  public Town DetectCity(Vector3 relativePosition, Terreno terreno, int radio)
+  {
     for (int i = -radio; i < radio; i++)
     {
       for (int j = -radio; j < radio; j++)
       {
-        Tuple<int, Terreno> indexGlobal = terreno.GetIndexGlobal(new Vector3(relativePosition.x + i, relativePosition.y, relativePosition.z +j));
+        Tuple<int, Terreno> indexGlobal = terreno.GetIndexGlobal(new Vector3(relativePosition.x + i, relativePosition.y, relativePosition.z + j));
         int numericIndex = objetsAdministrator.GetNumericIndex(indexGlobal);
-        if(terrainAdministrator.influencedEscaques.ContainsKey(numericIndex)) return terrainAdministrator.influencedEscaques[numericIndex];
+        if (terrainAdministrator.influencedEscaques.ContainsKey(numericIndex)) return terrainAdministrator.influencedEscaques[numericIndex];
       }
     }
 

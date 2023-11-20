@@ -30,6 +30,7 @@ public class TerrainAdministrator : MonoBehaviour
   public int sizeOfTerrain = 200;
   [NonSerialized]
   public Terreno terrenoOfHero;
+  public Vector3 positionHero = Vector3.zero;
   private int sizeEscaque;
   private int sizeTerrainInVertices;
   private readonly Dictionary<int, Vector3> vecindario = new();
@@ -155,7 +156,8 @@ public class TerrainAdministrator : MonoBehaviour
   public Vector3 MoveHero(Vector3 position, Vector3 movement)
   {
 
-    return terrenoOfHero.Move(position, movement);
+   positionHero = terrenoOfHero.Move(position, movement);
+   return positionHero;
   }
  
   public void SetTerrenoOfHero(Terreno terreno)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,7 @@ public class Construction : MonoBehaviour
   private TerrainAdministrator terrainAdministrator;
   private ObjetsAdministrator objetsAdministrator;
   private int townCounter = 0;
+  private int cityCounter = 0;
 
   // Start is called before the first frame update
   void Start()
@@ -27,9 +29,8 @@ public class Construction : MonoBehaviour
   // Update is called once per frame
   void Update()
   {
-    if (objetsAdministrator.isBuildingLocationSelected)
-    {
-      if (Input.GetKeyDown(KeyCode.Space))
+    
+      if (Input.GetKeyDown(KeyCode.Space) && CheckBuildingLocation())
       {
         GameObject building = InstanciateObject(prefabTest);
 
@@ -37,20 +38,23 @@ public class Construction : MonoBehaviour
         buildingScript.SetInitialValues("Casita", 100, 250, 1, 5, true);
       }
 
-      if (Input.GetKeyDown(KeyCode.F))
+      if (Input.GetKeyDown(KeyCode.F) && CheckBuildingLocation())
       {
         GameObject town = InstanciateObject(prefabTown);
         Town townScript = town.GetComponent<Town>();
         townScript.id = townCounter;
 
         Terreno terreno = terrainAdministrator.terrenoOfHero;
-        Town detectedCity = terreno.DetectCity(terreno.GetRelativePositionInVertices(town.transform.position), terreno, 60);
+        Town detectedCity = terreno.DetectCity(terreno.GetRelativePositionInVertices(town.transform.position), terreno, 20);
 
         if (detectedCity == null)
         {
           GameObject city = Instantiate(prefabCity, transform.position, Quaternion.identity);
           town.transform.SetParent(city.transform);
           townScript.city = city.GetComponent<City>();
+          townScript.city.id = cityCounter;
+          
+          cityCounter++;
         }else{
           townScript.city = detectedCity.city;
           town.transform.SetParent(detectedCity.city.transform);
@@ -58,7 +62,7 @@ public class Construction : MonoBehaviour
 
         townCounter++;
       }
-    }
+    
   }
 
   private GameObject InstanciateObject(GameObject prefab)
@@ -71,5 +75,22 @@ public class Construction : MonoBehaviour
     objetsAdministrator.AddBuilding(building);
 
     return building;
+  }
+
+  private bool CheckBuildingLocation(){
+    if(!objetsAdministrator.isBuildingLocationSelected) return false;
+
+    Vector3 buildingLocation = objetsAdministrator.GetBuildingLocation();
+    Terreno terreno = terrainAdministrator.terrenoOfHero;
+
+    Vector3 relativePosition = terreno.GetRelativePositionInVertices(buildingLocation);
+    Tuple<int, Terreno> index = terreno.GetIndexGlobal(relativePosition);
+    relativePosition = index.Item2.GetGlobalPositionFromGlobalIndex(index);
+    relativePosition = index.Item2.GetRelativePositionInVertices(relativePosition);
+
+    if(!index.Item2.IsWalkable(relativePosition)) return false;
+    if(objetsAdministrator.IsSomethingBuiltInHere(index) != null ) return false;
+
+    return true;
   }
 }

@@ -5,12 +5,11 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    private Dictionary<string, Tuple<int, Resource>> inventory = new();
+    public Dictionary<string, Tuple<int, Resource>> inventory = new();
 
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame

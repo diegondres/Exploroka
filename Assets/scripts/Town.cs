@@ -12,6 +12,7 @@ public class Town : MonoBehaviour
     public int cost = 5;
     private TerrainAdministrator terrainAdministrator;
     private ObjetsAdministrator objetsAdministrator;
+    private readonly int sizeInfluence = 30;
     public City city;
     
     void Start()
@@ -32,9 +33,9 @@ public class Town : MonoBehaviour
         Vector3 relativePosition = terrainAdministrator.terrenoOfHero.GetRelativePositionInVertices(transform.position);
         
 
-        for (int i = -12; i <= 12; i++)
+        for (int i = -sizeInfluence; i <= sizeInfluence; i++)
         {
-            for (int j = -12; j <= 12; j++)
+            for (int j = -sizeInfluence; j <= sizeInfluence; j++)
             {
                 if (i * i + j * j < 144)
                 {

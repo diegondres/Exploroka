@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Resource : MonoBehaviour
 {
-     public enum Tags
+    public enum Tags
     {
         arbol,
         piedra,
@@ -19,6 +19,8 @@ public class Resource : MonoBehaviour
     }
     //REFERENCIAS
     private Inventory inventory;
+    private UIAdministrator uIAdministrator;
+
 
     //COSAS DE RECURSOS
     public string ResourceName;
@@ -26,7 +28,7 @@ public class Resource : MonoBehaviour
     private Tags tags;
     [SerializeField]
     private Tags tags2;
-    public int population = 0;  
+    public int population = 0;
     public int shields = 0;
 
     //AGOTAMIENTO
@@ -41,6 +43,8 @@ public class Resource : MonoBehaviour
     void Start()
     {
         inventory = FindObjectOfType<Inventory>();
+        uIAdministrator = FindAnyObjectByType<UIAdministrator>();
+
     }
 
     // Update is called once per frame
@@ -56,7 +60,7 @@ public class Resource : MonoBehaviour
         this.canRunOut = canRunOut;
         this.extractionInInfluenceZone = extractionInInfluenceZone;
 
-        
+
     }
 
     public void PrintResourceValues()
@@ -68,9 +72,16 @@ public class Resource : MonoBehaviour
     {
         //TODO: detectar ciudad mas cercana o a la que queremos que vayan los recursos como los escudos o poblacion.
         //Si es un objeto que entregue este tipo de recursos no se debe mandar al inventario.
-        inventory.AddToInventory(this);
-        Destroy(gameObject);
-    }
+        if (tags2 != Tags.no_tallable)
+        {
+            if (population == 0 && shields == 0)
+            {
+                inventory.AddToInventory(this);
+            }
+            uIAdministrator.UpdateText(population, shields);   
+            Destroy(gameObject);
+        }
 
+    }
 
 }

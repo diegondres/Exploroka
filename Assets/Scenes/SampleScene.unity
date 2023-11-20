@@ -246,7 +246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minimumTime: 0.2
-  moveDuration: 0.25
+  moveDuration: 0.1
 --- !u!114 &202133887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,6 +260,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabTest: {fileID: 7297524597540266947, guid: 16bf2e9e322f20f4d934482431881ba9, type: 3}
+  prefabTown: {fileID: 37515049012196937, guid: 01f7e4de64d24c741a1947788e12fb5d, type: 3}
+  prefabCity: {fileID: 1795672414065558527, guid: 045e28d6bf9e5c94ea3beec75920bcae, type: 3}
   containerConstructions: {fileID: 1636852927}
 --- !u!1 &247045835
 GameObject:
@@ -273,6 +275,7 @@ GameObject:
   - component: {fileID: 247045836}
   - component: {fileID: 247045838}
   - component: {fileID: 247045839}
+  - component: {fileID: 247045840}
   m_Layer: 0
   m_Name: Controlador de juego
   m_TagString: Untagged
@@ -293,7 +296,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   containerTerrenos: {fileID: 1931665749}
-  containerResources: {fileID: 1581138136}
   Terreno: {fileID: 5626073509183861393, guid: f7fb85bb61f6e614d8148c0ef1d7ce99, type: 3}
   terrainTypes:
   - name: water
@@ -389,8 +391,6 @@ MonoBehaviour:
     frequency: 0.25
     amplitude: 4
   sizeOfTerrain: 400
-  probabilidadRecursos: 75
-  resourcePrefab: {fileID: 2414270832215534975, guid: 8fe0b0087cdd18846afffeee60293ea0, type: 3}
 --- !u!4 &247045837
 Transform:
   m_ObjectHideFlags: 0
@@ -429,6 +429,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d79386c42bdfcfa448ffc691fcd1f19f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  containerResources: {fileID: 1581138136}
+  resourcePrefab:
+  - {fileID: 3511560276588028008, guid: 44bc2926ab142884ea07f0f34a615de8, type: 3}
+  - {fileID: 6999482172890475551, guid: 33614fb84dbf4f24b8604123a06fd8b5, type: 3}
+  - {fileID: 5576103755310846304, guid: 7978399bbcb749b42aed5f8d0c9475bb, type: 3}
+  - {fileID: 6039895048328208422, guid: 228720f715accea448a01ff66fdc7ab3, type: 3}
+  - {fileID: 1561618024781362960, guid: f80c99770376de041ade9ba13e9a6b08, type: 3}
+  - {fileID: 7286429990847138010, guid: af166188b37cff542af11dddc47c8ff7, type: 3}
+  - {fileID: 8452348325840286211, guid: 40d5aba4ed76ca244bee35c9080bdd06, type: 3}
+  probabilidadRecursos: 75
+--- !u!114 &247045840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 247045835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0326e1b30a9b0ce41b7fd3924f45e682, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &478111240

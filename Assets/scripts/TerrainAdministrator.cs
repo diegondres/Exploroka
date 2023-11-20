@@ -10,8 +10,6 @@ public class TerrainAdministrator : MonoBehaviour
 {
   [SerializeField]
   private GameObject containerTerrenos;
-  [SerializeField]
-  private GameObject containerResources;
   private ObjetsAdministrator objetsAdministrator;
 
   [Header("Generacion Procedural")]
@@ -25,6 +23,7 @@ public class TerrainAdministrator : MonoBehaviour
   [SerializeField]
   private Wave[] waves;
   private readonly Dictionary<Vector3, GameObject> terrainDict = new();
+  public readonly Dictionary<int, Terreno> idTerrainDict = new();
   private int countTerrain = 0;
  
   [Header("Heroe")]
@@ -33,16 +32,13 @@ public class TerrainAdministrator : MonoBehaviour
   public Terreno terrenoOfHero;
   private int sizeEscaque;
   private int sizeTerrainInVertices;
-  private Dictionary<int, Vector3> vecindario = new();
+  private readonly Dictionary<int, Vector3> vecindario = new();
   public List<Tuple<int, Terreno>> sorroundingEscaques = new();
 
-  [Header("Recursos")]
-  public int probabilidadRecursos = 50;
-  [SerializeField]
-  private GameObject resourcePrefab;
-
-  private List<Terreno> terrenosWithoutResources = new();
   
+  [NonSerialized]
+  public Dictionary<int, Town> influencedEscaques = new();
+  private readonly List<Terreno> terrenosWithoutResources = new();
 
   void Awake()
   {
@@ -67,9 +63,21 @@ public class TerrainAdministrator : MonoBehaviour
   }
   private IEnumerator InvokeBueno(Terreno terreno){
       yield return new WaitForSeconds(1f);
-      GenerateRandomResource(terreno);
+      objetsAdministrator.GenerateRandomResource(terreno);
+    }
+  private IEnumerator ReturnToOriginal(Tuple<int, Terreno> tuple){
+      yield return new WaitForSeconds(1f);
+      tuple.Item2.ReturnPixelToOriginal(tuple.Item1);
     }
 
+  public void PaintInfluence(){
+    foreach (var pair in influencedEscaques)
+    {
+      Tuple<int, Terreno> globalIndex = objetsAdministrator.GetIndexFromNumeric(pair.Key);
+      globalIndex.Item2.PaintPixelInfluence(globalIndex.Item1, Color.magenta);
+      StartCoroutine(ReturnToOriginal(globalIndex));
+    }
+  }
   void SetNeighboorsReference()
   {
     vecindario.Add(0, new Vector3(-sizeOfTerrain, 0, -sizeOfTerrain));
@@ -146,9 +154,10 @@ public class TerrainAdministrator : MonoBehaviour
 
   public Vector3 MoveHero(Vector3 position, Vector3 movement)
   {
+
     return terrenoOfHero.Move(position, movement);
   }
-
+ 
   public void SetTerrenoOfHero(Terreno terreno)
   {
     terrenoOfHero = terreno;
@@ -204,6 +213,7 @@ public class TerrainAdministrator : MonoBehaviour
     ConnectWithNeighboors(scriptNewTerreno, position);
     scriptNewTerreno.id = countTerrain;
     terrainDict.Add(position, newTerreno);
+    idTerrainDict.Add(countTerrain, scriptNewTerreno);
 
     TerrainGeneration scriptGeneration = newTerreno.GetComponent<TerrainGeneration>();
     scriptGeneration.heightTerrainTypes = terrainTypes;
@@ -216,25 +226,6 @@ public class TerrainAdministrator : MonoBehaviour
     terrenosWithoutResources.Add(scriptNewTerreno);
   }
 
-  public void GenerateRandomResource(Terreno terreno){
-
-    List<float> probs = new();
-    do
-    {
-      int location = UnityEngine.Random.Range(0,400);
-      Vector3 position = terreno.GetGlobalPositionFromGlobalIndex(new Tuple<int, Terreno>(location, terreno));
-      
-      GameObject resource = Instantiate(resourcePrefab, position, Quaternion.identity);
-      resource.transform.SetParent(containerResources.transform);
-      objetsAdministrator.AddResource(resource, terreno);
-      
-      Resource resourceScript = resource.GetComponent<Resource>();
-      resourceScript.SetInitialValues("Cosita", location, false, false);
-      
-      probs.Add(UnityEngine.Random.Range(0,100));
-    } while (probs.Average() > probabilidadRecursos);
-
-  }
 
   public bool CompareTwoEscaques(Tuple<int, Terreno> escaque1, Tuple<int, Terreno> escaque2)
   {

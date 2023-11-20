@@ -432,7 +432,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   containerResources: {fileID: 1581138136}
-  resourcePrefab: {fileID: 2414270832215534975, guid: 8fe0b0087cdd18846afffeee60293ea0, type: 3}
+  resourcePrefab:
+  - {fileID: 3511560276588028008, guid: 44bc2926ab142884ea07f0f34a615de8, type: 3}
+  - {fileID: 6999482172890475551, guid: 33614fb84dbf4f24b8604123a06fd8b5, type: 3}
+  - {fileID: 5576103755310846304, guid: 7978399bbcb749b42aed5f8d0c9475bb, type: 3}
+  - {fileID: 6039895048328208422, guid: 228720f715accea448a01ff66fdc7ab3, type: 3}
+  - {fileID: 1561618024781362960, guid: f80c99770376de041ade9ba13e9a6b08, type: 3}
+  - {fileID: 7286429990847138010, guid: af166188b37cff542af11dddc47c8ff7, type: 3}
+  - {fileID: 8452348325840286211, guid: 40d5aba4ed76ca244bee35c9080bdd06, type: 3}
   probabilidadRecursos: 75
 --- !u!114 &247045840
 MonoBehaviour:

@@ -11,6 +11,9 @@ public class City : MonoBehaviour
     public int id = 0;
     public string nameCity;
 
+    public int population = 0;
+    public int shields = 0;
+
     
     // Start is called before the first frame update
     void Start()

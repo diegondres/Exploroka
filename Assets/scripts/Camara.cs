@@ -40,6 +40,7 @@ public class Camara : MonoBehaviour
       transform.rotation = Quaternion.Euler(new Vector3(30, -10, 0));
       camara.orthographic = true;
       camara.orthographicSize = 145;
+      camara.farClipPlane = 10000;
     }
 
 

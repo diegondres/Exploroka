@@ -22,7 +22,7 @@ public class ObjetsAdministrator : MonoBehaviour
     [SerializeField]
     private GameObject containerResources;
     [SerializeField]
-    private GameObject resourcePrefab;
+    private GameObject[] resourcePrefab;
     public int probabilidadRecursos = 50;
 
     //COSITAS
@@ -110,12 +110,10 @@ public class ObjetsAdministrator : MonoBehaviour
             int location = UnityEngine.Random.Range(0, 400);
             Vector3 position = terreno.GetGlobalPositionFromGlobalIndex(new Tuple<int, Terreno>(location, terreno));
 
-            GameObject resource = Instantiate(resourcePrefab, position, Quaternion.identity);
+            int random = UnityEngine.Random.Range(0, resourcePrefab.Length);
+            GameObject resource = Instantiate(resourcePrefab[random], position, Quaternion.identity);
             resource.transform.SetParent(containerResources.transform);
             AddResource(resource, terreno);
-
-            Resource resourceScript = resource.GetComponent<Resource>();
-            resourceScript.SetInitialValues("Cosita", location, false, false);
 
             probs.Add(UnityEngine.Random.Range(0, 100));
         } while (probs.Average() > probabilidadRecursos);

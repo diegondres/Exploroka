@@ -1,21 +1,38 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Resource : MonoBehaviour
 {
+     public enum Tags
+    {
+        arbol,
+        piedra,
+        tallable,
+        no_tallable,
+        animal,
+        planta,
+        medicinal,
+        hongo
+    }
     //REFERENCIAS
     private Inventory inventory;
 
     //COSAS DE RECURSOS
     public string ResourceName;
-    public readonly List<string> tags = new();
-
-    public readonly string[] predefinedTags = new string[] { "árbol", "piedra", "tallable", "animal", "planta", "medicinal", "hongo" };
+    [SerializeField]
+    private Tags tags;
+    [SerializeField]
+    private Tags tags2;
+    public int population = 0;  
+    public int shields = 0;
 
     //AGOTAMIENTO
     public int quantity;
     public bool canRunOut = false;
+    [NonSerialized]
     public int indexDict;
 
     //EXTRACCION
@@ -39,21 +56,18 @@ public class Resource : MonoBehaviour
         this.canRunOut = canRunOut;
         this.extractionInInfluenceZone = extractionInInfluenceZone;
 
-        int random = Random.Range(0, predefinedTags.Length);
-        tags.Add(predefinedTags[random]);
+        
     }
 
     public void PrintResourceValues()
     {
-        Debug.Log("Name: " + ResourceName + ";\n" + "quantity: " + quantity + ";\n" + "Can Run Out?: " + canRunOut);
-        foreach (string tag in tags)
-        {
-            Debug.Log(" recursos: " + tag);
-        }
+        Debug.Log("Name: " + ResourceName + ";\n" + "quantity: " + quantity + ";\n" + "Can Run Out?: " + canRunOut + " Tag: " + tags + " Tag2: " + tags2);
     }
 
     public void Consume()
     {
+        //TODO: detectar ciudad mas cercana o a la que queremos que vayan los recursos como los escudos o poblacion.
+        //Si es un objeto que entregue este tipo de recursos no se debe mandar al inventario.
         inventory.AddToInventory(this);
         Destroy(gameObject);
     }

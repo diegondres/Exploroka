@@ -12,6 +12,9 @@ public class ObjetsAdministrator : MonoBehaviour
     private readonly List<Dictionary<int, GameObject>> allObjects = new();
     private readonly Dictionary<int, GameObject> constructions = new();
     private readonly Dictionary<int, GameObject> resources = new();
+    public readonly Dictionary<int, List<GameObject>> frontiers = new();
+    public readonly List<City> cities = new();
+    public GameObject containerConstructions;
 
     //CONSTRUCCION
     private Tuple<int, Terreno> buildingGlobalIndex;
@@ -100,7 +103,6 @@ public class ObjetsAdministrator : MonoBehaviour
         return null;
     }
 
-
     public void GenerateRandomResource(Terreno terreno)
     {
 
@@ -119,15 +121,26 @@ public class ObjetsAdministrator : MonoBehaviour
         } while (probs.Average() > probabilidadRecursos);
     }
 
-    public int GetNumericIndex(Tuple<int, Terreno> index){
+    public int GetNumericIndex(Tuple<int, Terreno> index)
+    {
         return index.Item2.id * multiplier + index.Item1;
     }
 
-    public Tuple<int, Terreno> GetIndexFromNumeric(int num){
+    public Tuple<int, Terreno> GetIndexFromNumeric(int num)
+    {
         int id = num / multiplier;
-        int index = num - id* multiplier;
+        int index = num - id * multiplier;
         Terreno terreno = terrainAdministrator.idTerrainDict[id];
 
         return new Tuple<int, Terreno>(index, terreno);
     }
+
+    public void DeleteAllFrontiersCity(int city)
+    {
+        foreach (GameObject frontier in frontiers[city])
+        {
+            Destroy(frontier);
+        }
+    }
+
 }

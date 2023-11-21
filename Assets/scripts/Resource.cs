@@ -78,7 +78,10 @@ public class Resource : MonoBehaviour
             {
                 inventory.AddToInventory(this);
             }
-            uIAdministrator.UpdateText(population, shields);   
+
+            inventory.shields += shields;
+            inventory.population += population;
+            uIAdministrator.UpdateText();   
             Destroy(gameObject);
         }
 

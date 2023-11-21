@@ -10,6 +10,8 @@ public class Terreno : MonoBehaviour
   private float acumulatedTime = 0f;
   bool isSorroundingEscaquesPainted = false;
   private Vector3 worldPositionTerrain;
+  [NonSerialized]
+  private UIAdministrator uIAdministrator;
   //TERRENOS VECINOS
   [NonSerialized]
   public Terreno[] neighboors = new Terreno[8];
@@ -42,6 +44,7 @@ public class Terreno : MonoBehaviour
   //////////////////////////////----------START-----------//////////////////////////////////////////////////////////////
   void Inicialization()
   {
+    uIAdministrator = FindAnyObjectByType<UIAdministrator>();
     terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
     objetsAdministrator = FindAnyObjectByType<ObjetsAdministrator>();
     sizeEscaque = terrainAdministrator.GetSizeEscaque();
@@ -53,7 +56,7 @@ public class Terreno : MonoBehaviour
     worldPositionTerrain = transform.parent.TransformPoint(transform.localPosition);
   }
 
-  private void IdleTime(float num)
+  public void IdleTime(float num)
   {
     acumulatedTime = num;
   }
@@ -77,7 +80,7 @@ public class Terreno : MonoBehaviour
         IdleTime(acumulatedTime + Time.deltaTime);
         isSorroundingEscaquesPainted = false;
       }
-      if (Input.GetMouseButtonDown(0))
+      if (Input.GetMouseButtonDown(0) && !uIAdministrator.panelBuildingTown.activeSelf  )
       {
         Ray rayo = camara.ScreenPointToRay(Input.mousePosition);
 
@@ -98,15 +101,16 @@ public class Terreno : MonoBehaviour
               canConsumeResource = true;
             }
           }
-
           objetsAdministrator.SelectEscaqueToBuildIn(globalIndex);
-
         }
       }
       if (canConsumeResource && Input.GetKeyDown(KeyCode.E))
       {
         canConsumeResource = false;
         resourceSelected.Consume();
+      }
+      if(Input.GetKeyDown(KeyCode.J)){
+        objetsAdministrator.DeleteAllFrontiersCity(0);  
       }
     }
   }
@@ -233,6 +237,15 @@ public class Terreno : MonoBehaviour
 
     return globalIndex.Item2.CenterInEscaqueToGlobal(new Vector3(relativePositionZ, 0f, relativePositionX), 5f);
   }
+  public Vector3 GetRelativePositionFromGlobalIndex(Tuple<int, Terreno> globalIndex)
+  {
+    int ejeX = (int)(globalIndex.Item1 / sizeTerrainInVertices);
+    float wea2 = globalIndex.Item1 / (sizeTerrainInVertices / 2);
+    float relativePositionX = globalIndex.Item1 % 200 > 0 ? ejeX - sizeTerrainInVertices / 2 + 0.5f : ejeX - sizeTerrainInVertices / 2 + 1 - 0.5f;
+    float relativePositionZ = wea2 % 2 == 0 ? globalIndex.Item1 - ejeX * sizeTerrainInVertices - (sizeTerrainInVertices / 2 - 1) - 0.5f : globalIndex.Item1 - ejeX * sizeTerrainInVertices - sizeTerrainInVertices / 2 + 0.5f;
+
+    return new Vector3(relativePositionZ, 0f, relativePositionX);
+  }
 
   public Terreno GetTerrain(Vector3 relativePositionInVertices)
   {
@@ -275,7 +288,7 @@ public class Terreno : MonoBehaviour
     return transform.position;
   }
 
-
+  
   //////////////////////////////----------UTILES-----------///////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

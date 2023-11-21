@@ -25,18 +25,21 @@ public class TerrainAdministrator : MonoBehaviour
   private readonly Dictionary<Vector3, GameObject> terrainDict = new();
   public readonly Dictionary<int, Terreno> idTerrainDict = new();
   private int countTerrain = 0;
- 
+
   [Header("Heroe")]
   public int sizeOfTerrain = 200;
   [NonSerialized]
   public Terreno terrenoOfHero;
   public Vector3 positionHero = Vector3.zero;
+  [SerializeField]
+  private GameObject prefabFrontier;
   private int sizeEscaque;
   private int sizeTerrainInVertices;
   private readonly Dictionary<int, Vector3> vecindario = new();
   public List<Tuple<int, Terreno>> sorroundingEscaques = new();
+  public List<Tuple<Tuple<int, Terreno>, int>> frontierEscaques = new();
 
-  
+
   [NonSerialized]
   public Dictionary<int, Town> influencedEscaques = new();
   private readonly List<Terreno> terrenosWithoutResources = new();
@@ -52,26 +55,81 @@ public class TerrainAdministrator : MonoBehaviour
     CreateFirstTerrain();
   }
 
-  void Update(){
+  void Update()
+  {
 
-   if(terrenosWithoutResources.Count > 0){
-     foreach (Terreno terreno in terrenosWithoutResources)
+    if (terrenosWithoutResources.Count > 0)
     {
-      StartCoroutine(InvokeBueno(terreno));
-    }
-    terrenosWithoutResources.Clear();
-   } 
-  }
-  private IEnumerator InvokeBueno(Terreno terreno){
-      yield return new WaitForSeconds(1f);
-      objetsAdministrator.GenerateRandomResource(terreno);
-    }
-  private IEnumerator ReturnToOriginal(Tuple<int, Terreno> tuple){
-      yield return new WaitForSeconds(1f);
-      tuple.Item2.ReturnPixelToOriginal(tuple.Item1);
+      foreach (Terreno terreno in terrenosWithoutResources)
+      {
+        StartCoroutine(InvokeBueno(terreno));
+      }
+      terrenosWithoutResources.Clear();
     }
 
-  public void PaintInfluence(){
+    if (frontierEscaques.Count > 0)
+    {
+      foreach (Tuple<Tuple<int, Terreno>, int> tuple in frontierEscaques)
+      {
+        Vector3 relativePosition = tuple.Item1.Item2.GetRelativePositionFromGlobalIndex(tuple.Item1);
+        Tuple<int, Terreno> indexSides = tuple.Item1.Item2.GetIndexGlobal(relativePosition + new Vector3(-1, 0, 0));
+
+        if (!influencedEscaques.ContainsKey(objetsAdministrator.GetNumericIndex(indexSides)))
+        {
+          PutFrontierInEscaque(tuple, new Vector3(-9, 0, 0), Quaternion.identity);
+        }
+
+        indexSides = tuple.Item1.Item2.GetIndexGlobal(relativePosition + new Vector3(1, 0, 0));
+        if (!influencedEscaques.ContainsKey(objetsAdministrator.GetNumericIndex(indexSides)))
+        {
+          PutFrontierInEscaque(tuple, new Vector3(9, 0, 0), Quaternion.identity);
+        }
+
+        indexSides = tuple.Item1.Item2.GetIndexGlobal(relativePosition + new Vector3(0, 0, -1));
+        if (!influencedEscaques.ContainsKey(objetsAdministrator.GetNumericIndex(indexSides)))
+        {
+          PutFrontierInEscaque(tuple, new Vector3(0, 0, -9), Quaternion.Euler(new Vector3(0, -90, 0)));
+        }
+
+        indexSides = tuple.Item1.Item2.GetIndexGlobal(relativePosition + new Vector3(0, 0, 1));
+        if (!influencedEscaques.ContainsKey(objetsAdministrator.GetNumericIndex(indexSides)))
+        {
+          PutFrontierInEscaque(tuple, new Vector3(0, 0, 9), Quaternion.Euler(new Vector3(0, 90, 0)));
+        }
+      }
+      frontierEscaques.Clear();
+    }
+  }
+
+  private void PutFrontierInEscaque(Tuple<Tuple<int, Terreno>, int> tuple, Vector3 offset, Quaternion rotation)
+  {
+    Vector3 position = tuple.Item1.Item2.GetGlobalPositionFromGlobalIndex(tuple.Item1) + offset;
+    if (objetsAdministrator.frontiers.ContainsKey(tuple.Item2))
+    {
+      objetsAdministrator.frontiers[tuple.Item2].Add(Instantiate(prefabFrontier, position, rotation));
+    }
+    else
+    {
+      List<GameObject> fronteritas = new()
+            {
+                Instantiate(prefabFrontier, position,rotation)
+            };
+      objetsAdministrator.frontiers[tuple.Item2] = fronteritas;
+    }
+  }
+  private IEnumerator InvokeBueno(Terreno terreno)
+  {
+    yield return new WaitForSeconds(1f);
+    objetsAdministrator.GenerateRandomResource(terreno);
+  }
+  private IEnumerator ReturnToOriginal(Tuple<int, Terreno> tuple)
+  {
+    yield return new WaitForSeconds(1f);
+    tuple.Item2.ReturnPixelToOriginal(tuple.Item1);
+  }
+
+  public void PaintInfluence()
+  {
     foreach (var pair in influencedEscaques)
     {
       Tuple<int, Terreno> globalIndex = objetsAdministrator.GetIndexFromNumeric(pair.Key);
@@ -156,10 +214,10 @@ public class TerrainAdministrator : MonoBehaviour
   public Vector3 MoveHero(Vector3 position, Vector3 movement)
   {
 
-   positionHero = terrenoOfHero.Move(position, movement);
-   return positionHero;
+    positionHero = terrenoOfHero.Move(position, movement);
+    return positionHero;
   }
- 
+
   public void SetTerrenoOfHero(Terreno terreno)
   {
     terrenoOfHero = terreno;
@@ -185,7 +243,7 @@ public class TerrainAdministrator : MonoBehaviour
         CreateTerrain(position + vecindario[i]);
       }
     }
-   
+
   }
   public bool IsTerrainActive(Terreno terreno)
   {

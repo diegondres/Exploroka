@@ -14,7 +14,7 @@ public class Town : MonoBehaviour
     private ObjetsAdministrator objetsAdministrator;
     private readonly int sizeInfluence = 30;
     public City city;
-    
+
     void Start()
     {
         terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
@@ -31,7 +31,6 @@ public class Town : MonoBehaviour
     void GenerateInfluenceZone()
     {
         Vector3 relativePosition = terrainAdministrator.terrenoOfHero.GetRelativePositionInVertices(transform.position);
-        
 
         for (int i = -sizeInfluence; i <= sizeInfluence; i++)
         {
@@ -43,6 +42,7 @@ public class Town : MonoBehaviour
                     Tuple<int, Terreno> index = terrainAdministrator.terrenoOfHero.GetIndexGlobal(relativePositionIJ);
                     int indexNumeric = objetsAdministrator.GetNumericIndex(index);
                     if (!terrainAdministrator.influencedEscaques.ContainsKey(indexNumeric)) terrainAdministrator.influencedEscaques.Add(indexNumeric, this);
+                    terrainAdministrator.frontierEscaques.Add(new Tuple<Tuple<int, Terreno>, int>(index, city.id));
                 }
             }
         }

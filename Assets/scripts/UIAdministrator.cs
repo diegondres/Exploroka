@@ -1,31 +1,37 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using TMPro;
 using UnityEngine;
 
 public class UIAdministrator : MonoBehaviour
 {
+    [Header("Construction")]
+    public GameObject panelBuildingTown;    
     public TextMeshProUGUI textMeshProUGUI;     
+    private Construction construction;
     private Inventory inventory;
-    private int shields = 0;
-    private int population = 0;
+    private TerrainAdministrator terrainAdministrator;
+    
     void Start()
     {
         inventory = FindAnyObjectByType<Inventory>();
-        UpdateText(0,0);
+        construction = FindAnyObjectByType<Construction>();
+        terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
+        UpdateText();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(panelBuildingTown.activeSelf) terrainAdministrator.terrenoOfHero.IdleTime(0);
     }
 
-    public void UpdateText(int foodForPeople, int woodToBuild){
-        if(foodForPeople > 0) population += foodForPeople;
-        if(woodToBuild > 0) shields += woodToBuild;
-        string texto = "Poblacion: " + population + ", Escudos: " + shields + "\n";
+    public void UpdateText(){
+        string texto = "Gobernabilidad: " + inventory.governance + "\n";
+        texto += "Poblacion: " + inventory.population + ", Escudos: " + inventory.shields + "\n";
+        
         Dictionary<string, Tuple<int, Resource>> inv = inventory.inventory;
         foreach(var item in inv){
             if(item.Value.Item1 > 0){
@@ -33,5 +39,19 @@ public class UIAdministrator : MonoBehaviour
             }
         }
         textMeshProUGUI.text = texto;
+    }
+
+     // Método llamado cuando se hace clic en el botón "Sí"
+    public void BuildTown()
+    {
+        construction.BuildTown();
+        panelBuildingTown.SetActive(false);
+    }
+
+    // Método llamado cuando se hace clic en el botón "No"
+    public void DontBuildTown()
+    {
+        // Ocultar el cuadro de diálogo sin realizar la acción
+        panelBuildingTown.SetActive(false);
     }
 }

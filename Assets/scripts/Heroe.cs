@@ -58,12 +58,14 @@ public class Heroe : MonoBehaviour
       distanciaEnVector = terrainAdministrator.CalculateDistance(transform.position, destino);
     }
 
+
     if (Vector3.Magnitude(distanciaEnVector) > 2.8f && acumulatedTime >= minimumTime)
     {
       MouseMoving(distanciaEnVector);
       distanciaEnVector = terrainAdministrator.CalculateDistance(transform.position, destino);
       acumulatedTime = 0.0f;
     }
+    
 
   }
 
@@ -80,32 +82,35 @@ public class Heroe : MonoBehaviour
     movement = Vector3.zero;
     if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && !isMoving)
     {
-      movement = new Vector3(0, 0, sizeEscaque);
+      movement += new Vector3(0, 0, sizeEscaque);
       rotation = 0.0f;
-      StartCoroutine(ContinuosMove(movement, rotation));
     }
     if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && !isMoving)
     {
-      movement = new Vector3(0, 0, -sizeEscaque);
+      movement += new Vector3(0, 0, -sizeEscaque);
       rotation = 180f;
-      StartCoroutine(ContinuosMove(movement, rotation));
     }
     if ((Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) && !isMoving)
     {
-      movement = new Vector3(sizeEscaque, 0, 0);
+      movement += new Vector3(sizeEscaque, 0, 0);
       rotation = 90f;
-      StartCoroutine(ContinuosMove(movement, rotation));
     }
     if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) && !isMoving)
     {
-      movement = new Vector3(-sizeEscaque, 0, 0);
+      movement += new Vector3(-sizeEscaque, 0, 0);
       rotation = 270f;
-      StartCoroutine(ContinuosMove(movement, rotation));
     }
-    if (isMoving)
+
+    if (Vector3.Magnitude(movement)>0)
     {
-      distanciaEnVector = Vector3.zero;
+      StartCoroutine(ContinuosMove(movement, rotation));
+      if (isMoving)
+      {
+        distanciaEnVector = Vector3.zero;
+      }
     }
+
+
   }
 
   private void MouseMoving(Vector3 distance)
@@ -136,7 +141,10 @@ public class Heroe : MonoBehaviour
         rotation = 180f;
       }
     }
-    MoveHero(movement, rotation);
+    if(!isMoving){
+      StartCoroutine(ContinuosMove(movement, rotation));
+    }
+    
   }
 
   private IEnumerator ContinuosMove(Vector3 movement, float rotation)
@@ -144,7 +152,7 @@ public class Heroe : MonoBehaviour
     isMoving = true;
 
     Vector3 startPosition = transform.position;
-    Vector3 endPosition =  terrainAdministrator.MoveHero(transform.position, movement);
+    Vector3 endPosition = terrainAdministrator.MoveHero(transform.position, movement);
 
     float elapsedTime = 0f;
     while (elapsedTime < moveDuration)
@@ -161,5 +169,5 @@ public class Heroe : MonoBehaviour
     MoveHero(Vector3.zero, rotation);
     isMoving = false;
   }
- 
+
 }

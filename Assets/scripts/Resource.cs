@@ -8,14 +8,7 @@ public class Resource : MonoBehaviour
 {
     public enum Tags
     {
-        arbol,
-        piedra,
-        tallable,
-        no_tallable,
-        animal,
-        planta,
-        medicinal,
-        hongo
+        arbol,piedra,tallable,no_tallable,animal,planta,medicinal,hongo
     }
     //REFERENCIAS
     private Inventory inventory;
@@ -30,12 +23,12 @@ public class Resource : MonoBehaviour
     private Tags tags2;
     public int population = 0;
     public int shields = 0;
-
-    //AGOTAMIENTO
     public int quantity;
     public bool canRunOut = false;
+
+
     [NonSerialized]
-    public int indexDict;
+    public int indexInDict;
 
     //EXTRACCION
     public bool extractionInInfluenceZone = false;
@@ -44,14 +37,8 @@ public class Resource : MonoBehaviour
     {
         inventory = FindObjectOfType<Inventory>();
         uIAdministrator = FindAnyObjectByType<UIAdministrator>();
-
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     public void SetInitialValues(string ResourceName, int quantity, bool canRunOut, bool extractionInInfluenceZone)
     {
@@ -59,8 +46,6 @@ public class Resource : MonoBehaviour
         this.quantity = quantity;
         this.canRunOut = canRunOut;
         this.extractionInInfluenceZone = extractionInInfluenceZone;
-
-
     }
 
     public void PrintResourceValues()

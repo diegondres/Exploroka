@@ -22,15 +22,9 @@ public class Town : MonoBehaviour
         GenerateInfluenceZone();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     void GenerateInfluenceZone()
     {
-        Vector3 relativePosition = terrainAdministrator.terrenoOfHero.GetRelativePositionInVertices(transform.position);
+        Vector3 relativePosition = SubTerrainAdmReference.terrainOfHero.GetRelativePositionInVertices(transform.position);
 
         for (int i = -sizeInfluence; i <= sizeInfluence; i++)
         {
@@ -39,13 +33,13 @@ public class Town : MonoBehaviour
                 if (i * i + j * j < 144)
                 {
                     Vector3 relativePositionIJ = new(relativePosition.x + i, relativePosition.y, relativePosition.z + j);
-                    Tuple<int, Terreno> index = terrainAdministrator.terrenoOfHero.GetIndexGlobal(relativePositionIJ);
-                    int indexNumeric = objetsAdministrator.GetNumericIndex(index);
-                    if (!terrainAdministrator.influencedEscaques.ContainsKey(indexNumeric)) terrainAdministrator.influencedEscaques.Add(indexNumeric, this);
-                    terrainAdministrator.frontierEscaques.Add(new Tuple<Tuple<int, Terreno>, int>(index, city.id));
+                    Tuple<int, Terreno> index = SubTerrainAdmReference.terrainOfHero.GetIndexGlobal(relativePositionIJ);
+                    int indexNumeric = SubObjectsAdmReferences.GetNumericIndex(index);
+                    if (!SubTerrainAdmReference.influencedEscaques.ContainsKey(indexNumeric)) SubTerrainAdmReference.influencedEscaques.Add(indexNumeric, this);
+                    terrainAdministrator.newInfluenceEscaques.Add(new Tuple<Tuple<int, Terreno>, int>(index, city.id));
                 }
             }
         }
-        terrainAdministrator.PaintInfluence();
+        terrainAdministrator.PaintInfluenceTown();
     }
 }

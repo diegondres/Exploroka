@@ -15,7 +15,7 @@ public class Terreno : MonoBehaviour
   //TERRENOS VECINOS
   [NonSerialized]
   public Terreno[] neighboors = new Terreno[8];
-  [NonSerialized]
+
   public int id;
   private TerrainAdministrator terrainAdministrator;
   private ObjetsAdministrator objetsAdministrator;
@@ -47,8 +47,8 @@ public class Terreno : MonoBehaviour
     uIAdministrator = FindAnyObjectByType<UIAdministrator>();
     terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
     objetsAdministrator = FindAnyObjectByType<ObjetsAdministrator>();
-    sizeEscaque = terrainAdministrator.GetSizeEscaque();
-    sizeTerrainInVertices = terrainAdministrator.GetSizeTerrainInVertices();
+    sizeEscaque = SubTerrainAdmReference.sizeEscaque;
+    sizeTerrainInVertices = SubTerrainAdmReference.sizeTerrainInVertices;
     tileRenderer = GetComponent<MeshRenderer>();
     terrainGeneration = GetComponent<TerrainGeneration>();
     camara = FindAnyObjectByType<Camera>();
@@ -65,11 +65,11 @@ public class Terreno : MonoBehaviour
 
   void Update()
   {
-    if (terrainAdministrator.IsTerrainActive(this))
+    if (SubTerrainAdmReference.IsTerrainActive(this))
     {
       if (acumulatedTime > limitTime && !isSorroundingEscaquesPainted)
       {
-        foreach (Tuple<int, Terreno> escaque in terrainAdministrator.sorroundingEscaques)
+        foreach (Tuple<int, Terreno> escaque in SubTerrainAdmReference.GetSorroundingEscaques())
         {
           escaque.Item2.PaintPixelInfluence(escaque.Item1, Color.red);
         }
@@ -80,7 +80,7 @@ public class Terreno : MonoBehaviour
         IdleTime(acumulatedTime + Time.deltaTime);
         isSorroundingEscaquesPainted = false;
       }
-      if (Input.GetMouseButtonDown(0) && !uIAdministrator.panelBuildingTown.activeSelf  )
+      if (Input.GetMouseButtonDown(0) && !uIAdministrator.panelBuildingTown.activeSelf)
       {
         Ray rayo = camara.ScreenPointToRay(Input.mousePosition);
 
@@ -90,7 +90,8 @@ public class Terreno : MonoBehaviour
           Vector3 relativePosition = GetRelativePositionInVertices(destino);
           Tuple<int, Terreno> globalIndex = GetIndexGlobal(relativePosition);
 
-          GameObject thing = objetsAdministrator.IsSomethingBuiltInHere(globalIndex);
+          GameObject thing = SubObjectsAdmReferences.IsSomethingBuiltInHere(globalIndex);
+
           if (thing != null)
           {
             if (thing.GetComponent<Building>() != null) thing.GetComponent<Building>().PrintBuildingValues();
@@ -101,7 +102,7 @@ public class Terreno : MonoBehaviour
               canConsumeResource = true;
             }
           }
-          objetsAdministrator.SelectEscaqueToBuildIn(globalIndex);
+          SubObjectsAdmReferences.SelectEscaqueToBuildIn(globalIndex);
         }
       }
       if (canConsumeResource && Input.GetKeyDown(KeyCode.E))
@@ -109,8 +110,9 @@ public class Terreno : MonoBehaviour
         canConsumeResource = false;
         resourceSelected.Consume();
       }
-      if(Input.GetKeyDown(KeyCode.J)){
-        objetsAdministrator.DeleteAllFrontiersCity(0);  
+      if (Input.GetKeyDown(KeyCode.J))
+      {
+        objetsAdministrator.DeleteAllFrontiersCity(0);
       }
     }
   }
@@ -135,9 +137,8 @@ public class Terreno : MonoBehaviour
     {
       if (IsWalkable(relativePositionInVertices))
       {
-
         AddSorroundingEscaques(relativePositionInVertices);
-        objetsAdministrator.isBuildingLocationSelected = false;
+        SubObjectsAdmReferences.isBuildingLocationSelected = false;
 
         return CenterInEscaqueToGlobal(relativePositionInVertices, 6f);
       }
@@ -147,7 +148,6 @@ public class Terreno : MonoBehaviour
         return CenterInEscaqueToGlobal(relativePositionInVertices, 6f);
       }
     }
-
   }
 
   public bool IsWalkable(Vector3 relativePositionInVertices)
@@ -158,7 +158,6 @@ public class Terreno : MonoBehaviour
   public Vector3 CalculateDistance(Vector3 actualPosition, Vector3 destiny)
   {
     Vector3 relativeActualPositionInVertices = GetRelativePositionInVertices(actualPosition);
-
     Vector3 relativeDestinyInVertices = GetRelativePositionInVertices(destiny);
 
     Tuple<int, Terreno> destinyGlobalIndex = GetIndexGlobal(relativeDestinyInVertices);
@@ -168,7 +167,7 @@ public class Terreno : MonoBehaviour
 
   private void AddSorroundingEscaques(Vector3 relativePositionInVertices)
   {
-    CleanVisitedEscaques();
+    SubTerrainAdmReference.CleanVisitedEscaques();
 
     for (int i = -1; i < 2; i++)
     {
@@ -176,21 +175,13 @@ public class Terreno : MonoBehaviour
       {
         if (i != 0 || j != 0)
         {
-          terrainAdministrator.sorroundingEscaques.Add(GetIndexGlobal(new(relativePositionInVertices.x + i, relativePositionInVertices.y, relativePositionInVertices.z + j)));
+          SubTerrainAdmReference.AddSorroundinEscaque(GetIndexGlobal(new(relativePositionInVertices.x + i, relativePositionInVertices.y, relativePositionInVertices.z + j)));
         }
       }
     }
   }
 
-  void CleanVisitedEscaques()
-  {
-    List<Tuple<int, Terreno>> globalIndex = terrainAdministrator.sorroundingEscaques;
-    foreach (Tuple<int, Terreno> escaque in globalIndex)
-    {
-      escaque.Item2.ReturnPixelToOriginal(escaque.Item1);
-    }
-    globalIndex.Clear();
-  }
+
   //////////////////////////////----------MOVIMIENTO-----------/////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -288,7 +279,7 @@ public class Terreno : MonoBehaviour
     return transform.position;
   }
 
-  
+
   //////////////////////////////----------UTILES-----------///////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -302,7 +293,6 @@ public class Terreno : MonoBehaviour
     texture2D.SetPixels32(pixs);
     texture2D.Apply();
   }
-
   public void ReturnPixelToOriginal(int index)
   {
     Texture2D texture2D = (Texture2D)tileRenderer.material.mainTexture;
@@ -326,18 +316,5 @@ public class Terreno : MonoBehaviour
     texture2D.Apply();
   }
 
-  public Town DetectCity(Vector3 relativePosition, Terreno terreno, int radio)
-  {
-    for (int i = -radio; i < radio; i++)
-    {
-      for (int j = -radio; j < radio; j++)
-      {
-        Tuple<int, Terreno> indexGlobal = terreno.GetIndexGlobal(new Vector3(relativePosition.x + i, relativePosition.y, relativePosition.z + j));
-        int numericIndex = objetsAdministrator.GetNumericIndex(indexGlobal);
-        if (terrainAdministrator.influencedEscaques.ContainsKey(numericIndex)) return terrainAdministrator.influencedEscaques[numericIndex];
-      }
-    }
 
-    return null;
-  }
 }

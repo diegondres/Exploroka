@@ -75,7 +75,7 @@ public class TerrainGeneration : MonoBehaviour
         terreno = GetComponent<Terreno>();
         terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
         noiseGeneration = FindAnyObjectByType<NoiseGeneration>();
-        sizeTerrainInVertices = terrainAdministrator.GetSizeTerrainInVertices();
+        sizeTerrainInVertices = SubTerrainAdmReference.sizeTerrainInVertices    ;
 
         tileDepth = sizeTerrainInVertices; tileWidth = sizeTerrainInVertices;
 

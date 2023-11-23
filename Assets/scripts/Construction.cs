@@ -36,7 +36,7 @@ public class Construction : MonoBehaviour
     if (Input.GetKeyDown(KeyCode.Space) && CheckBuildingLocation())
     {
       GameObject building = InstanciateObject(prefabTest);
-      objetsAdministrator.AddBuilding(building);
+      SubObjectsAdmReferences.AddBuilding(building);
 
       Building buildingScript = building.GetComponent<Building>();
       buildingScript.SetInitialValues("Casita", 100, 250, 1, 5, true);
@@ -52,19 +52,19 @@ public class Construction : MonoBehaviour
 
   private GameObject InstanciateObject(GameObject prefab)
   {
-    Vector3 buildingLocation = objetsAdministrator.GetBuildingLocation();
+    Vector3 buildingLocation = SubObjectsAdmReferences.GetBuildingLocation();
 
-    objetsAdministrator.isBuildingLocationSelected = false;
+    SubObjectsAdmReferences.isBuildingLocationSelected = false;
 
     return Instantiate(prefab, buildingLocation, Quaternion.identity, objetsAdministrator.containerConstructions.transform);
   }
 
   private bool CheckBuildingLocation()
   {
-    if (!objetsAdministrator.isBuildingLocationSelected) return false;
+    if (!SubObjectsAdmReferences.isBuildingLocationSelected) return false;
 
-    Vector3 buildingLocation = objetsAdministrator.GetBuildingLocation();
-    Terreno terreno = terrainAdministrator.terrenoOfHero;
+    Vector3 buildingLocation = SubObjectsAdmReferences.GetBuildingLocation();
+    Terreno terreno = SubTerrainAdmReference.terrainOfHero;
 
     Vector3 relativePosition = terreno.GetRelativePositionInVertices(buildingLocation);
     Tuple<int, Terreno> index = terreno.GetIndexGlobal(relativePosition);
@@ -72,7 +72,7 @@ public class Construction : MonoBehaviour
     relativePosition = index.Item2.GetRelativePositionInVertices(relativePosition);
 
     if (!index.Item2.IsWalkable(relativePosition)) return false;
-    if (objetsAdministrator.IsSomethingBuiltInHere(index) != null) return false;
+    if (SubObjectsAdmReferences.IsSomethingBuiltInHere(index) != null) return false;
 
     return true;
   }
@@ -80,13 +80,12 @@ public class Construction : MonoBehaviour
   public void BuildTown()
   {
     GameObject town = InstanciateObject(prefabTown);
-    objetsAdministrator.AddBuilding(town);
+    SubObjectsAdmReferences.AddBuilding(town);
 
     Town townScript = town.GetComponent<Town>();
     townScript.id = townCounter;
 
-    Terreno terreno = terrainAdministrator.terrenoOfHero;
-    Town detectedCity = terreno.DetectCity(terreno.GetRelativePositionInVertices(town.transform.position), terreno, 15);
+    Town detectedCity = SubTerrainAdmReference.DetectCity(town.transform.position, 15);
 
     if (detectedCity == null)
     {

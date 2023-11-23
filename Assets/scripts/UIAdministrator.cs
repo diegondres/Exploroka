@@ -25,7 +25,7 @@ public class UIAdministrator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(panelBuildingTown.activeSelf) terrainAdministrator.terrenoOfHero.IdleTime(0);
+        if(panelBuildingTown.activeSelf) SubTerrainAdmReference.terrainOfHero.IdleTime(0);
     }
 
     public void UpdateText(){

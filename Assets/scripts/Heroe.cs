@@ -29,8 +29,8 @@ public class Heroe : MonoBehaviour
   {
     destino = transform.position;
     terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
-    terrainAdministrator.InWhatTerrenoAmI(transform.position);
-    sizeEscaque = terrainAdministrator.GetSizeEscaque();
+    SubTerrainAdmReference.InWhatTerrenoAmI(transform.position);
+    sizeEscaque = SubTerrainAdmReference.sizeEscaque;
     camara = FindAnyObjectByType<Camera>();
     //TODO: se tiene que hacer un arreglo para que el personaje inicie en una referencia correcta del terreno
     //MoveHero(movement, 0.0f);
@@ -52,13 +52,13 @@ public class Heroe : MonoBehaviour
       {
         destino = rayo.GetPoint(distancia);
       }
-      distanciaEnVector = terrainAdministrator.CalculateDistance(transform.position, destino);
+      distanciaEnVector = SubTerrainAdmReference.CalculateDistance(transform.position, destino);
     }
 
     if (Vector3.Magnitude(distanciaEnVector) > 2.8f && acumulatedTime >= minimumTime)
     {
       MouseMoving(distanciaEnVector);
-      distanciaEnVector = terrainAdministrator.CalculateDistance(transform.position, destino);
+      distanciaEnVector = SubTerrainAdmReference.CalculateDistance(transform.position, destino);
       acumulatedTime = 0.0f;
     }
 
@@ -67,7 +67,7 @@ public class Heroe : MonoBehaviour
   private void MoveHero(Vector3 movement, float rotation)
   {
     //TODO: cuando se solucione el movimiento con el mouse, esta funcion deberia desaparecer y solo dejar la corutina.
-    transform.position = terrainAdministrator.MoveHero(transform.position, movement);
+    transform.position = SubTerrainAdmReference.MoveHero(transform.position, movement);
     transform.eulerAngles = new Vector3(0, rotation, 0);
   }
 
@@ -141,7 +141,7 @@ public class Heroe : MonoBehaviour
     isMoving = true;
 
     Vector3 startPosition = transform.position;
-    Vector3 endPosition =  terrainAdministrator.MoveHero(transform.position, movement);
+    Vector3 endPosition =  SubTerrainAdmReference.MoveHero(transform.position, movement);
 
     float elapsedTime = 0f;
     while (elapsedTime < moveDuration)

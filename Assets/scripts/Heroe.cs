@@ -17,18 +17,20 @@ public class Heroe : MonoBehaviour
   private float acumulatedTime = 0.0f;
   private int sizeEscaque;
   private float rotation;
-  
+
   //REFERENCIAS
   private Camera camara;
   private Vector3 destino;
   private TerrainAdministrator terrainAdministrator;
   private Vector3 distanciaEnVector = Vector3.zero;
   private Vector3 movement = Vector3.zero;
+  private UIAdministrator uIAdministrator;
 
   void Start()
   {
     destino = transform.position;
     terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
+    uIAdministrator = FindAnyObjectByType<UIAdministrator>();
     SubTerrainAdmReference.InWhatTerrenoAmI(transform.position);
     sizeEscaque = SubTerrainAdmReference.sizeEscaque;
     camara = FindAnyObjectByType<Camera>();
@@ -39,27 +41,30 @@ public class Heroe : MonoBehaviour
   void Update()
   {
     acumulatedTime += Time.deltaTime;
-
-    ArrowMoving();
-
-    if (Input.GetMouseButtonDown(1))
+    if (!uIAdministrator.IsAnyPanelOpen())
     {
-      Ray rayo = camara.ScreenPointToRay(Input.mousePosition);
-      Plane plano = new(Vector3.up, transform.position);
-      distancia = 0.0f;
 
-      if (plano.Raycast(rayo, out distancia))
+      ArrowMoving();
+
+      if (Input.GetMouseButtonDown(1))
       {
-        destino = rayo.GetPoint(distancia);
-      }
-      distanciaEnVector = SubTerrainAdmReference.CalculateDistance(transform.position, destino);
-    }
+        Ray rayo = camara.ScreenPointToRay(Input.mousePosition);
+        Plane plano = new(Vector3.up, transform.position);
+        distancia = 0.0f;
 
-    if (Vector3.Magnitude(distanciaEnVector) > 2.8f && acumulatedTime >= minimumTime)
-    {
-      MouseMoving(distanciaEnVector);
-      distanciaEnVector = SubTerrainAdmReference.CalculateDistance(transform.position, destino);
-      acumulatedTime = 0.0f;
+        if (plano.Raycast(rayo, out distancia))
+        {
+          destino = rayo.GetPoint(distancia);
+        }
+        distanciaEnVector = SubTerrainAdmReference.CalculateDistance(transform.position, destino);
+      }
+
+      if (Vector3.Magnitude(distanciaEnVector) > 2.8f && acumulatedTime >= minimumTime)
+      {
+        MouseMoving(distanciaEnVector);
+        distanciaEnVector = SubTerrainAdmReference.CalculateDistance(transform.position, destino);
+        acumulatedTime = 0.0f;
+      }
     }
 
   }
@@ -141,7 +146,7 @@ public class Heroe : MonoBehaviour
     isMoving = true;
 
     Vector3 startPosition = transform.position;
-    Vector3 endPosition =  SubTerrainAdmReference.MoveHero(transform.position, movement);
+    Vector3 endPosition = SubTerrainAdmReference.MoveHero(transform.position, movement);
 
     float elapsedTime = 0f;
     while (elapsedTime < moveDuration)
@@ -158,5 +163,5 @@ public class Heroe : MonoBehaviour
     MoveHero(Vector3.zero, rotation);
     isMoving = false;
   }
- 
+
 }

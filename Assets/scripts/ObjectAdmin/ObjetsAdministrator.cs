@@ -9,19 +9,24 @@ using UnityEngine;
 public class ObjetsAdministrator : MonoBehaviour
 {
     //LAS LISTAS DE OBJETOS Y LA LISTA DE LISTAS
-    public GameObject containerConstructions;
     [SerializeField]
     private GameObject containerResources;
+    [SerializeField]
+    private GameObject containerConstructions;
+    [SerializeField]
+    private GameObject containerFrontiers;
     [SerializeField]
     private GameObject[] resourcePrefab;
     public int probabilidadRecursos = 50;
 
     //COSITAS
     private TerrainAdministrator terrainAdministrator;
+    [SerializeField]
 
     void Start()
     {
         terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
+        SubObjectsAdmReferences.InicializateContainerReferences(containerConstructions, containerFrontiers);
     }
 
     public void GenerateRandomResource(Terreno terreno)

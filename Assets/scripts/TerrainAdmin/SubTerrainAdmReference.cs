@@ -127,15 +127,22 @@ static class SubTerrainAdmReference
 
   public static bool IsThisEscaqueInfluenced(Vector3 relativePosition, Terreno terreno, int city)
   {
+    //Calidad garantizada por el practicante tassadar
     Tuple<int, Terreno> indexSides = terreno.GetIndexGlobal(relativePosition);
+    Vector3 realRelativePosition = indexSides.Item2.GetRelativePositionFromGlobalIndex(indexSides);
+    
     int numericIndex = SubObjectsAdmReferences.GetNumericIndex(indexSides);
+
+    if(!terreno.IsWalkable(realRelativePosition)){
+      return true;
+    }
     if (city == -1)
     {
       return influencedEscaques.ContainsKey(numericIndex);
     }
     else
     {
-      return influencedEscaques.ContainsKey(numericIndex) && influencedEscaques[numericIndex].city.id == city;
+      return influencedEscaques.ContainsKey(numericIndex) && influencedEscaques[numericIndex].city.id == city ;
     }
   }
 

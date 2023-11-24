@@ -16,10 +16,10 @@ public class City : MonoBehaviour
     public List<Tuple<int, Terreno>> influencedEscaquesOfCity;
     private ObjetsAdministrator objetsAdministrator;
     private TerrainAdministrator terrainAdministrator;
-    void Start(){
+    void Start()
+    {
         objetsAdministrator = FindObjectOfType<ObjetsAdministrator>();
-        terrainAdministrator =  FindAnyObjectByType<TerrainAdministrator>();
-        Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
     }
 
 
@@ -33,17 +33,16 @@ public class City : MonoBehaviour
         return towns;
     }
 
-    public void GenerateNewInfluenceZone(){
-                Debug.Log("asdsasdasdsadasdasdasd");
-
+    public void GenerateNewInfluenceZone()
+    {
         objetsAdministrator.DeleteAllFrontiersCity(id);
-        List<Tuple<int, Terreno>> allInfluencedEscaques = new();
+        List<Tuple<int, Terreno>> allInfluencedEscaques = new();    
 
         foreach (Town town in GetTownsOfThisCity())
         {
             allInfluencedEscaques.AddRange(town.influencedEscaques);
         }
-        
+
         SubTerrainAdmReference.CheckNewInfluencedEscaques(allInfluencedEscaques, id, terrainAdministrator);
     }
 

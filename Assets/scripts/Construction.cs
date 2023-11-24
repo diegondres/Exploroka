@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Construction : MonoBehaviour
 {
@@ -44,7 +45,10 @@ public class Construction : MonoBehaviour
 
     if (Input.GetKeyDown(KeyCode.F) && CheckBuildingLocation())
     {
-      uIAdministrator.panelBuildingTown.SetActive(true);
+      //Detectar si esta proximo a ciudades, de ser asi, enviar lista de ciudades cercanas.
+      
+      uIAdministrator.ActivatePanelBuildTown();
+      
 
     }
 
@@ -56,7 +60,7 @@ public class Construction : MonoBehaviour
 
     SubObjectsAdmReferences.isBuildingLocationSelected = false;
 
-    return Instantiate(prefab, buildingLocation, Quaternion.identity, objetsAdministrator.containerConstructions.transform);
+    return Instantiate(prefab, buildingLocation, Quaternion.identity, SubObjectsAdmReferences.containerConstructions.transform);
   }
 
   private bool CheckBuildingLocation()
@@ -77,7 +81,7 @@ public class Construction : MonoBehaviour
     return true;
   }
 
-  public void BuildTown()
+  public void BuildTown(string nameCity)
   {
     GameObject town = InstanciateObject(prefabTown);
     SubObjectsAdmReferences.AddBuilding(town);
@@ -91,8 +95,12 @@ public class Construction : MonoBehaviour
     {
       GameObject city = Instantiate(prefabCity, transform.position, Quaternion.identity);
       town.transform.SetParent(city.transform);
-      townScript.city = city.GetComponent<City>();
-      townScript.city.id = cityCounter;
+      City cityScript = city.GetComponent<City>();
+      cityScript.id = cityCounter;
+      cityScript.nameCity = nameCity;
+      cityScript.gameObject.name = nameCity;
+
+      townScript.city = cityScript;
 
       inventory.governance -= cityPrice;
       cityCounter++;

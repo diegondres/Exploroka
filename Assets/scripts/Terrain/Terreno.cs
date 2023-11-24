@@ -80,7 +80,7 @@ public class Terreno : MonoBehaviour
         IdleTime(acumulatedTime + Time.deltaTime);
         isSorroundingEscaquesPainted = false;
       }
-      if (Input.GetMouseButtonDown(0) && !uIAdministrator.panelBuildingTown.activeSelf)
+      if (Input.GetMouseButtonDown(0) && !uIAdministrator.IsAnyPanelOpen())
       {
         Ray rayo = camara.ScreenPointToRay(Input.mousePosition);
 

@@ -4,12 +4,18 @@ using System.Collections.Generic;
 using System.Data;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIAdministrator : MonoBehaviour
 {
     [Header("Construction")]
     public GameObject panelBuildingTown;    
     public TextMeshProUGUI textMeshProUGUI;     
+    public TextMeshProUGUI textMeshProPanel; 
+
+    public TextMeshProUGUI nameCity;
+    public TMP_Dropdown dropdownCities;
+
     private Construction construction;
     private Inventory inventory;
     private TerrainAdministrator terrainAdministrator;
@@ -44,14 +50,30 @@ public class UIAdministrator : MonoBehaviour
      // Método llamado cuando se hace clic en el botón "Sí"
     public void BuildTown()
     {
-        construction.BuildTown();
+        construction.BuildTown(nameCity.text);
+        
         panelBuildingTown.SetActive(false);
     }
 
     // Método llamado cuando se hace clic en el botón "No"
     public void DontBuildTown()
-    {
-        // Ocultar el cuadro de diálogo sin realizar la acción
+    {   
         panelBuildingTown.SetActive(false);
+    }
+
+    public void ActivatePanelBuildTown(){
+        
+        panelBuildingTown.SetActive(true);
+        textMeshProPanel.text = "¿Desea fundar una ciudad?";
+        
+    }
+
+    public bool IsAnyPanelOpen(){
+        if(panelBuildingTown.activeSelf){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

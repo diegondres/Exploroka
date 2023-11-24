@@ -38,13 +38,13 @@ public class TerrainAdministrator : MonoBehaviour
 
     if (SubObjectsAdmReferences.frontiers.ContainsKey(city))
     {
-      SubObjectsAdmReferences.frontiers[city].Add(Instantiate(prefabFrontier, position, rotation));
+      SubObjectsAdmReferences.frontiers[city].Add(Instantiate(prefabFrontier, position, rotation, SubObjectsAdmReferences.containerFrontiers.transform));
     }
     else
     {
       List<GameObject> fronteritas = new()
             {
-                Instantiate(prefabFrontier, position,rotation)
+                Instantiate(prefabFrontier, position,rotation, SubObjectsAdmReferences.containerFrontiers.transform)
             };
       SubObjectsAdmReferences.frontiers[city] = fronteritas;
     }

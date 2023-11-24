@@ -13,10 +13,19 @@ public static class SubObjectsAdmReferences
     public static bool isBuildingLocationSelected = false;
     private static readonly int multiplier = 10000;
 
+    public static GameObject containerConstructions;
+    public static GameObject containerFrontiers;
+
     public static void Inicializate()
     {
         allObjects.Add(constructions);
         allObjects.Add(resources);
+    }
+
+    public static void InicializateContainerReferences(GameObject containerConst, GameObject containerFront)
+    {
+        containerConstructions = containerConst;
+        containerFrontiers = containerFront;
     }
 
     public static void SelectEscaqueToBuildIn(Tuple<int, Terreno> globalIndex)

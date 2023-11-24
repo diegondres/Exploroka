@@ -22,6 +22,8 @@ static class SubTerrainAdmReference
   [NonSerialized]
   public static readonly List<Terreno> terrenosWithoutResources = new();
   private static readonly List<Tuple<int, Terreno>> sorroundingEscaques = new();
+  [NonSerialized]
+  public static readonly List<Tuple<int, Terreno>> newInfluenceEscaques = new();
 
 
   public static bool IsThisEscaqueVisited(Tuple<int, Terreno> visitedEscaque)
@@ -121,6 +123,50 @@ static class SubTerrainAdmReference
     }
 
     return null;
+  }
+
+  public static bool IsThisEscaqueInfluenced(Vector3 relativePosition, Terreno terreno, int city)
+  {
+    Tuple<int, Terreno> indexSides = terreno.GetIndexGlobal(relativePosition);
+    int numericIndex = SubObjectsAdmReferences.GetNumericIndex(indexSides);
+    if (city == -1)
+    {
+      return influencedEscaques.ContainsKey(numericIndex);
+    }
+    else
+    {
+      return influencedEscaques.ContainsKey(numericIndex) && influencedEscaques[numericIndex].city.id == city;
+    }
+  }
+
+  public static void CheckNewInfluencedEscaques(List<Tuple<int, Terreno>> influencedEscaques, int city, TerrainAdministrator terrainAdministrator)
+  {
+    foreach (Tuple<int, Terreno> newInfluencedEscaque in influencedEscaques)
+    {
+      Vector3 relativePosition = newInfluencedEscaque.Item2.GetRelativePositionFromGlobalIndex(newInfluencedEscaque);
+
+      if (!IsThisEscaqueInfluenced(relativePosition + new Vector3(-1, 0, 0), newInfluencedEscaque.Item2, city))
+      {
+        terrainAdministrator.PutFrontierInEscaque(newInfluencedEscaque, new Vector3(-9, 0, 0), Quaternion.identity, city);
+      }
+
+      if (!IsThisEscaqueInfluenced(relativePosition + new Vector3(1, 0, 0), newInfluencedEscaque.Item2, city))
+      {
+        terrainAdministrator.PutFrontierInEscaque(newInfluencedEscaque, new Vector3(9, 0, 0), Quaternion.identity, city);
+      }
+
+      if (!IsThisEscaqueInfluenced(relativePosition + new Vector3(0, 0, -1), newInfluencedEscaque.Item2,city))
+      {
+        terrainAdministrator.PutFrontierInEscaque(newInfluencedEscaque, new Vector3(0, 0, -9), Quaternion.Euler(new Vector3(0, -90, 0)),city);
+      }
+
+      if (!IsThisEscaqueInfluenced(relativePosition + new Vector3(0, 0, 1), newInfluencedEscaque.Item2, city))
+      {
+        terrainAdministrator.PutFrontierInEscaque(newInfluencedEscaque, new Vector3(0, 0, 9), Quaternion.Euler(new Vector3(0, 90, 0)), city);
+      }
+
+      }
+    newInfluenceEscaques.Clear();
   }
 
 }

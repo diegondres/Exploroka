@@ -102,7 +102,14 @@ public class Construction : MonoBehaviour
       townScript.city = detectedCity.city;
       town.transform.SetParent(detectedCity.city.transform);
     }
+    StartCoroutine(GenerateNewInfluenceZone(townScript.city));
     uIAdministrator.UpdateText();
     townCounter++;
+  }
+
+  private IEnumerator GenerateNewInfluenceZone(City city)
+  {
+    yield return new WaitForSeconds(0.1f);
+    city.GenerateNewInfluenceZone();
   }
 }

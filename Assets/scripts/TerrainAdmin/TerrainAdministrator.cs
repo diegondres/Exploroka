@@ -9,8 +9,7 @@ public class TerrainAdministrator : MonoBehaviour
   private GameObject prefabFrontier;
   private ObjetsAdministrator objetsAdministrator;
   private SubTerrainAdmGeneration subTerrainAdmGeneration;
-  [NonSerialized]
-  public List<Tuple<Tuple<int, Terreno>, int>> newInfluenceEscaques = new();
+ 
 
   void Awake()
   {
@@ -31,47 +30,15 @@ public class TerrainAdministrator : MonoBehaviour
       }
       SubTerrainAdmReference.terrenosWithoutResources.Clear();
     }
-
-    if (newInfluenceEscaques.Count > 0)
-    {
-      foreach (Tuple<Tuple<int, Terreno>, int> tuple in newInfluenceEscaques)
-      {
-        Vector3 relativePosition = tuple.Item1.Item2.GetRelativePositionFromGlobalIndex(tuple.Item1);
-        Tuple<int, Terreno> indexSides = tuple.Item1.Item2.GetIndexGlobal(relativePosition + new Vector3(-1, 0, 0));
-
-        if (!SubTerrainAdmReference.influencedEscaques.ContainsKey(SubObjectsAdmReferences.GetNumericIndex(indexSides)))
-        {
-          PutFrontierInEscaque(tuple, new Vector3(-9, 0, 0), Quaternion.identity);
-        }
-
-        indexSides = tuple.Item1.Item2.GetIndexGlobal(relativePosition + new Vector3(1, 0, 0));
-        if (!SubTerrainAdmReference.influencedEscaques.ContainsKey(SubObjectsAdmReferences.GetNumericIndex(indexSides)))
-        {
-          PutFrontierInEscaque(tuple, new Vector3(9, 0, 0), Quaternion.identity);
-        }
-
-        indexSides = tuple.Item1.Item2.GetIndexGlobal(relativePosition + new Vector3(0, 0, -1));
-        if (!SubTerrainAdmReference.influencedEscaques.ContainsKey(SubObjectsAdmReferences.GetNumericIndex(indexSides)))
-        {
-          PutFrontierInEscaque(tuple, new Vector3(0, 0, -9), Quaternion.Euler(new Vector3(0, -90, 0)));
-        }
-
-        indexSides = tuple.Item1.Item2.GetIndexGlobal(relativePosition + new Vector3(0, 0, 1));
-        if (!SubTerrainAdmReference.influencedEscaques.ContainsKey(SubObjectsAdmReferences.GetNumericIndex(indexSides)))
-        {
-          PutFrontierInEscaque(tuple, new Vector3(0, 0, 9), Quaternion.Euler(new Vector3(0, 90, 0)));
-        }
-      }
-      newInfluenceEscaques.Clear();
-    }
   }
-
-  private void PutFrontierInEscaque(Tuple<Tuple<int, Terreno>, int> tuple, Vector3 offset, Quaternion rotation)
+  
+  public void PutFrontierInEscaque(Tuple<int, Terreno> index, Vector3 offset, Quaternion rotation, int city)
   {
-    Vector3 position = tuple.Item1.Item2.GetGlobalPositionFromGlobalIndex(tuple.Item1) + offset;
-    if (SubObjectsAdmReferences.frontiers.ContainsKey(tuple.Item2))
+    Vector3 position = index.Item2.GetGlobalPositionFromGlobalIndex(index) + offset;
+
+    if (SubObjectsAdmReferences.frontiers.ContainsKey(city))
     {
-      SubObjectsAdmReferences.frontiers[tuple.Item2].Add(Instantiate(prefabFrontier, position, rotation));
+      SubObjectsAdmReferences.frontiers[city].Add(Instantiate(prefabFrontier, position, rotation));
     }
     else
     {
@@ -79,16 +46,14 @@ public class TerrainAdministrator : MonoBehaviour
             {
                 Instantiate(prefabFrontier, position,rotation)
             };
-      SubObjectsAdmReferences.frontiers[tuple.Item2] = fronteritas;
+      SubObjectsAdmReferences.frontiers[city] = fronteritas;
     }
   }
-
 
   public Terreno GetTerrenoScriptFromId(int id)
   {
     return subTerrainAdmGeneration.GetTerrenoScriptFromId(id);
   }
-
   public void PaintInfluenceTown()
   {
     foreach (var pair in SubTerrainAdmReference.influencedEscaques)
@@ -108,7 +73,6 @@ public class TerrainAdministrator : MonoBehaviour
       subTerrainAdmGeneration.FillNeighborhood(item);
     }
   }
-
   private IEnumerator InvokeBueno(Terreno terreno)
   {
     yield return new WaitForSeconds(1f);

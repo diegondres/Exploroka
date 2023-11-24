@@ -12,7 +12,8 @@ public class Town : MonoBehaviour
     public int cost = 5;
     private TerrainAdministrator terrainAdministrator;
     private ObjetsAdministrator objetsAdministrator;
-    private readonly int sizeInfluence = 30;
+    private readonly int sizeInfluence = 15;
+    public List<Tuple<int, Terreno>> influencedEscaques = new();
     public City city;
 
     void Start()
@@ -30,13 +31,17 @@ public class Town : MonoBehaviour
         {
             for (int j = -sizeInfluence; j <= sizeInfluence; j++)
             {
-                if (i * i + j * j < 144)
+                if (i * i + j * j < sizeInfluence * sizeInfluence)
                 {
                     Vector3 relativePositionIJ = new(relativePosition.x + i, relativePosition.y, relativePosition.z + j);
                     Tuple<int, Terreno> index = SubTerrainAdmReference.terrainOfHero.GetIndexGlobal(relativePositionIJ);
                     int indexNumeric = SubObjectsAdmReferences.GetNumericIndex(index);
-                    if (!SubTerrainAdmReference.influencedEscaques.ContainsKey(indexNumeric)) SubTerrainAdmReference.influencedEscaques.Add(indexNumeric, this);
-                    terrainAdministrator.newInfluenceEscaques.Add(new Tuple<Tuple<int, Terreno>, int>(index, city.id));
+
+                    if (!SubTerrainAdmReference.influencedEscaques.ContainsKey(indexNumeric))
+                    {
+                        SubTerrainAdmReference.influencedEscaques.Add(indexNumeric, this);
+                        influencedEscaques.Add(index);
+                    }
                 }
             }
         }

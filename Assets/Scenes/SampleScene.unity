@@ -262,7 +262,6 @@ MonoBehaviour:
   prefabTest: {fileID: 7297524597540266947, guid: 16bf2e9e322f20f4d934482431881ba9, type: 3}
   prefabTown: {fileID: 37515049012196937, guid: 01f7e4de64d24c741a1947788e12fb5d, type: 3}
   prefabCity: {fileID: 1795672414065558527, guid: 045e28d6bf9e5c94ea3beec75920bcae, type: 3}
-  containerConstructions: {fileID: 1636852927}
 --- !u!1 &247045835
 GameObject:
   m_ObjectHideFlags: 0
@@ -272,9 +271,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 247045837}
-  - component: {fileID: 247045836}
   - component: {fileID: 247045838}
-  - component: {fileID: 247045839}
   - component: {fileID: 247045840}
   m_Layer: 0
   m_Name: Controlador de juego
@@ -283,116 +280,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &247045836
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 247045835}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d3864b8b07f2fc4ca518098bf7eaec5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  containerTerrenos: {fileID: 1931665749}
-  Terreno: {fileID: 5626073509183861393, guid: f7fb85bb61f6e614d8148c0ef1d7ce99, type: 3}
-  terrainTypes:
-  - name: water
-    threshold: 0.3
-    color: {r: 0.053800307, g: 0.20733821, b: 0.8773585, a: 0}
-    index: 0
-  - name: grass
-    threshold: 0.7
-    color: {r: 0.23932172, g: 0.7169812, b: 0.09807763, a: 0}
-    index: 1
-  - name: mountain
-    threshold: 1
-    color: {r: 0.5283019, g: 0.27140886, b: 0.042363837, a: 0}
-    index: 2
-  heightMultiplier: 250
-  heightCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.762214
-      value: 0.039191082
-      inSlope: 0.3352542
-      outSlope: 0.3352542
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.9052577
-      value: 0.12135577
-      inSlope: 1.7697915
-      outSlope: 1.7697915
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.94666755
-      value: 0.20563442
-      inSlope: 0.6304865
-      outSlope: 0.6304865
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.98284197
-      value: 0.8010374
-      inSlope: 8.310996
-      outSlope: 8.310996
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  waves:
-  - seed: 5931
-    frequency: 1
-    amplitude: 1
-  - seed: 8242
-    frequency: 0.5
-    amplitude: 2
-  - seed: 1649
-    frequency: 0.25
-    amplitude: 4
-  - seed: 5624
-    frequency: 0.5
-    amplitude: 2
-  - seed: 3328
-    frequency: 1
-    amplitude: 1
-  - seed: 96358
-    frequency: 0.25
-    amplitude: 4
-  sizeOfTerrain: 400
-  positionHero: {x: 0, y: 0, z: 0}
-  prefabFrontier: {fileID: 6482802981903597354, guid: c95a8970c5afdd54aa70f6bc5c676d34, type: 3}
 --- !u!4 &247045837
 Transform:
   m_ObjectHideFlags: 0
@@ -405,7 +292,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 100, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1945920569}
+  - {fileID: 903460725}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &247045838
@@ -421,29 +310,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scale: 15
---- !u!114 &247045839
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 247045835}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d79386c42bdfcfa448ffc691fcd1f19f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  containerResources: {fileID: 1581138136}
-  resourcePrefab:
-  - {fileID: 3511560276588028008, guid: 44bc2926ab142884ea07f0f34a615de8, type: 3}
-  - {fileID: 6999482172890475551, guid: 33614fb84dbf4f24b8604123a06fd8b5, type: 3}
-  - {fileID: 5576103755310846304, guid: 7978399bbcb749b42aed5f8d0c9475bb, type: 3}
-  - {fileID: 6039895048328208422, guid: 228720f715accea448a01ff66fdc7ab3, type: 3}
-  - {fileID: 1561618024781362960, guid: f80c99770376de041ade9ba13e9a6b08, type: 3}
-  - {fileID: 7286429990847138010, guid: af166188b37cff542af11dddc47c8ff7, type: 3}
-  - {fileID: 8452348325840286211, guid: 40d5aba4ed76ca244bee35c9080bdd06, type: 3}
-  - {fileID: 7860866898358656854, guid: cf62923454f283a43831db159a40bb7d, type: 3}
-  probabilidadRecursos: 75
 --- !u!114 &247045840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1127,6 +993,62 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 896523197}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &903460724
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 903460725}
+  - component: {fileID: 903460726}
+  m_Layer: 0
+  m_Name: ObjectAdmin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &903460725
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903460724}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 247045837}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &903460726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903460724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d79386c42bdfcfa448ffc691fcd1f19f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  containerConstructions: {fileID: 1636852927}
+  containerResources: {fileID: 1581138136}
+  resourcePrefab:
+  - {fileID: 3511560276588028008, guid: 44bc2926ab142884ea07f0f34a615de8, type: 3}
+  - {fileID: 6999482172890475551, guid: 33614fb84dbf4f24b8604123a06fd8b5, type: 3}
+  - {fileID: 5576103755310846304, guid: 7978399bbcb749b42aed5f8d0c9475bb, type: 3}
+  - {fileID: 6039895048328208422, guid: 228720f715accea448a01ff66fdc7ab3, type: 3}
+  - {fileID: 1561618024781362960, guid: f80c99770376de041ade9ba13e9a6b08, type: 3}
+  - {fileID: 7286429990847138010, guid: af166188b37cff542af11dddc47c8ff7, type: 3}
+  - {fileID: 8452348325840286211, guid: 40d5aba4ed76ca244bee35c9080bdd06, type: 3}
+  - {fileID: 7860866898358656854, guid: cf62923454f283a43831db159a40bb7d, type: 3}
+  probabilidadRecursos: 75
 --- !u!1 &1056771309
 GameObject:
   m_ObjectHideFlags: 0
@@ -2244,6 +2166,159 @@ Transform:
   - {fileID: 1814963408}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1945920568
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1945920569}
+  - component: {fileID: 1945920571}
+  - component: {fileID: 1945920570}
+  m_Layer: 0
+  m_Name: TerrainAdmin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1945920569
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1945920568}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 247045837}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1945920570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1945920568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e29a7690616e7d4b9c54f5d5daf0b03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabTerreno: {fileID: 5626073509183861393, guid: f7fb85bb61f6e614d8148c0ef1d7ce99, type: 3}
+  terrainTypes:
+  - name: water
+    threshold: 0.3
+    color: {r: 0.053800307, g: 0.20733821, b: 0.8773585, a: 0}
+    index: 0
+  - name: grass
+    threshold: 0.7
+    color: {r: 0.23932172, g: 0.7169812, b: 0.09807763, a: 0}
+    index: 1
+  - name: mountain
+    threshold: 1
+    color: {r: 0.5283019, g: 0.27140886, b: 0.042363837, a: 0}
+    index: 2
+  heightMultiplier: 250
+  heightCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.762214
+      value: 0.039191082
+      inSlope: 0.3352542
+      outSlope: 0.3352542
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.9052577
+      value: 0.12135577
+      inSlope: 1.7697915
+      outSlope: 1.7697915
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.94666755
+      value: 0.20563442
+      inSlope: 0.6304865
+      outSlope: 0.6304865
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.98284197
+      value: 0.8010374
+      inSlope: 8.310996
+      outSlope: 8.310996
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  waves:
+  - seed: 5931
+    frequency: 1
+    amplitude: 1
+  - seed: 8242
+    frequency: 0.5
+    amplitude: 2
+  - seed: 1649
+    frequency: 0.25
+    amplitude: 4
+  - seed: 5624
+    frequency: 0.5
+    amplitude: 2
+  - seed: 3328
+    frequency: 1
+    amplitude: 1
+  - seed: 96358
+    frequency: 0.25
+    amplitude: 4
+  containerTerrenos: {fileID: 1931665749}
+--- !u!114 &1945920571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1945920568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d3864b8b07f2fc4ca518098bf7eaec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabFrontier: {fileID: 6482802981903597354, guid: c95a8970c5afdd54aa70f6bc5c676d34, type: 3}
 --- !u!1 &2132589877
 GameObject:
   m_ObjectHideFlags: 0

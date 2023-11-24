@@ -242,11 +242,19 @@ public class Terreno : MonoBehaviour
   {
     if (relativePositionInVertices.x < -10)
     {
-      if (relativePositionInVertices.z < -10) return neighboors[0];
+      if (relativePositionInVertices.z < -10)
+      {
+        return neighboors[0];
+      }
 
-      else if (relativePositionInVertices.z > 10) return neighboors[2];
+      else if (relativePositionInVertices.z > 10)
+      {
+        return neighboors[2];
+      }
 
-      else return neighboors[1];
+      else {
+        return neighboors[1];
+        }
     }
     else if (relativePositionInVertices.x > 10)
     {
@@ -315,6 +323,4 @@ public class Terreno : MonoBehaviour
     texture2D.SetPixels32(pixs);
     texture2D.Apply();
   }
-
-
 }

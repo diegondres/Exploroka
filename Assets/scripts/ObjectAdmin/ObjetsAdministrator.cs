@@ -31,7 +31,7 @@ public class ObjetsAdministrator : MonoBehaviour
         {
             int localPosition = UnityEngine.Random.Range(0, 400);
             Vector3 position = terreno.GetGlobalPositionFromGlobalIndex(new Tuple<int, Terreno>(localPosition, terreno));
-                
+
             int random = UnityEngine.Random.Range(0, resourcePrefab.Length);
             GameObject resource = Instantiate(resourcePrefab[random], position, Quaternion.identity);
             resource.transform.SetParent(containerResources.transform);
@@ -43,9 +43,13 @@ public class ObjetsAdministrator : MonoBehaviour
 
     public void DeleteAllFrontiersCity(int city)
     {
-        foreach (GameObject frontier in SubObjectsAdmReferences.frontiers[city])
+        if (SubObjectsAdmReferences.frontiers.ContainsKey(city))
         {
-            Destroy(frontier);
+            foreach (GameObject frontier in SubObjectsAdmReferences.frontiers[city])
+            {
+                Destroy(frontier);
+            }
+
         }
     }
 

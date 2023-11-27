@@ -8,16 +8,21 @@ using UnityEngine.UI;
 
 public class UIAdministrator : MonoBehaviour
 {
-    [Header("Construction")]
+    [Header("Fundar")]
     public GameObject panelBuildingTown;    
-    public TextMeshProUGUI textMeshProUGUI;     
-    public TextMeshProUGUI textMeshProPanel; 
-
+        public TextMeshProUGUI textBuildingTownPanel; 
     public TextMeshProUGUI nameCity;
+
+
+    [Header("Inventario")]
+    public TextMeshProUGUI textInventory;     
+    private Inventory inventory;
+
+    [Header("Referencias ciudades")]
     public TMP_Dropdown dropdownCities;
 
+    //REFERENCES
     private Construction construction;
-    private Inventory inventory;
     private TerrainAdministrator terrainAdministrator;
     
     void Start()
@@ -25,6 +30,7 @@ public class UIAdministrator : MonoBehaviour
         inventory = FindAnyObjectByType<Inventory>();
         construction = FindAnyObjectByType<Construction>();
         terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
+
         UpdateText();
     }
 
@@ -44,7 +50,7 @@ public class UIAdministrator : MonoBehaviour
                 texto += "-" + item.Key + ": "+item.Value.Item1 + "\n";
             }
         }
-        textMeshProUGUI.text = texto;
+        textInventory.text = texto;
     }
 
      // Método llamado cuando se hace clic en el botón "Sí"
@@ -61,10 +67,10 @@ public class UIAdministrator : MonoBehaviour
         panelBuildingTown.SetActive(false);
     }
 
-    public void ActivatePanelBuildTown(){
+    public void ActivatePanelBuildTown(string texto){
         
         panelBuildingTown.SetActive(true);
-        textMeshProPanel.text = "¿Desea fundar una ciudad?";
+        textBuildingTownPanel.text = texto;
         
     }
 

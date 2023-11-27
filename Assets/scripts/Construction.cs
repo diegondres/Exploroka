@@ -47,7 +47,7 @@ public class Construction : MonoBehaviour
     {
       //Detectar si esta proximo a ciudades, de ser asi, enviar lista de ciudades cercanas.
       
-      uIAdministrator.ActivatePanelBuildTown();
+      uIAdministrator.ActivatePanelBuildTown("¿Desea fundar una ciudad?");
       
 
     }

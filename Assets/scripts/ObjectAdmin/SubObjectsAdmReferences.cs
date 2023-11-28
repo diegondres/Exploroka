@@ -54,7 +54,7 @@ public static class SubObjectsAdmReferences
     public static Vector3 GetBuildingLocation()
     {
         isBuildingLocationSelected = false;
-        buildingGlobalIndex.Item2.PaintPixelInfluence(buildingGlobalIndex.Item1, Color.red);
+            buildingGlobalIndex.Item2.PaintPixelInfluence(buildingGlobalIndex.Item1, Color.red);
 
         return buildingGlobalIndex.Item2.GetGlobalPositionFromGlobalIndex(buildingGlobalIndex);
     }

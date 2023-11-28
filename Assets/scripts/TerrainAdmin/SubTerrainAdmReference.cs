@@ -117,7 +117,7 @@ static class SubTerrainAdmReference
         Tuple<int, Terreno> indexGlobal = terrainOfHero.GetIndexGlobal(new Vector3(relativePosition.x + i, relativePosition.y, relativePosition.z + j));
         int numericIndex = SubObjectsAdmReferences.GetNumericIndex(indexGlobal);
 
-        if (influencedEscaques.ContainsKey(numericIndex) && !CheckIfCityIsInList(citiesDetected, influencedEscaques[numericIndex].id) )
+        if (influencedEscaques.ContainsKey(numericIndex) && !CheckIfCityIsInList(citiesDetected, influencedEscaques[numericIndex].city.id) )
         {
           citiesDetected.Add(influencedEscaques[numericIndex].city);
         };

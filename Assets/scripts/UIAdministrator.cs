@@ -13,6 +13,7 @@ public class UIAdministrator : MonoBehaviour
     public GameObject panelBuildingTown;
     public TextMeshProUGUI textBuildingTownPanel;
     public TextMeshProUGUI nameCity;
+    public GameObject inputCity;
 
 
     [Header("Inventario")]
@@ -29,12 +30,15 @@ public class UIAdministrator : MonoBehaviour
     private TerrainAdministrator terrainAdministrator;
     private List<City> cities;
     private City citySelected = null;
+    private bool isCitySelected = false;
 
     void Start()
     {
         inventory = FindAnyObjectByType<Inventory>();
         construction = FindAnyObjectByType<Construction>();
         terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
+
+        dropdownCities.onValueChanged.AddListener(HandleCityConnectionDropdown);
 
         UpdateText();
     }
@@ -63,18 +67,28 @@ public class UIAdministrator : MonoBehaviour
 
     public void BuildTown()
     {
-        construction.BuildTown(nameCity.text);
         panelBuildingTown.SetActive(false);
+        construction.BuildTown(nameCity.text, citySelected);
         citySelected = null;
+        nameCity.text = "";
     }
 
     public void ActivatePanelBuildTown()
     {
-        panelBuildingTown.SetActive(true);
-        Debug.Log(citySelected.nameCity);
-        textBuildingTownPanel.text = "¿Esta seguro que quiere gastar 5 de gobernabilidad [Icon_gov]?";
-        textBuildOrConectTownPanel.autoSizeTextContainer = true;
+        if (isCitySelected)
+        {
+            textBuildingTownPanel.text = "¿Esta seguro que quiere crear un PUEBLO por 1 de gobernabilidad [Icon_gov]?";
+            inputCity.SetActive(false);
+        }
+        else
+        {
+            textBuildingTownPanel.text = "¿Esta seguro que quiere fundar una CIUDAD por 5 de gobernabilidad [Icon_gov]?";
+            inputCity.SetActive(true);
 
+        }
+        
+        isCitySelected = false;
+        panelBuildingTown.SetActive(true);
     }
 
     public void ActivatePanelBuildOrConectTown(List<City> cities)
@@ -87,17 +101,18 @@ public class UIAdministrator : MonoBehaviour
         options.Insert(0, new TMP_Dropdown.OptionData(""));
         dropdownCities.AddOptions(cityNames);
         dropdownCities.value = 0;
-        
-        panelBuildOrConectTown.SetActive(true);
-        textBuildOrConectTownPanel.text = "Elige entre fundar una nueva ciudad o elegir una ciudad a la que añexar nueva ciudad";
-        textBuildOrConectTownPanel.autoSizeTextContainer = true;
 
+        panelBuildOrConectTown.SetActive(true);
+        textBuildOrConectTownPanel.text = "Elige entre fundar una nueva ciudad o elegir una ciudad a la que anexar nueva ciudad";
     }
 
     public void HandleCityConnectionDropdown(int index)
     {
-        Debug.Log(index);
+        isCitySelected = true;
+        index -= 1;
         citySelected = cities[index];
+        panelBuildOrConectTown.SetActive(false);
+        ActivatePanelBuildTown();
     }
 
     public bool IsAnyPanelOpen()

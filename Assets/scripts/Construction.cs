@@ -43,13 +43,10 @@ public class Construction : MonoBehaviour
       buildingScript.SetInitialValues("Casita", 100, 250, 1, 5, true);
     }
 
-    if (Input.GetKeyDown(KeyCode.F) && CheckBuildingLocation())
+    if (Input.GetKeyDown(KeyCode.F) && CheckBuildingLocation() && !IsBuildingLocationInCity())
     {
-
       List<City> detectedCities = SubTerrainAdmReference.DetectCity(SubObjectsAdmReferences.GetBuildingLocation(), 15);
-
       uIAdministrator.ActivatePanelBuildOrConectTown(detectedCities);
-
     }
 
   }
@@ -61,6 +58,16 @@ public class Construction : MonoBehaviour
     SubObjectsAdmReferences.isBuildingLocationSelected = false;
 
     return Instantiate(prefab, buildingLocation, Quaternion.identity, SubObjectsAdmReferences.containerConstructions.transform);
+  }
+
+  private bool IsBuildingLocationInCity()
+  {
+    Vector3 relativePositionBuilingLocation = SubTerrainAdmReference.terrainOfHero.GetRelativePositionInVertices(SubObjectsAdmReferences.GetBuildingLocation());
+
+    Tuple<int, Terreno> index = SubTerrainAdmReference.terrainOfHero.GetIndexGlobal(relativePositionBuilingLocation);
+    int numericIndex = SubObjectsAdmReferences.GetNumericIndex(index);
+
+    return SubTerrainAdmReference.influencedEscaques.ContainsKey(numericIndex);
   }
 
   private bool CheckBuildingLocation()
@@ -81,7 +88,7 @@ public class Construction : MonoBehaviour
     return true;
   }
 
-  public void BuildTown(string nameCity)
+  public void BuildTown(string nameCity, City attachedCity)
   {
     GameObject town = InstanciateObject(prefabTown);
     SubObjectsAdmReferences.AddBuilding(town);
@@ -89,17 +96,27 @@ public class Construction : MonoBehaviour
     Town townScript = town.GetComponent<Town>();
     townScript.id = townCounter;
 
-    GameObject city = Instantiate(prefabCity, transform.position, Quaternion.identity);
-    town.transform.SetParent(city.transform);
-    City cityScript = city.GetComponent<City>();
-    cityScript.id = cityCounter;
-    cityScript.nameCity = nameCity;
-    cityScript.gameObject.name = nameCity;
+    if (attachedCity != null)
+    {
+        townScript.city = attachedCity;
+        town.transform.SetParent(attachedCity.transform);
+    }
+    else
+    {
+      GameObject city = Instantiate(prefabCity, transform.position, Quaternion.identity);
+      town.transform.SetParent(city.transform);
 
-    townScript.city = cityScript;
+      City cityScript = city.GetComponent<City>();
+      cityScript.id = cityCounter;
+      cityScript.nameCity = nameCity;
+      cityScript.gameObject.name = nameCity;
 
-    inventory.governance -= cityPrice;
-    cityCounter++;
+      townScript.city = cityScript;
+      
+      inventory.governance -= cityPrice;
+      cityCounter++;
+    }
+
 
     StartCoroutine(GenerateNewInfluenceZone(townScript.city));
     uIAdministrator.UpdateText();

@@ -8,28 +8,21 @@ using UnityEngine.UIElements;
 public class Heroe : MonoBehaviour
 {
   [Header("Movilidad")]
-  [SerializeField]
-  private float minimumTime = 0.0f;
+
   [SerializeField]
   private float moveDuration = 0.1f;
   private bool isMoving = false;
-  private float distancia = 0.0f;
-  private float acumulatedTime = 0.0f;
   private int sizeEscaque;
   private float rotation;
 
   //REFERENCIAS
   private Camera camara;
-  private Vector3 destino;
-  private TerrainAdministrator terrainAdministrator;
-  private Vector3 distanciaEnVector = Vector3.zero;
+  public Vector3 distanciaEnVector = Vector3.zero;
   private Vector3 movement = Vector3.zero;
   private UIAdministrator uIAdministrator;
 
   void Start()
   {
-    destino = transform.position;
-    terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
     uIAdministrator = FindAnyObjectByType<UIAdministrator>();
     SubTerrainAdmReference.InWhatTerrenoAmI(transform.position);
     sizeEscaque = SubTerrainAdmReference.sizeEscaque;
@@ -40,32 +33,7 @@ public class Heroe : MonoBehaviour
 
   void Update()
   {
-    acumulatedTime += Time.deltaTime;
-    if (!uIAdministrator.IsAnyPanelOpen())
-    {
-
-      ArrowMoving();
-
-      if (Input.GetMouseButtonDown(1))
-      {
-        Ray rayo = camara.ScreenPointToRay(Input.mousePosition);
-        Plane plano = new(Vector3.up, transform.position);
-        distancia = 0.0f;
-
-        if (plano.Raycast(rayo, out distancia))
-        {
-          destino = rayo.GetPoint(distancia);
-        }
-        distanciaEnVector = SubTerrainAdmReference.CalculateDistance(transform.position, destino);
-      }
-
-      if (Vector3.Magnitude(distanciaEnVector) > 2.8f && acumulatedTime >= minimumTime)
-      {
-        MouseMoving(distanciaEnVector);
-        distanciaEnVector = SubTerrainAdmReference.CalculateDistance(transform.position, destino);
-        acumulatedTime = 0.0f;
-      }
-    }
+    
 
   }
 
@@ -76,7 +44,7 @@ public class Heroe : MonoBehaviour
     transform.eulerAngles = new Vector3(0, rotation, 0);
   }
 
-  private void ArrowMoving()
+  public void ArrowMoving()
   {
     rotation = 0.0f;
     movement = Vector3.zero;
@@ -110,7 +78,7 @@ public class Heroe : MonoBehaviour
     }
   }
 
-  private void MouseMoving(Vector3 distance)
+  public void MouseMoving(Vector3 distance)
   {
     if (Mathf.Abs(distance.x) > Mathf.Abs(distance.z))
     {

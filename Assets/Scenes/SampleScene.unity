@@ -747,8 +747,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15af508371ce7a44ea48bb0f6bff041b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minimumTime: 0.2
   moveDuration: 0.1
+  distanciaEnVector: {x: 0, y: 0, z: 0}
 --- !u!114 &202133887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -775,6 +775,7 @@ GameObject:
   - component: {fileID: 247045837}
   - component: {fileID: 247045838}
   - component: {fileID: 247045840}
+  - component: {fileID: 247045841}
   m_Layer: 0
   m_Name: Controlador de juego
   m_TagString: Untagged
@@ -827,6 +828,20 @@ MonoBehaviour:
   governance: 5
   shields: 0
   population: 0
+--- !u!114 &247045841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 247045835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25ede208088115c44b5eda39f5d3b1c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  heroe: {fileID: 202133885}
+  minimumTime: 1
 --- !u!1 &257363962
 GameObject:
   m_ObjectHideFlags: 0

@@ -18,11 +18,6 @@ public class Inventory : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.I)){
-            foreach(var resource in inventory){
-                Debug.Log(resource.Key + resource.Value.Item1);
-            }
-        }
     }
 
     public void AddToInventory(Resource resource){

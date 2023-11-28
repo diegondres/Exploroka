@@ -10,17 +10,14 @@ public class Terreno : MonoBehaviour
   private float acumulatedTime = 0f;
   bool isSorroundingEscaquesPainted = false;
   private Vector3 worldPositionTerrain;
-  [NonSerialized]
-  private UIAdministrator uIAdministrator;
+
   //TERRENOS VECINOS
   [NonSerialized]
   public Terreno[] neighboors = new Terreno[8];
 
   public int id;
   private TerrainAdministrator terrainAdministrator;
-  private ObjetsAdministrator objetsAdministrator;
   private TerrainGeneration terrainGeneration;
-  private Camera camara;
 
   //GENERACION PROCEDURAL
   [NonSerialized]
@@ -32,10 +29,6 @@ public class Terreno : MonoBehaviour
   //tamaño del terreno en cantidad de escaques
   private float sizeTerrainInVertices;
 
-  //RECURSOS
-  bool canConsumeResource = false;
-  Resource resourceSelected;
-
   void Start()
   {
     Inicialization();
@@ -44,14 +37,11 @@ public class Terreno : MonoBehaviour
   //////////////////////////////----------START-----------//////////////////////////////////////////////////////////////
   void Inicialization()
   {
-    uIAdministrator = FindAnyObjectByType<UIAdministrator>();
     terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
-    objetsAdministrator = FindAnyObjectByType<ObjetsAdministrator>();
     sizeEscaque = SubTerrainAdmReference.sizeEscaque;
     sizeTerrainInVertices = SubTerrainAdmReference.sizeTerrainInVertices;
     tileRenderer = GetComponent<MeshRenderer>();
     terrainGeneration = GetComponent<TerrainGeneration>();
-    camara = FindAnyObjectByType<Camera>();
 
     worldPositionTerrain = transform.parent.TransformPoint(transform.localPosition);
   }
@@ -80,40 +70,7 @@ public class Terreno : MonoBehaviour
         IdleTime(acumulatedTime + Time.deltaTime);
         isSorroundingEscaquesPainted = false;
       }
-      if (Input.GetMouseButtonDown(0) && !uIAdministrator.IsAnyPanelOpen())
-      {
-        Ray rayo = camara.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(rayo, out RaycastHit hit, 1000))
-        {
-          Vector3 destino = hit.point;
-          Vector3 relativePosition = GetRelativePositionInVertices(destino);
-          Tuple<int, Terreno> globalIndex = GetIndexGlobal(relativePosition);
-
-          GameObject thing = SubObjectsAdmReferences.IsSomethingBuiltInHere(globalIndex);
-
-          if (thing != null)
-          {
-            if (thing.GetComponent<Building>() != null) thing.GetComponent<Building>().PrintBuildingValues();
-            else if (thing.GetComponent<Resource>() != null)
-            {
-              resourceSelected = thing.GetComponent<Resource>();
-              resourceSelected.PrintResourceValues();
-              canConsumeResource = true;
-            }
-          }
-          SubObjectsAdmReferences.SelectEscaqueToBuildIn(globalIndex);
-        }
-      }
-      if (canConsumeResource && Input.GetKeyDown(KeyCode.E))
-      {
-        canConsumeResource = false;
-        resourceSelected.Consume();
-      }
-      if (Input.GetKeyDown(KeyCode.J))
-      {
-        objetsAdministrator.DeleteAllFrontiersCity(0);
-      }
+     
     }
   }
 

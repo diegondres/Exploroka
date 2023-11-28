@@ -57,6 +57,10 @@ public class Resource : MonoBehaviour
     {
         //TODO: detectar ciudad mas cercana o a la que queremos que vayan los recursos como los escudos o poblacion.
         //Si es un objeto que entregue este tipo de recursos no se debe mandar al inventario.
+        List<City> citiesAround = SubTerrainAdmReference.DetectCity(transform.position, 20);
+        Debug.Log(citiesAround.Count);
+        
+
         if (tags2 != Tags.no_tallable)
         {
             if (population == 0 && shields == 0)

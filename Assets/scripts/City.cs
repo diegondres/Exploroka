@@ -1,9 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Threading;
-using UnityEditor.AppleTV;
 using UnityEngine;
 
 public class City : MonoBehaviour

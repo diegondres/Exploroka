@@ -105,9 +105,11 @@ static class SubTerrainAdmReference
     }
   }
 
-  public static Town DetectCity(Vector3 globalPositionTown, int radio)
+  public static List<City> DetectCity(Vector3 globalPositionTown, int radio)
   {
     Vector3 relativePosition = terrainOfHero.GetRelativePositionInVertices(globalPositionTown);
+    List<City> citiesDetected = new();
+
     for (int i = -radio; i < radio; i++)
     {
       for (int j = -radio; j < radio; j++)
@@ -115,16 +117,26 @@ static class SubTerrainAdmReference
         Tuple<int, Terreno> indexGlobal = terrainOfHero.GetIndexGlobal(new Vector3(relativePosition.x + i, relativePosition.y, relativePosition.z + j));
         int numericIndex = SubObjectsAdmReferences.GetNumericIndex(indexGlobal);
 
-        if (influencedEscaques.ContainsKey(numericIndex))
+        if (influencedEscaques.ContainsKey(numericIndex) && !CheckIfCityIsInList(citiesDetected, influencedEscaques[numericIndex].id) )
         {
-          return influencedEscaques[numericIndex];
+          citiesDetected.Add(influencedEscaques[numericIndex].city);
         };
       }
     }
 
-    return null;
+    return citiesDetected;
   }
 
+  static bool CheckIfCityIsInList(List<City> cities, int id){
+    foreach (City city in cities)
+    {
+      if(city.id == id){
+        return true;
+      }
+    }
+    return false;
+  }
+  
   public static bool IsThisEscaqueInfluenced(Vector3 relativePosition, Terreno terreno, int city)
   {
     //Calidad garantizada por el practicante tassadar

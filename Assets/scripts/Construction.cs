@@ -45,10 +45,10 @@ public class Construction : MonoBehaviour
 
     if (Input.GetKeyDown(KeyCode.F) && CheckBuildingLocation())
     {
-      //Detectar si esta proximo a ciudades, de ser asi, enviar lista de ciudades cercanas.
-      
-      uIAdministrator.ActivatePanelBuildTown("¿Desea fundar una ciudad?");
-      
+
+      List<City> detectedCities = SubTerrainAdmReference.DetectCity(SubObjectsAdmReferences.GetBuildingLocation(), 15);
+
+      uIAdministrator.ActivatePanelBuildOrConectTown(detectedCities);
 
     }
 
@@ -89,27 +89,18 @@ public class Construction : MonoBehaviour
     Town townScript = town.GetComponent<Town>();
     townScript.id = townCounter;
 
-    Town detectedCity = SubTerrainAdmReference.DetectCity(town.transform.position, 15);
+    GameObject city = Instantiate(prefabCity, transform.position, Quaternion.identity);
+    town.transform.SetParent(city.transform);
+    City cityScript = city.GetComponent<City>();
+    cityScript.id = cityCounter;
+    cityScript.nameCity = nameCity;
+    cityScript.gameObject.name = nameCity;
 
-    if (detectedCity == null)
-    {
-      GameObject city = Instantiate(prefabCity, transform.position, Quaternion.identity);
-      town.transform.SetParent(city.transform);
-      City cityScript = city.GetComponent<City>();
-      cityScript.id = cityCounter;
-      cityScript.nameCity = nameCity;
-      cityScript.gameObject.name = nameCity;
+    townScript.city = cityScript;
 
-      townScript.city = cityScript;
+    inventory.governance -= cityPrice;
+    cityCounter++;
 
-      inventory.governance -= cityPrice;
-      cityCounter++;
-    }
-    else
-    {
-      townScript.city = detectedCity.city;
-      town.transform.SetParent(detectedCity.city.transform);
-    }
     StartCoroutine(GenerateNewInfluenceZone(townScript.city));
     uIAdministrator.UpdateText();
     townCounter++;

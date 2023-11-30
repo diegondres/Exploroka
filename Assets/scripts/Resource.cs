@@ -71,7 +71,7 @@ public class Resource : MonoBehaviour
                 else
                 {
                     List<City> citiesAround = SubTerrainAdmReference.DetectCity(transform.position, 20);
-                    uIAdministrator.ActivatePanelResourceDestination(citiesAround, this);
+                    uIAdministrator.subUIAdminResources.ActivatePanelResourceDestination(citiesAround, this);
                 }
             }
         }
@@ -88,7 +88,7 @@ public class Resource : MonoBehaviour
             city.shields += shields;
             city.population += population;
         }
-        uIAdministrator.UpdateText();
+        uIAdministrator.subUIAdminInventory.UpdateText();
 
         Destroy(gameObject);
     }

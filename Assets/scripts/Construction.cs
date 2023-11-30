@@ -46,7 +46,7 @@ public class Construction : MonoBehaviour
     if (Input.GetKeyDown(KeyCode.F) && CheckBuildingLocation() && !IsBuildingLocationInCity())
     {
       List<City> detectedCities = SubTerrainAdmReference.DetectCity(SubObjectsAdmReferences.GetBuildingLocation(), 15);
-      uIAdministrator.ActivatePanelBuildOrConectTown(detectedCities);
+      uIAdministrator.subUIAdminCity.ActivatePanelBuildOrConectTown(detectedCities);
     }
 
   }
@@ -97,6 +97,9 @@ public class Construction : MonoBehaviour
     {
         townScript.city = attachedCity;
         town.transform.SetParent(attachedCity.transform);
+
+        inventory.governance -= 1;
+
     }
     else
     {
@@ -114,9 +117,8 @@ public class Construction : MonoBehaviour
       cityCounter++;
     }
 
-
     StartCoroutine(GenerateNewInfluenceZone(townScript.city));
-    uIAdministrator.UpdateText();
+    uIAdministrator.subUIAdminInventory.UpdateText();
     townCounter++;
   }
 

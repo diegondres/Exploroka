@@ -114,6 +114,7 @@ static class SubTerrainAdmReference
   public static Vector3 MoveHero(Vector3 position, Vector3 movement)
   {
     positionHero = terrainOfHero.Move(position, movement);
+    
     return positionHero;
   }
   public static void SetTerrenoOfHero(Terreno terreno, SubTerrainAdmGeneration subTerrainAdmGeneration)

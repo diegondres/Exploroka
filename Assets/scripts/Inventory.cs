@@ -7,8 +7,6 @@ public class Inventory : MonoBehaviour
 {
     public Dictionary<string, Tuple<int, Resource>> inventory = new();
     public int governance = 5;
-    public int shields = 0;
-    public int population = 0;
 
     // Start is called before the first frame update
     void Start()

@@ -35,7 +35,7 @@ public class Town : MonoBehaviour
                 {
                     Vector3 relativePositionIJ = new(relativePosition.x + i, relativePosition.y, relativePosition.z + j);
                     Tuple<int, Terreno> index = SubTerrainAdmReference.terrainOfHero.GetIndexGlobal(relativePositionIJ);
-                    int indexNumeric = SubObjectsAdmReferences.GetNumericIndex(index);
+                    int indexNumeric = SubTerrainAdmReference.GetNumericIndex(index);
 
                     if (!SubTerrainAdmReference.influencedEscaques.ContainsKey(indexNumeric))
                     {

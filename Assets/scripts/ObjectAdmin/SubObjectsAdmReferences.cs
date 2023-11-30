@@ -84,14 +84,6 @@ public static class SubObjectsAdmReferences
         return index.Item2.id * multiplier + index.Item1;
     }
 
-    public static Tuple<int, Terreno> GetIndexFromNumeric(int num, TerrainAdministrator terrainAdministrator)
-    {
-        int id = num / multiplier;
-        int index = num - id * multiplier;
-        Terreno terreno = terrainAdministrator.GetTerrenoScriptFromId(id);
-
-        return new Tuple<int, Terreno>(index, terreno);
-    }
 
     public static GameObject IsSomethingBuiltInHere(Tuple<int, Terreno> globalIndex)
     {

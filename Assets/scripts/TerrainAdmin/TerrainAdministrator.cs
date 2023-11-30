@@ -58,7 +58,7 @@ public class TerrainAdministrator : MonoBehaviour
   {
     foreach (var pair in SubTerrainAdmReference.influencedEscaques)
     {
-      Tuple<int, Terreno> globalIndex = SubObjectsAdmReferences.GetIndexFromNumeric(pair.Key, this);
+      Tuple<int, Terreno> globalIndex = SubTerrainAdmReference.GetIndexFromNumeric(pair.Key, this);
       globalIndex.Item2.PaintPixelInfluence(globalIndex.Item1, Color.magenta);
       StartCoroutine(ReturnToOriginal(globalIndex));
     }

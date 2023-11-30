@@ -62,10 +62,7 @@ public class Construction : MonoBehaviour
 
   private bool IsBuildingLocationInCity()
   {
-    Vector3 relativePositionBuilingLocation = SubTerrainAdmReference.terrainOfHero.GetRelativePositionInVertices(SubObjectsAdmReferences.GetBuildingLocation());
-
-    Tuple<int, Terreno> index = SubTerrainAdmReference.terrainOfHero.GetIndexGlobal(relativePositionBuilingLocation);
-    int numericIndex = SubObjectsAdmReferences.GetNumericIndex(index);
+    int numericIndex = SubTerrainAdmReference.GetNumericIndexFromGlobalPosition(SubObjectsAdmReferences.GetBuildingLocation());
 
     return SubTerrainAdmReference.influencedEscaques.ContainsKey(numericIndex);
   }

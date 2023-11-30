@@ -12,7 +12,7 @@ public class InputAdministrator : MonoBehaviour
     private UIAdministrator uIAdministrator;
     private ObjetsAdministrator objetsAdministrator;
     //RECURSOS
-    bool canConsumeResource = false;
+    bool isAResourceSelected = false;
     Resource resourceSelected;
     private Camera camara;
 
@@ -41,7 +41,8 @@ public class InputAdministrator : MonoBehaviour
         {
             heroe.ArrowMoving();
 
-            if (Input.GetMouseButtonDown(1))
+            //MOUSE
+            if (Input.GetMouseButtonDown(1))  //Mouse click left for hero moving
             {
                 Ray rayo = camara.ScreenPointToRay(Input.mousePosition);
                 Plane plano = new(Vector3.up, transform.position);
@@ -59,7 +60,7 @@ public class InputAdministrator : MonoBehaviour
                 heroe.distanciaEnVector = SubTerrainAdmReference.CalculateDistance(transform.position, destino);
                 acumulatedTime = 0.0f;
             }
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0)) //Mouse click left for select something
             {
                 Ray rayo = camara.ScreenPointToRay(Input.mousePosition);
 
@@ -69,6 +70,8 @@ public class InputAdministrator : MonoBehaviour
                     Vector3 relativePosition = SubTerrainAdmReference.terrainOfHero.GetRelativePositionInVertices(destino);
                     Tuple<int, Terreno> globalIndex = SubTerrainAdmReference.terrainOfHero.GetIndexGlobal(relativePosition);
 
+
+                    //TODO: es posible que queramos mejorar esta logica en el futuro, si es que hay mas tipos de cosas mas alla de recursos y construcciones.
                     GameObject thing = SubObjectsAdmReferences.IsSomethingBuiltInHere(globalIndex);
 
                     if (thing != null)
@@ -78,17 +81,17 @@ public class InputAdministrator : MonoBehaviour
                         {
                             resourceSelected = thing.GetComponent<Resource>();
                             resourceSelected.PrintResourceValues();
-                            canConsumeResource = true;
+                            isAResourceSelected = true;
                         }
                     }
                     SubObjectsAdmReferences.SelectEscaqueToBuildIn(globalIndex);
                 }
             }
-        }
-        if (canConsumeResource && Input.GetKeyDown(KeyCode.E))
-        {
-            canConsumeResource = false;
-            resourceSelected.Consume();
+            if (Input.GetKeyDown(KeyCode.E) && isAResourceSelected)
+            {
+                isAResourceSelected = false;
+                resourceSelected.PreConsume();             
+            }
         }
 
     }

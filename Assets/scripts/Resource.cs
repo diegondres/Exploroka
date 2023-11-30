@@ -8,7 +8,7 @@ public class Resource : MonoBehaviour
 {
     public enum Tags
     {
-        arbol,piedra,tallable,no_tallable,animal,planta,medicinal,hongo
+        arbol, piedra, tallable, no_tallable, animal, planta, medicinal, hongo
     }
     //REFERENCIAS
     private Inventory inventory;
@@ -52,28 +52,51 @@ public class Resource : MonoBehaviour
     {
         Debug.Log("Name: " + ResourceName + ";\n" + "quantity: " + quantity + ";\n" + "Can Run Out?: " + canRunOut + " Tag: " + tags + " Tag2: " + tags2);
     }
-
-    public void Consume()
+    public void PreConsume()
     {
-        //TODO: detectar ciudad mas cercana o a la que queremos que vayan los recursos como los escudos o poblacion.
-        //Si es un objeto que entregue este tipo de recursos no se debe mandar al inventario.
-        List<City> citiesAround = SubTerrainAdmReference.DetectCity(transform.position, 20);
-        Debug.Log(citiesAround.Count);
-        
-
-        if (tags2 != Tags.no_tallable)
+        if (tags2 != Tags.no_tallable) //Esto es por si nos encontramos con una pieda o similar que no hace nada
         {
-            if (population == 0 && shields == 0)
+            if (ThisResourceGoToInvetory())
             {
-                inventory.AddToInventory(this);
+                Consume(true);
             }
-
-            inventory.shields += shields;
-            inventory.population += population;
-            uIAdministrator.UpdateText();   
-            Destroy(gameObject);
+            else
+            {
+                int numericIndex = SubTerrainAdmReference.GetNumericIndexFromGlobalPosition(transform.position);
+                if (SubTerrainAdmReference.influencedEscaques.ContainsKey(numericIndex))
+                {
+                    City city = SubTerrainAdmReference.influencedEscaques[numericIndex].city;
+                    Consume(false, city);
+                }
+                else
+                {
+                    List<City> citiesAround = SubTerrainAdmReference.DetectCity(transform.position, 20);
+                    uIAdministrator.ActivatePanelResourceDestination(citiesAround, this);
+                }
+            }
         }
+    }
 
+    public void Consume(bool toInventory, City city = null)
+    {
+        if (toInventory)
+        {
+            inventory.AddToInventory(this);
+        }
+        if (city != null)
+        {
+            city.shields += shields;
+            city.population += population;
+        }
+        uIAdministrator.UpdateText();
+
+        Destroy(gameObject);
+    }
+
+
+    public bool ThisResourceGoToInvetory()
+    {
+        return population == 0 && shields == 0;
     }
 
 }

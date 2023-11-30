@@ -16,6 +16,9 @@ static class SubTerrainAdmReference
   public static Terreno terrainOfHero;
   private static Vector3 positionHero = Vector3.zero;
 
+  private static readonly int multiplier = 10000;
+
+
 
   [NonSerialized]
   public static readonly Dictionary<int, Town> influencedEscaques = new();
@@ -37,6 +40,25 @@ static class SubTerrainAdmReference
     }
     return false;
   }
+
+  public static int GetNumericIndex(Tuple<int, Terreno> index)
+  {
+    return index.Item2.id * multiplier + index.Item1;
+  }
+  public static int GetNumericIndexFromGlobalPosition(Vector3 globalPosition){
+    Vector3 relativePosition = terrainOfHero.GetRelativePositionInVertices(globalPosition);
+    Tuple<int, Terreno> index = terrainOfHero.GetIndexGlobal(relativePosition);
+    
+    return GetNumericIndex(index);
+  }
+   public static Tuple<int, Terreno> GetIndexFromNumeric(int num, TerrainAdministrator terrainAdministrator)
+    {
+        int id = num / multiplier;
+        int index = num - id * multiplier;
+        Terreno terreno = terrainAdministrator.GetTerrenoScriptFromId(id);
+
+        return new Tuple<int, Terreno>(index, terreno);
+    }
 
   public static bool CompareTwoEscaques(Tuple<int, Terreno> escaque1, Tuple<int, Terreno> escaque2)
   {
@@ -115,9 +137,9 @@ static class SubTerrainAdmReference
       for (int j = -radio; j < radio; j++)
       {
         Tuple<int, Terreno> indexGlobal = terrainOfHero.GetIndexGlobal(new Vector3(relativePosition.x + i, relativePosition.y, relativePosition.z + j));
-        int numericIndex = SubObjectsAdmReferences.GetNumericIndex(indexGlobal);
+        int numericIndex = GetNumericIndex(indexGlobal);
 
-        if (influencedEscaques.ContainsKey(numericIndex) && !CheckIfCityIsInList(citiesDetected, influencedEscaques[numericIndex].city.id) )
+        if (influencedEscaques.ContainsKey(numericIndex) && !CheckIfCityIsInList(citiesDetected, influencedEscaques[numericIndex].city.id))
         {
           citiesDetected.Add(influencedEscaques[numericIndex].city);
         };
@@ -127,25 +149,28 @@ static class SubTerrainAdmReference
     return citiesDetected;
   }
 
-  static bool CheckIfCityIsInList(List<City> cities, int id){
+  static bool CheckIfCityIsInList(List<City> cities, int id)
+  {
     foreach (City city in cities)
     {
-      if(city.id == id){
+      if (city.id == id)
+      {
         return true;
       }
     }
     return false;
   }
-  
+
   public static bool IsThisEscaqueInfluenced(Vector3 relativePosition, Terreno terreno, int city)
   {
     //Calidad garantizada por el practicante tassadar
     Tuple<int, Terreno> indexSides = terreno.GetIndexGlobal(relativePosition);
     Vector3 realRelativePosition = indexSides.Item2.GetRelativePositionFromGlobalIndex(indexSides);
-    
-    int numericIndex = SubObjectsAdmReferences.GetNumericIndex(indexSides);
 
-    if(!terreno.IsWalkable(realRelativePosition)){
+    int numericIndex = GetNumericIndex(indexSides);
+
+    if (!terreno.IsWalkable(realRelativePosition))
+    {
       return true;
     }
     if (city == -1)
@@ -154,7 +179,7 @@ static class SubTerrainAdmReference
     }
     else
     {
-      return influencedEscaques.ContainsKey(numericIndex) && influencedEscaques[numericIndex].city.id == city ;
+      return influencedEscaques.ContainsKey(numericIndex) && influencedEscaques[numericIndex].city.id == city;
     }
   }
 
@@ -174,9 +199,9 @@ static class SubTerrainAdmReference
         terrainAdministrator.PutFrontierInEscaque(newInfluencedEscaque, new Vector3(9, 0, 0), Quaternion.identity, city);
       }
 
-      if (!IsThisEscaqueInfluenced(relativePosition + new Vector3(0, 0, -1), newInfluencedEscaque.Item2,city))
+      if (!IsThisEscaqueInfluenced(relativePosition + new Vector3(0, 0, -1), newInfluencedEscaque.Item2, city))
       {
-        terrainAdministrator.PutFrontierInEscaque(newInfluencedEscaque, new Vector3(0, 0, -9), Quaternion.Euler(new Vector3(0, -90, 0)),city);
+        terrainAdministrator.PutFrontierInEscaque(newInfluencedEscaque, new Vector3(0, 0, -9), Quaternion.Euler(new Vector3(0, -90, 0)), city);
       }
 
       if (!IsThisEscaqueInfluenced(relativePosition + new Vector3(0, 0, 1), newInfluencedEscaque.Item2, city))
@@ -184,7 +209,7 @@ static class SubTerrainAdmReference
         terrainAdministrator.PutFrontierInEscaque(newInfluencedEscaque, new Vector3(0, 0, 9), Quaternion.Euler(new Vector3(0, 90, 0)), city);
       }
 
-      }
+    }
     newInfluenceEscaques.Clear();
   }
 

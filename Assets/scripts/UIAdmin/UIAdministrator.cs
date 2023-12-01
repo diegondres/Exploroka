@@ -26,27 +26,15 @@ public class UIAdministrator : MonoBehaviour
     {
         inventory = FindAnyObjectByType<Inventory>();
 
-        subUIAdminCity = FindAnyObjectByType<SubUIAdminCity>();
-        subUIAdminResources = FindAnyObjectByType<SubUIAdminResources>();
-        subUIAdminInventory = FindAnyObjectByType<SubUIAdminInventory>();
+        subUIAdminCity = GetComponent<SubUIAdminCity>();
+        subUIAdminResources = GetComponent<SubUIAdminResources>();
+        subUIAdminInventory = GetComponent<SubUIAdminInventory>();
 
     }
-
-
-    public void UpdateText()
-    {
-        string texto = "Gobernabilidad: " + inventory.governance + "\n";
-
-        Dictionary<string, Tuple<int, Resource>> inv = inventory.inventory;
-        foreach (var item in inv)
-        {
-            if (item.Value.Item1 > 0)
-            {
-                texto += "-" + item.Key + ": " + item.Value.Item1 + "\n";
-            }
-        }
-        textInventory.text = texto;
+    void Update(){
+        if (IsAnyPanelOpen()) SubTerrainAdmReference.terrainOfHero.IdleTime(0);
     }
+
     public bool IsAnyPanelOpen()
     {
         foreach (GameObject panel in panels)

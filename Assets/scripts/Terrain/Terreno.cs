@@ -83,6 +83,7 @@ public class Terreno : MonoBehaviour
     position += movement;
     Vector3 relativePositionInVertices = GetRelativePositionInVertices(position);
 
+
     if (GetTerrain(relativePositionInVertices) != null)
     {
       Terreno neighboor = GetTerrain(relativePositionInVertices);

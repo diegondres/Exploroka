@@ -35,7 +35,6 @@ public class InputAdministrator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         acumulatedTime += Time.deltaTime;
         if (!uIAdministrator.IsAnyPanelOpen())
         {

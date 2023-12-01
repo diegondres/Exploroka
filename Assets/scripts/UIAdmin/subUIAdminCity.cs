@@ -18,6 +18,11 @@ public class SubUIAdminCity : MonoBehaviour
     public TextMeshProUGUI textBuildOrConectTownPanel;
     public TMP_Dropdown dropdownCities;
 
+    [Header("City Information")]
+    public GameObject panelCityInformation;
+    public TextMeshProUGUI panelCityInfoTitle;
+    public TextMeshProUGUI panelCityInfoText;
+
     //REFERENCES
     private Construction construction;
     private List<City> cities;
@@ -29,17 +34,16 @@ public class SubUIAdminCity : MonoBehaviour
     void Start()
     {
         construction = FindAnyObjectByType<Construction>();
-        uIAdministrator = FindAnyObjectByType<UIAdministrator>();
+        uIAdministrator = GetComponent<UIAdministrator>();
 
         dropdownCities.onValueChanged.AddListener(HandleCityConnectionDropdown);
         uIAdministrator.panels.Add(panelBuildOrConectTown);
-        uIAdministrator.panels.Add(panelConfirmationBuildTown);
+        uIAdministrator.panels.Add(panelConfirmationBuildTown); 
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (uIAdministrator.IsAnyPanelOpen()) SubTerrainAdmReference.terrainOfHero.IdleTime(0);
 
     }
 
@@ -92,4 +96,15 @@ public class SubUIAdminCity : MonoBehaviour
         panelBuildOrConectTown.SetActive(false);
         ActivatePanelConfirmationBuildTown();
     }
+    
+    public void ActivatePanelCityInformation(City city){
+        panelCityInfoTitle.text = city.name;
+        panelCityInfoText.text = "Poblacion: " + city.population +
+        "\nEscudos: " + city.shields +
+        "\nConsumo comida: " + city.foodConsumption +
+        "\nFelicidad " + city.happiness;
+
+        panelCityInformation.SetActive(true);
+    }
+
 }

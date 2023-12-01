@@ -33,8 +33,6 @@ public class Heroe : MonoBehaviour
 
   void Update()
   {
-    
-
   }
 
   private void MoveHero(Vector3 movement, float rotation)
@@ -42,6 +40,14 @@ public class Heroe : MonoBehaviour
     //TODO: cuando se solucione el movimiento con el mouse, esta funcion deberia desaparecer y solo dejar la corutina.
     transform.position = SubTerrainAdmReference.MoveHero(transform.position, movement);
     transform.eulerAngles = new Vector3(0, rotation, 0);
+
+    int numericIndex = SubTerrainAdmReference.GetNumericIndexFromGlobalPosition(transform.position);
+    if(SubTerrainAdmReference.influencedEscaques.ContainsKey(numericIndex)){
+      uIAdministrator.subUIAdminCity.ActivatePanelCityInformation(SubTerrainAdmReference.influencedEscaques[numericIndex].city);
+    }
+    else {
+      uIAdministrator.subUIAdminCity.panelCityInformation.SetActive(false);
+    }
   }
 
   public void ArrowMoving()

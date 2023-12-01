@@ -82,13 +82,14 @@ public class Resource : MonoBehaviour
         if (toInventory)
         {
             inventory.AddToInventory(this);
+            uIAdministrator.subUIAdminInventory.UpdateText();
         }
         if (city != null)
-        {
+        {   
             city.shields += shields;
             city.population += population;
+            uIAdministrator.subUIAdminCity.ActivatePanelCityInformation(city);  
         }
-        uIAdministrator.subUIAdminInventory.UpdateText();
 
         Destroy(gameObject);
     }

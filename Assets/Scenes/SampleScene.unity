@@ -1207,6 +1207,9 @@ MonoBehaviour:
   panelBuildOrConectTown: {fileID: 1320573222}
   textBuildOrConectTownPanel: {fileID: 1810176906}
   dropdownCities: {fileID: 1188161517}
+  panelCityInformation: {fileID: 1721069714}
+  panelCityInfoTitle: {fileID: 1410745727}
+  panelCityInfoText: {fileID: 1991329415}
 --- !u!114 &276738882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4943,7 +4946,7 @@ GameObject:
   - component: {fileID: 1410745728}
   - component: {fileID: 1410745727}
   m_Layer: 5
-  m_Name: Text
+  m_Name: TituloText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5757,7 +5760,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1320573222}
+      - m_Target: {fileID: 1271866406}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -7776,7 +7779,7 @@ GameObject:
   - component: {fileID: 1991329416}
   - component: {fileID: 1991329415}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: InventoryCityText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

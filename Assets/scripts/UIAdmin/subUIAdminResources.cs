@@ -6,27 +6,31 @@ using UnityEngine;
 
 public class SubUIAdminResources : MonoBehaviour
 {
-     [Header("Recursos")]
+    [Header("Recursos")]
     public GameObject panelSelectCityResource;
     public TMP_Dropdown dropdownCitiesResource;
     private List<City> citiesNearResource;
     private City citySelectedResource = null;
     private bool isCityResourceSelected = false;
     private Resource resource;
+    private UIAdministrator uIAdministrator;
+
     // Start is called before the first frame update
     void Start()
     {
-                dropdownCitiesResource.onValueChanged.AddListener(HandleCityResourceDropdown);
-
+        dropdownCitiesResource.onValueChanged.AddListener(HandleCityResourceDropdown);
+        
+        uIAdministrator = FindAnyObjectByType<UIAdministrator>();
+        uIAdministrator.panels.Add(panelSelectCityResource);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
-     public void ActivatePanelResourceDestination(List<City> cities, Resource resource)
+    public void ActivatePanelResourceDestination(List<City> cities, Resource resource)
     {
         citiesNearResource = cities;
         this.resource = resource;

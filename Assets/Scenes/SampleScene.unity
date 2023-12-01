@@ -824,7 +824,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveDuration: 0.1
+  isMoving: 0
   distanciaEnVector: {x: 0, y: 0, z: 0}
+  route: []
+  indexRoute: 0
 --- !u!114 &202133887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -915,7 +918,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   heroe: {fileID: 202133885}
-  minimumTime: 1
+  minimumTime: 0.2
 --- !u!1 &257363962
 GameObject:
   m_ObjectHideFlags: 0

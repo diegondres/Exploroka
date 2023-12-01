@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters;
@@ -11,30 +12,67 @@ public class Heroe : MonoBehaviour
 
   [SerializeField]
   private float moveDuration = 0.1f;
-  private bool isMoving = false;
+  public bool isMoving = false;
   private int sizeEscaque;
   private float rotation;
 
   //REFERENCIAS
-  private Camera camara;
+
   public Vector3 distanciaEnVector = Vector3.zero;
   private Vector3 movement = Vector3.zero;
   private UIAdministrator uIAdministrator;
-
+  public List<Vector3> route = new();
+  public int indexRoute = 0;
+  int routeLenght = -1;
   void Start()
   {
     uIAdministrator = FindAnyObjectByType<UIAdministrator>();
     SubTerrainAdmReference.InWhatTerrenoAmI(transform.position);
     sizeEscaque = SubTerrainAdmReference.sizeEscaque;
-    camara = FindAnyObjectByType<Camera>();
+
     //TODO: se tiene que hacer un arreglo para que el personaje inicie en una referencia correcta del terreno
     //MoveHero(movement, 0.0f);
   }
 
   void Update()
   {
-    
+  }
+  public void GenerateRoute(Vector3 destino)
+  {
+    indexRoute = 0;
+    route.Clear();
+    Vector3 distance = SubTerrainAdmReference.CalculateDistance(transform.position, destino);
+    Vector3 distanceRelativePosition = distance / sizeEscaque;
+    Vector3 destinoRelativePosition = SubTerrainAdmReference.terrainOfHero.GetRelativePositionInVertices(destino);
+    Vector3 heroCalculatedPosition = transform.position;
+    int contador = 0;
+    Debug.Log("Distancia: " + Vector3.Distance(destinoRelativePosition, distanceRelativePosition) + "vector director: " + distanceRelativePosition);
+    while (Vector3.Magnitude(distanceRelativePosition) > 0.1f && contador < 10)
+    {
+      Vector3 movement = MouseMoving(distanceRelativePosition);
+      heroCalculatedPosition += movement;
 
+      distanceRelativePosition = SubTerrainAdmReference.CalculateDistance(heroCalculatedPosition, destino) / sizeEscaque;
+      Debug.Log("movement: " + movement);
+      Debug.Log("Magnitud: " + Vector3.Magnitude(distanceRelativePosition) + "vector director: " + distanceRelativePosition);
+      route.Add(movement);
+
+      contador++;
+    }
+    routeLenght = route.Count -1;
+  }
+
+  public bool IsRouteFinish()
+  {
+    return indexRoute == routeLenght;
+  }
+
+  public void MoveThroughRoute()
+  {
+    Debug.Log("Tamaño ruta: " + route.Count + " indexRoute: " + indexRoute);
+    StartCoroutine(ContinuosMove(route[indexRoute], 0f));
+    if(indexRoute == route.Count -1) routeLenght = -1;
+    indexRoute++;
   }
 
   private void MoveHero(Vector3 movement, float rotation)
@@ -69,7 +107,7 @@ public class Heroe : MonoBehaviour
       rotation = 270f;
     }
 
-    if (Vector3.Magnitude(movement)>0)
+    if (Vector3.Magnitude(movement) > 0)
     {
       StartCoroutine(ContinuosMove(movement, rotation));
       if (isMoving)
@@ -77,11 +115,9 @@ public class Heroe : MonoBehaviour
         distanciaEnVector = Vector3.zero;
       }
     }
-
-
   }
 
-  public void MouseMoving(Vector3 distance)
+  public Vector3 MouseMoving(Vector3 distance)
   {
     if (Mathf.Abs(distance.x) > Mathf.Abs(distance.z))
     {
@@ -109,10 +145,9 @@ public class Heroe : MonoBehaviour
         rotation = 180f;
       }
     }
-    if(!isMoving){
-      StartCoroutine(ContinuosMove(movement, rotation));
-    }
-    
+    return movement;
+
+
   }
 
   private IEnumerator ContinuosMove(Vector3 movement, float rotation)

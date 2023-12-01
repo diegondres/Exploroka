@@ -15,11 +15,10 @@ public class InputAdministrator : MonoBehaviour
     bool isAResourceSelected = false;
     Resource resourceSelected;
     private Camera camara;
-
+    Vector3 destino;
 
     private float acumulatedTime = 0.0f;
-    private float distancia = 0.0f;
-    private Vector3 destino;
+
 
 
 
@@ -35,12 +34,8 @@ public class InputAdministrator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        acumulatedTime += Time.deltaTime;
-        
-
         if (!uIAdministrator.IsAnyPanelOpen())
-        {   
+        {
             acumulatedTime += Time.deltaTime;
             heroe.ArrowMoving();
 
@@ -48,21 +43,17 @@ public class InputAdministrator : MonoBehaviour
             if (Input.GetMouseButtonDown(1))  //Mouse click left for hero moving
             {
                 Ray rayo = camara.ScreenPointToRay(Input.mousePosition);
-                Plane plano = new(Vector3.up, transform.position);
-                distancia = 0.0f;
 
-                if (plano.Raycast(rayo, out distancia))
+                if (Physics.Raycast(rayo, out RaycastHit hit, 1000))
                 {
-                    destino = rayo.GetPoint(distancia);
+                    destino = hit.point;
+                    heroe.GenerateRoute(destino);
                 }
-                heroe.distanciaEnVector = SubTerrainAdmReference.CalculateDistance(heroe.gameObject.transform.position, destino);
             }
-            if (Vector3.Magnitude(heroe.distanciaEnVector) > 2.8f && acumulatedTime >= minimumTime)
+            if (!heroe.IsRouteFinish() && acumulatedTime >= minimumTime && !heroe.isMoving && heroe.route.Count > 0)
             {
-                heroe.MouseMoving(heroe.distanciaEnVector);
-                heroe.distanciaEnVector = SubTerrainAdmReference.CalculateDistance(heroe.gameObject.transform.position, destino);
+                heroe.MoveThroughRoute();
                 acumulatedTime = 0.0f;
-                
             }
             if (Input.GetMouseButtonDown(0)) //Mouse click left for select something
             {
@@ -73,6 +64,7 @@ public class InputAdministrator : MonoBehaviour
                     Vector3 destino = hit.point;
                     Vector3 relativePosition = SubTerrainAdmReference.terrainOfHero.GetRelativePositionInVertices(destino);
                     Tuple<int, Terreno> globalIndex = SubTerrainAdmReference.terrainOfHero.GetIndexGlobal(relativePosition);
+                    Debug.DrawRay(camara.transform.position, destino - camara.transform.position, Color.blue, 2f);
 
 
                     //TODO: es posible que queramos mejorar esta logica en el futuro, si es que hay mas tipos de cosas mas alla de recursos y construcciones.
@@ -94,7 +86,7 @@ public class InputAdministrator : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E) && isAResourceSelected)
             {
                 isAResourceSelected = false;
-                resourceSelected.PreConsume();             
+                resourceSelected.PreConsume();
             }
         }
 

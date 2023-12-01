@@ -12,6 +12,7 @@ public class Camara : MonoBehaviour
   void Start(){
     camara = FindAnyObjectByType<Camera>();
     camara.backgroundColor = Color.blue;
+    
   }
   
   private void LateUpdate()
@@ -39,7 +40,8 @@ public class Camara : MonoBehaviour
       offset = new Vector3(100, 350, -600);
       transform.rotation = Quaternion.Euler(new Vector3(30, -10, 0));
       camara.orthographic = true;
-      camara.orthographicSize = 90;
+      camara.orthographicSize = 145;
+      camara.farClipPlane = 10000;
     }
 
 

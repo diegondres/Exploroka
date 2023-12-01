@@ -7,33 +7,25 @@ using UnityEngine.UIElements;
 
 public class Heroe : MonoBehaviour
 {
-  //[SerializeField]
-  //private float velocidad = 5f; // Velocidad de movimiento del personaje
-  [SerializeField]
-  private float minimumTime = 0.0f;
+  [Header("Movilidad")]
 
   [SerializeField]
   private float moveDuration = 0.1f;
   private bool isMoving = false;
-
-  // private float longRayCast = 10f;
-
-  private Camera camara;
-  private Vector3 destino;
-  private float distancia = 0.0f;
-  private TerrainAdministrator terrainAdministrator;
-  private Vector3 movement = Vector3.zero;
-  private float rotation;
-  private Vector3 distanciaEnVector = Vector3.zero;
-  private float acumulatedTime = 0.0f;
   private int sizeEscaque;
+  private float rotation;
+
+  //REFERENCIAS
+  private Camera camara;
+  public Vector3 distanciaEnVector = Vector3.zero;
+  private Vector3 movement = Vector3.zero;
+  private UIAdministrator uIAdministrator;
 
   void Start()
   {
-    destino = transform.position;
-    terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
-    terrainAdministrator.InWhatTerrenoAmI(transform.position);
-    sizeEscaque = terrainAdministrator.GetSizeEscaque();
+    uIAdministrator = FindAnyObjectByType<UIAdministrator>();
+    SubTerrainAdmReference.InWhatTerrenoAmI(transform.position);
+    sizeEscaque = SubTerrainAdmReference.sizeEscaque;
     camara = FindAnyObjectByType<Camera>();
     //TODO: se tiene que hacer un arreglo para que el personaje inicie en una referencia correcta del terreno
     //MoveHero(movement, 0.0f);
@@ -41,30 +33,6 @@ public class Heroe : MonoBehaviour
 
   void Update()
   {
-    acumulatedTime += Time.deltaTime;
-
-    ArrowMoving();
-
-    if (Input.GetMouseButtonDown(1))
-    {
-      Ray rayo = camara.ScreenPointToRay(Input.mousePosition);
-      Plane plano = new(Vector3.up, transform.position);
-      distancia = 0.0f;
-
-      if (plano.Raycast(rayo, out distancia))
-      {
-        destino = rayo.GetPoint(distancia);
-      }
-      distanciaEnVector = terrainAdministrator.CalculateDistance(transform.position, destino);
-    }
-
-
-    if (Vector3.Magnitude(distanciaEnVector) > 2.8f && acumulatedTime >= minimumTime)
-    {
-      MouseMoving(distanciaEnVector);
-      distanciaEnVector = terrainAdministrator.CalculateDistance(transform.position, destino);
-      acumulatedTime = 0.0f;
-    }
     
 
   }
@@ -72,11 +40,11 @@ public class Heroe : MonoBehaviour
   private void MoveHero(Vector3 movement, float rotation)
   {
     //TODO: cuando se solucione el movimiento con el mouse, esta funcion deberia desaparecer y solo dejar la corutina.
-    transform.position = terrainAdministrator.MoveHero(transform.position, movement);
+    transform.position = SubTerrainAdmReference.MoveHero(transform.position, movement);
     transform.eulerAngles = new Vector3(0, rotation, 0);
   }
 
-  private void ArrowMoving()
+  public void ArrowMoving()
   {
     rotation = 0.0f;
     movement = Vector3.zero;
@@ -113,7 +81,7 @@ public class Heroe : MonoBehaviour
 
   }
 
-  private void MouseMoving(Vector3 distance)
+  public void MouseMoving(Vector3 distance)
   {
     if (Mathf.Abs(distance.x) > Mathf.Abs(distance.z))
     {
@@ -152,7 +120,7 @@ public class Heroe : MonoBehaviour
     isMoving = true;
 
     Vector3 startPosition = transform.position;
-    Vector3 endPosition = terrainAdministrator.MoveHero(transform.position, movement);
+    Vector3 endPosition = SubTerrainAdmReference.MoveHero(transform.position, movement);
 
     float elapsedTime = 0f;
     while (elapsedTime < moveDuration)

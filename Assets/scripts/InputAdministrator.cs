@@ -64,8 +64,6 @@ public class InputAdministrator : MonoBehaviour
                     Vector3 destino = hit.point;
                     Vector3 relativePosition = SubTerrainAdmReference.terrainOfHero.GetRelativePositionInVertices(destino);
                     Tuple<int, Terreno> globalIndex = SubTerrainAdmReference.terrainOfHero.GetIndexGlobal(relativePosition);
-                    Debug.DrawRay(camara.transform.position, destino - camara.transform.position, Color.blue, 2f);
-
 
                     //TODO: es posible que queramos mejorar esta logica en el futuro, si es que hay mas tipos de cosas mas alla de recursos y construcciones.
                     GameObject thing = SubObjectsAdmReferences.IsSomethingBuiltInHere(globalIndex);

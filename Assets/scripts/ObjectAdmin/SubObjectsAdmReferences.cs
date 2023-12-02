@@ -94,5 +94,14 @@ public static class SubObjectsAdmReferences
         }
         return null;
     }
+    
+    public static Resource IsAResourceHere(int numericIndex){
+        //Es en el 1 porque esa es la posicion de los recursos en la lista allObjects
+        if(allObjects[1].ContainsKey(numericIndex)){
+            return allObjects[1][numericIndex].GetComponent<Resource>();
+        }
+        
+        return null;
+    }
 
 }

@@ -25,6 +25,7 @@ public class Resource : MonoBehaviour
     public int shields = 0;
     public int quantity;
     public bool canRunOut = false;
+    public Tuple<int, Terreno> myGlobalIndex;
 
 
     [NonSerialized]
@@ -65,8 +66,9 @@ public class Resource : MonoBehaviour
                 int numericIndex = SubTerrainAdmReference.GetNumericIndexFromGlobalPosition(transform.position);
                 if (SubTerrainAdmReference.influencedEscaques.ContainsKey(numericIndex))
                 {
-                    City city = SubTerrainAdmReference.influencedEscaques[numericIndex].city;
-                    Consume(false, city);
+                    Town town = SubTerrainAdmReference.influencedEscaques[numericIndex];
+                    town.RemoveResourceAvailable(numericIndex);
+                    Consume(false, town.city);
                 }
                 else
                 {
@@ -89,6 +91,7 @@ public class Resource : MonoBehaviour
             city.shields += shields;
             city.population += population;
             uIAdministrator.subUIAdminCity.ActivatePanelCityInformation(city);  
+            //Decirle al town que borre ese recurso disponible
         }
 
         Destroy(gameObject);

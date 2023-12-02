@@ -45,5 +45,5 @@ public class City : MonoBehaviour
 
         SubTerrainAdmReference.CheckNewInfluencedEscaques(allInfluencedEscaques, id, terrainAdministrator);
     }
-
+    
 }

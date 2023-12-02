@@ -35,11 +35,16 @@ public class ObjetsAdministrator : MonoBehaviour
         do
         {
             int localPosition = UnityEngine.Random.Range(0, 400);
-            Vector3 position = terreno.GetGlobalPositionFromGlobalIndex(new Tuple<int, Terreno>(localPosition, terreno));
+            Tuple<int, Terreno> resourceGlobalIndex = new (localPosition, terreno);
+            Vector3 position = terreno.GetGlobalPositionFromGlobalIndex(resourceGlobalIndex);
 
             int random = UnityEngine.Random.Range(0, resourcePrefab.Length);
             GameObject resource = Instantiate(resourcePrefab[random], position, Quaternion.identity);
             resource.transform.SetParent(containerResources.transform);
+
+            Resource resourceScript = resource.GetComponent<Resource>();
+            resourceScript.myGlobalIndex = resourceGlobalIndex;
+
             SubObjectsAdmReferences.AddResource(resource, terreno);
 
             probs.Add(UnityEngine.Random.Range(0, 100));

@@ -118,9 +118,10 @@ public class Terreno : MonoBehaviour
     Vector3 relativeActualPositionInVertices = GetRelativePositionInVertices(actualPosition);
     Vector3 relativeDestinyInVertices = GetRelativePositionInVertices(destiny);
 
+    Tuple<int, Terreno> actualPositionGlobalIndex = GetIndexGlobal(relativeActualPositionInVertices);
     Tuple<int, Terreno> destinyGlobalIndex = GetIndexGlobal(relativeDestinyInVertices);
 
-    return CenterInEscaqueToGlobal(relativeActualPositionInVertices, 6f) - GetGlobalPositionFromGlobalIndex(destinyGlobalIndex);
+    return GetGlobalPositionFromGlobalIndexWithoutHeight(actualPositionGlobalIndex) - GetGlobalPositionFromGlobalIndexWithoutHeight(destinyGlobalIndex);
   }
 
   private void AddSorroundingEscaques(Vector3 relativePositionInVertices)
@@ -185,6 +186,15 @@ public class Terreno : MonoBehaviour
     float relativePositionZ = wea2 % 2 == 0 ? globalIndex.Item1 - ejeX * sizeTerrainInVertices - (sizeTerrainInVertices / 2 - 1) - 0.5f : globalIndex.Item1 - ejeX * sizeTerrainInVertices - sizeTerrainInVertices / 2 + 0.5f;
 
     return globalIndex.Item2.CenterInEscaqueToGlobal(new Vector3(relativePositionZ, 0f, relativePositionX), 5f);
+  }
+   public Vector3 GetGlobalPositionFromGlobalIndexWithoutHeight(Tuple<int, Terreno> globalIndex)
+  {
+    int ejeX = (int)(globalIndex.Item1 / sizeTerrainInVertices);
+    float wea2 = globalIndex.Item1 / (sizeTerrainInVertices / 2);
+    float relativePositionX = globalIndex.Item1 % 200 > 0 ? ejeX - sizeTerrainInVertices / 2 + 0.5f : ejeX - sizeTerrainInVertices / 2 + 1 - 0.5f;
+    float relativePositionZ = wea2 % 2 == 0 ? globalIndex.Item1 - ejeX * sizeTerrainInVertices - (sizeTerrainInVertices / 2 - 1) - 0.5f : globalIndex.Item1 - ejeX * sizeTerrainInVertices - sizeTerrainInVertices / 2 + 0.5f;
+
+    return globalIndex.Item2.GetGlobalPositionFromRelative(new Vector3(relativePositionZ, 0f, relativePositionX));
   }
   public Vector3 GetRelativePositionFromGlobalIndex(Tuple<int, Terreno> globalIndex)
   {

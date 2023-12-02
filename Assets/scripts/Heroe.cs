@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters;
@@ -11,28 +12,55 @@ public class Heroe : MonoBehaviour
 
   [SerializeField]
   private float moveDuration = 0.1f;
-  private bool isMoving = false;
+  public bool isMoving = false;
   private int sizeEscaque;
   private float rotation;
 
   //REFERENCIAS
-  private Camera camara;
-  public Vector3 distanciaEnVector = Vector3.zero;
+
   private Vector3 movement = Vector3.zero;
   private UIAdministrator uIAdministrator;
-
+  public List<Tuple<Vector3, float>> route = new();
+  public int indexRoute = 0;
+  public bool IsRouteFinish = true;
   void Start()
   {
     uIAdministrator = FindAnyObjectByType<UIAdministrator>();
     SubTerrainAdmReference.InWhatTerrenoAmI(transform.position);
     sizeEscaque = SubTerrainAdmReference.sizeEscaque;
-    camara = FindAnyObjectByType<Camera>();
+
     //TODO: se tiene que hacer un arreglo para que el personaje inicie en una referencia correcta del terreno
     //MoveHero(movement, 0.0f);
   }
 
   void Update()
   {
+  }
+  public void GenerateRoute(Vector3 destino)
+  {
+    indexRoute = 0;
+    route.Clear();
+    IsRouteFinish = false;
+    Vector3 distance = SubTerrainAdmReference.CalculateDistance(transform.position, destino);
+    Vector3 distanceRelativePosition = distance / sizeEscaque;
+    Vector3 heroCalculatedPosition = transform.position;
+    
+    while (Vector3.Magnitude(distanceRelativePosition) > 0.1f )
+    {
+      Tuple<Vector3, float> movementTuple = MouseMoving(distanceRelativePosition);
+      heroCalculatedPosition += movementTuple.Item1;
+
+      distanceRelativePosition = SubTerrainAdmReference.CalculateDistance(heroCalculatedPosition, destino) / sizeEscaque;
+      route.Add(movementTuple);
+    }
+  }
+
+
+  public void MoveThroughRoute()
+  {
+    StartCoroutine(ContinuosMove(route[indexRoute].Item1, route[indexRoute].Item2));
+    indexRoute++;
+    if(indexRoute == route.Count) IsRouteFinish = true;
   }
 
   private void MoveHero(Vector3 movement, float rotation)
@@ -56,35 +84,36 @@ public class Heroe : MonoBehaviour
     movement = Vector3.zero;
     if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && !isMoving)
     {
-      movement = new Vector3(0, 0, sizeEscaque);
+      movement += new Vector3(0, 0, sizeEscaque);
       rotation = 0.0f;
-      StartCoroutine(ContinuosMove(movement, rotation));
     }
     if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && !isMoving)
     {
-      movement = new Vector3(0, 0, -sizeEscaque);
+      movement += new Vector3(0, 0, -sizeEscaque);
       rotation = 180f;
-      StartCoroutine(ContinuosMove(movement, rotation));
     }
     if ((Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) && !isMoving)
     {
-      movement = new Vector3(sizeEscaque, 0, 0);
+      movement += new Vector3(sizeEscaque, 0, 0);
       rotation = 90f;
-      StartCoroutine(ContinuosMove(movement, rotation));
     }
     if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) && !isMoving)
     {
-      movement = new Vector3(-sizeEscaque, 0, 0);
+      movement += new Vector3(-sizeEscaque, 0, 0);
       rotation = 270f;
-      StartCoroutine(ContinuosMove(movement, rotation));
     }
-    if (isMoving)
+
+    if (Vector3.Magnitude(movement) > 0)
     {
-      distanciaEnVector = Vector3.zero;
+      StartCoroutine(ContinuosMove(movement, rotation));
+      if (isMoving)
+      {
+        IsRouteFinish = true;
+      }
     }
   }
 
-  public void MouseMoving(Vector3 distance)
+  public Tuple<Vector3, float> MouseMoving(Vector3 distance)
   {
     if (Mathf.Abs(distance.x) > Mathf.Abs(distance.z))
     {
@@ -112,7 +141,9 @@ public class Heroe : MonoBehaviour
         rotation = 180f;
       }
     }
-    MoveHero(movement, rotation);
+    return new Tuple<Vector3, float>(movement, rotation);
+
+
   }
 
   private IEnumerator ContinuosMove(Vector3 movement, float rotation)

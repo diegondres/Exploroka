@@ -21,9 +21,9 @@ public class Heroe : MonoBehaviour
   public Vector3 distanciaEnVector = Vector3.zero;
   private Vector3 movement = Vector3.zero;
   private UIAdministrator uIAdministrator;
-  public List<Vector3> route = new();
+  public List<Tuple<Vector3, float>> route = new();
   public int indexRoute = 0;
-  int routeLenght = -1;
+  public bool IsRouteFinish = true;
   void Start()
   {
     uIAdministrator = FindAnyObjectByType<UIAdministrator>();
@@ -41,38 +41,27 @@ public class Heroe : MonoBehaviour
   {
     indexRoute = 0;
     route.Clear();
+    IsRouteFinish = false;
     Vector3 distance = SubTerrainAdmReference.CalculateDistance(transform.position, destino);
     Vector3 distanceRelativePosition = distance / sizeEscaque;
-    Vector3 destinoRelativePosition = SubTerrainAdmReference.terrainOfHero.GetRelativePositionInVertices(destino);
     Vector3 heroCalculatedPosition = transform.position;
-    int contador = 0;
-    Debug.Log("Distancia: " + Vector3.Distance(destinoRelativePosition, distanceRelativePosition) + "vector director: " + distanceRelativePosition);
-    while (Vector3.Magnitude(distanceRelativePosition) > 0.1f && contador < 10)
+    
+    while (Vector3.Magnitude(distanceRelativePosition) > 0.1f )
     {
-      Vector3 movement = MouseMoving(distanceRelativePosition);
-      heroCalculatedPosition += movement;
+      Tuple<Vector3, float> movementTuple = MouseMoving(distanceRelativePosition);
+      heroCalculatedPosition += movementTuple.Item1;
 
       distanceRelativePosition = SubTerrainAdmReference.CalculateDistance(heroCalculatedPosition, destino) / sizeEscaque;
-      Debug.Log("movement: " + movement);
-      Debug.Log("Magnitud: " + Vector3.Magnitude(distanceRelativePosition) + "vector director: " + distanceRelativePosition);
-      route.Add(movement);
-
-      contador++;
+      route.Add(movementTuple);
     }
-    routeLenght = route.Count -1;
   }
 
-  public bool IsRouteFinish()
-  {
-    return indexRoute == routeLenght;
-  }
 
   public void MoveThroughRoute()
   {
-    Debug.Log("Tamaño ruta: " + route.Count + " indexRoute: " + indexRoute);
-    StartCoroutine(ContinuosMove(route[indexRoute], 0f));
-    if(indexRoute == route.Count -1) routeLenght = -1;
+    StartCoroutine(ContinuosMove(route[indexRoute].Item1, route[indexRoute].Item2));
     indexRoute++;
+    if(indexRoute == route.Count) IsRouteFinish = true;
   }
 
   private void MoveHero(Vector3 movement, float rotation)
@@ -117,7 +106,7 @@ public class Heroe : MonoBehaviour
     }
   }
 
-  public Vector3 MouseMoving(Vector3 distance)
+  public Tuple<Vector3, float> MouseMoving(Vector3 distance)
   {
     if (Mathf.Abs(distance.x) > Mathf.Abs(distance.z))
     {
@@ -145,7 +134,7 @@ public class Heroe : MonoBehaviour
         rotation = 180f;
       }
     }
-    return movement;
+    return new Tuple<Vector3, float>(movement, rotation);
 
 
   }

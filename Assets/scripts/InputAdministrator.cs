@@ -50,7 +50,7 @@ public class InputAdministrator : MonoBehaviour
                     heroe.GenerateRoute(destino);
                 }
             }
-            if (!heroe.IsRouteFinish() && acumulatedTime >= minimumTime && !heroe.isMoving && heroe.route.Count > 0)
+            if (!heroe.IsRouteFinish && acumulatedTime >= minimumTime && !heroe.isMoving && heroe.route.Count > 0)
             {
                 heroe.MoveThroughRoute();
                 acumulatedTime = 0.0f;

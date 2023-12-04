@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Windows;
+using Random = UnityEngine.Random;
+
 
 
 [System.Serializable]
@@ -50,10 +52,17 @@ public class NoiseGeneration : MonoBehaviour
         public AnimationCurve curve = AnimationCurve.Linear(0, 0, 1, 1);
 
     }
-    // función que vomite (bioma, altura)
-    public Tuple<float,Color32> GetHeight(int x, int y)
+    //
+    // función que vomite (bioma, altura, recurso)
+    //
+    public Tuple<float,Color32, string> GetHeight(int x, int y)
     {
-        Color32 color = new Color32(0,100,255,0);
+        float h;
+        Color32 color;
+        string recurso = "";
+
+
+        color = new Color32(0,100,255,0);
         Color32 rojo = new Color32(255, 70, 70, 0);
         Color32 montanhos = new Color32(180, 80, 0, 0);
         Color32 nieve = new Color32(255, 255, 255, 0);
@@ -66,7 +75,7 @@ public class NoiseGeneration : MonoBehaviour
         Color32 jungla = new Color32(0, 80, 0, 0);
 
 
-        float h = Perlinazo(x, y, escalaAgua, 0);
+        h = Perlinazo(x, y, escalaAgua, 0);
         float ruidoMontanhoso = Perlinazo(x, y, escalaRuidoMontanha, -7);
         float montanhaMisma = Perlinazo(x, y, escalaMontanha, 7);
         float montanhaCadena = EvaluarSpline(PerlinWrap2(x, y, escalaWrap, -12), "cadena");
@@ -110,8 +119,13 @@ public class NoiseGeneration : MonoBehaviour
                         float z = PerlinWrap(x, y, escalaWrapChico, 3);
                         if (z > limiteWrap) {
                             color = new Color32(50, 100, 50, 0);    //bosque chico
+                            recurso = "arbol";
                         } else {
                             color = new Color32(155, 215, 0, 0);    //pasto
+                            if(Random.value < 0.05f)
+                            {
+                                recurso = "flor";
+                            }
                         }
                     } else {
                         color = new Color32(192, 233, 186, 0);    //nieve
@@ -125,6 +139,7 @@ public class NoiseGeneration : MonoBehaviour
                         float z = PerlinWrap(x, y, escalaWrapChico, 3);
                         if (z > limiteWrap) {
                             color = new Color32(50, 100, 50, 0);    //bosque chico
+                            recurso = "arbol";
                         } else {
                             color = new Color32(155, 215, 0, 0);    //pasto
                         }
@@ -150,7 +165,7 @@ public class NoiseGeneration : MonoBehaviour
             h = nAgua;
         }
 
-        return new Tuple<float, Color32> ( h, color );
+        return new Tuple<float, Color32, string> ( h, color, recurso);
     }
     
     public float PerlinWrap(int i, int j, float escala, float capa)

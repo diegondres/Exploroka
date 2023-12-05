@@ -8,7 +8,7 @@ public static class SubObjectsAdmReferences
     private static readonly Dictionary<int, GameObject> constructions = new();
     private static readonly Dictionary<int, GameObject> resources = new();
     public static readonly Dictionary<int, List<GameObject>> frontiers = new();
-    public static readonly List<City> cities = new();
+    private static readonly List<City> cities = new();
     private static Tuple<int, Terreno> buildingGlobalIndex;
     public static bool isBuildingLocationSelected = false;
     private static readonly int multiplier = 10000;
@@ -67,6 +67,20 @@ public static class SubObjectsAdmReferences
 
         int indexBuildingDict = GetNumericIndex(indexBuilding);
         constructions.Add(indexBuildingDict, building);
+    }
+    public static void AddCity(City city){
+        cities.Add(city);
+    }
+    public static bool IsNameCityTaken(string nameCity){
+        foreach (City city in cities)
+        {
+            if (city.nameCity == nameCity)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static void AddResource(GameObject resource, Terreno terreno)

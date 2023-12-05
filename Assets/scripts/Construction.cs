@@ -110,9 +110,10 @@ public class Construction : MonoBehaviour
       cityScript.id = cityCounter;
       cityScript.nameCity = nameCity;
       cityScript.gameObject.name = nameCity;
-
+  
       townScript.city = cityScript;
       
+      SubObjectsAdmReferences.AddCity(cityScript);
       inventory.governance -= cityPrice;
       cityCounter++;
     }

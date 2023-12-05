@@ -21,7 +21,12 @@ public class SubUIAdminCity : MonoBehaviour
     [Header("City Information")]
     public GameObject panelCityInformation;
     public TextMeshProUGUI panelCityInfoTitle;
-    public TextMeshProUGUI panelCityInfoText;
+    public TextMeshProUGUI populationText;
+    public TextMeshProUGUI ShieldsText;
+    public TextMeshProUGUI foodConsumptionText;
+    public TextMeshProUGUI happinessText;
+    public GameObject panelRepeatedCityName;
+
 
     //REFERENCES
     private Construction construction;
@@ -38,7 +43,7 @@ public class SubUIAdminCity : MonoBehaviour
 
         dropdownCities.onValueChanged.AddListener(HandleCityConnectionDropdown);
         uIAdministrator.panels.Add(panelBuildOrConectTown);
-        uIAdministrator.panels.Add(panelConfirmationBuildTown); 
+        uIAdministrator.panels.Add(panelConfirmationBuildTown);
     }
 
     // Update is called once per frame
@@ -49,10 +54,17 @@ public class SubUIAdminCity : MonoBehaviour
 
     public void BuildTown()
     {
-        panelConfirmationBuildTown.SetActive(false);
-        construction.BuildTown(nameCity.text, citySelected);
-        citySelected = null;
-        nameCity.text = "";
+        if (!SubObjectsAdmReferences.IsNameCityTaken(nameCity.text))
+        {
+            panelConfirmationBuildTown.SetActive(false);
+            panelRepeatedCityName.SetActive(false);
+            construction.BuildTown(nameCity.text, citySelected);
+            citySelected = null;
+            nameCity.text = "";
+        }
+        else{
+            panelRepeatedCityName.SetActive(true);
+        }
     }
 
     public void ActivatePanelConfirmationBuildTown()
@@ -96,13 +108,14 @@ public class SubUIAdminCity : MonoBehaviour
         panelBuildOrConectTown.SetActive(false);
         ActivatePanelConfirmationBuildTown();
     }
-    
-    public void ActivatePanelCityInformation(City city){
+
+    public void ActivatePanelCityInformation(City city)
+    {
         panelCityInfoTitle.text = city.name;
-        panelCityInfoText.text = "Poblacion: " + city.population +
-        "\nEscudos: " + city.shields +
-        "\nConsumo comida: " + city.foodConsumption +
-        "\nFelicidad " + city.happiness;
+        populationText.text = "X " + city.population;
+        ShieldsText.text = "X " + city.shields;
+        foodConsumptionText.text = "X " + city.foodConsumption;
+        happinessText.text = "X " + city.happiness;
 
         panelCityInformation.SetActive(true);
     }

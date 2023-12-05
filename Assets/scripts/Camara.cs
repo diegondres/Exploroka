@@ -33,19 +33,26 @@ public class Camara : MonoBehaviour
             offset = new Vector3(0, 300, 0);
             transform.rotation = Quaternion.Euler(new Vector3(90, 0, 0));
             camara.orthographic = false;
+            camara.nearClipPlane = 0.3f;
+            camara.farClipPlane = 1000;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             offset = new Vector3(0, 200, -275);
             transform.rotation = Quaternion.Euler(new Vector3(27, 0, 0));
             camara.orthographic = false;
+            camara.nearClipPlane = 0.3f;
+            camara.farClipPlane = 2000; 
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             offset = new Vector3(100, 350, -600);
             transform.rotation = Quaternion.Euler(new Vector3(30, -10, 0));
             camara.orthographic = true;
-            camara.orthographicSize = 90;
+            camara.orthographicSize = 150;
+            camara.farClipPlane = 2000;
+            camara.nearClipPlane = -20;
+
         }
 
 

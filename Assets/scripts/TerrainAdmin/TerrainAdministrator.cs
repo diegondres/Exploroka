@@ -97,14 +97,6 @@ void LoadModels()
     }
   void Update()
   {
-    if (SubTerrainAdmReference.terrenosWithoutResources.Count > 0)
-    {
-      foreach (Terreno terreno in SubTerrainAdmReference.terrenosWithoutResources)
-      {
-        StartCoroutine(InvokeBueno(terreno));
-      }
-      SubTerrainAdmReference.terrenosWithoutResources.Clear();
-    }
   }
   
   public void PutFrontierInEscaque(Tuple<int, Terreno> index, Vector3 offset, Quaternion rotation, int city)
@@ -151,11 +143,6 @@ void LoadModels()
                 subTerrainAdmGeneration.FillNeighborhood(item2);
             }
     }
-  }
-  private IEnumerator InvokeBueno(Terreno terreno)
-  {
-    yield return new WaitForSeconds(1f);
-    objetsAdministrator.GenerateRandomResource(terreno);
   }
   private IEnumerator ReturnToOriginal(Tuple<int, Terreno> tuple)
   {

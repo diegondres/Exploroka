@@ -18,12 +18,8 @@ static class SubTerrainAdmReference
 
   private static readonly int multiplier = 10000;
 
-
-
   [NonSerialized]
   public static readonly Dictionary<int, Town> influencedEscaques = new();
-  [NonSerialized]
-  public static readonly List<Terreno> terrenosWithoutResources = new();
   private static readonly List<Tuple<int, Terreno>> sorroundingEscaques = new();
   [NonSerialized]
   public static readonly List<Tuple<int, Terreno>> newInfluenceEscaques = new();

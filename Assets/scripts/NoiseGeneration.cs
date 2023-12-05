@@ -53,7 +53,7 @@ public class NoiseGeneration : MonoBehaviour
 
     }
     //
-    // función que vomite (bioma, altura, recurso)
+    // funciï¿½n que vomite (bioma, altura, recurso)
     //
     public Tuple<float,Color32, string> GetHeight(int x, int y)
     {
@@ -79,7 +79,7 @@ public class NoiseGeneration : MonoBehaviour
         float ruidoMontanhoso = Perlinazo(x, y, escalaRuidoMontanha, -7);
         float montanhaMisma = Perlinazo(x, y, escalaMontanha, 7);
         float montanhaCadena = EvaluarSpline(PerlinWrap2(x, y, escalaWrap, -12), "cadena");
-        float zonaMontanhosa = Mathf.Max(EvaluarSpline(Perlinazo(x, y, escalaMontanhoso, 8), "montañaDonde"),EvaluarSpline(Perlinazo(x, y, escalaMetaMontanhoso, -8), "montañaDonde"));
+        float zonaMontanhosa = Mathf.Max(EvaluarSpline(Perlinazo(x, y, escalaMontanhoso, 8), "montanhaDonde"),EvaluarSpline(Perlinazo(x, y, escalaMetaMontanhoso, -8), "montanhaDonde"));
 
         float zonaCarcavosa = EvaluarSpline(Perlinazo(x, y, escalaPantanoso, 9), "carcavasDonde");
         float carcavasCadena = EvaluarSpline(Perlinazo(x, y, escalaCadenaPantano, 10), "carcavas");
@@ -195,7 +195,7 @@ public class NoiseGeneration : MonoBehaviour
     }
     public float Perlinazo(float x, float y, float escala, float capa)
     {
-        // Multiplicador para que el valor de escala no sea tan bajo (sino sería 0.003 vs 0.002 etc)
+        // Multiplicador para que el valor de escala no sea tan bajo (sino serï¿½a 0.003 vs 0.002 etc)
         int Lfijo = 40;
 
         // Calculamos la coordenada x escalada y modificada con la semilla.
@@ -205,15 +205,15 @@ public class NoiseGeneration : MonoBehaviour
         // Calculamos la coordenada y escalada.
         float yCoord = (float)(y) / Lfijo * escala + capa * 17 + semilla * 11; ;
 
-        // Cálculo del valor de ruido Perlin principal en las coordenadas (xCoord, yCoord).
+        // Cï¿½lculo del valor de ruido Perlin principal en las coordenadas (xCoord, yCoord).
         float val = Mathf.PerlinNoise(xCoord, yCoord);
 
-        // Cálculo del segundo nivel de detalle de ruido Perlin en coordenadas escaladas y trasladadas.
+        // Cï¿½lculo del segundo nivel de detalle de ruido Perlin en coordenadas escaladas y trasladadas.
         float detail1 = Mathf.PerlinNoise(xCoord * 2 + 10, yCoord * 2 - 100);
         // Restamos 0.5 y multiplicamos por 0.5 para ajustar el rango y agregarlo al valor principal.
         val += 0.5f * (0.5f - detail1);
 
-        // Cálculo del tercer nivel de detalle de ruido Perlin en coordenadas escaladas y trasladadas.
+        // Cï¿½lculo del tercer nivel de detalle de ruido Perlin en coordenadas escaladas y trasladadas.
         float detail2 = Mathf.PerlinNoise(xCoord * 4 + 88, yCoord * 4 + 99);
         // Restamos 0.25 y multiplicamos por 0.25 para ajustar el rango y agregarlo al valor principal.
         val += 0.25f * (0.5f - detail2);
@@ -234,7 +234,7 @@ public class NoiseGeneration : MonoBehaviour
             }
         }
         if(segment == null) {
-            print("ERROR: No se encontró espline " + cualEspline);
+            print("ERROR: No se encontro espline " + cualEspline);
             return 0;
         }
         if (input >= segment.inputStart && input <= segment.inputEnd) {
@@ -243,53 +243,5 @@ public class NoiseGeneration : MonoBehaviour
         }
         return 0;
     }
-
-    public float[,] GenerateNoiseMap(int mapDepth, int mapWidth, float offsetX, float offsetZ, Wave[] waves)
-    {
-        //    Debug.Log("offsetZ: " +  offsetZ + " offsetX: " + offsetX);
-        // create an empty noise map with the mapDepth and mapWidth coordinates
-        float[,] noiseMap = new float[mapDepth, mapWidth];
-
-        for (int zIndex = 0; zIndex < mapDepth; zIndex++) {
-            for (int xIndex = 0; xIndex < mapWidth; xIndex++) {
-                // calculate sample indices based on the coordinates, the scale and the offset
-                float sampleX = (xIndex + offsetX) / scale;
-                float sampleZ = (zIndex + offsetZ) / scale;
-                // generate noise value using PerlinNoise
-                float noise = 0f;
-                float normalization = 0f;
-
-                foreach (Wave wave in waves) {
-                    // generate noise value using PerlinNoise for a given Wave
-                    noise += wave.amplitude * Mathf.PerlinNoise(sampleX * wave.frequency + wave.seed, sampleZ * wave.frequency + wave.seed);
-                    normalization += wave.amplitude;
-                }
-
-                // normalize the noise value so that it is within 0 and 1
-                noise /= normalization;
-
-                noiseMap[zIndex, xIndex] = noise;
-            }
-        }
-        return noiseMap;
-    }
-
-    public float[,] GenerateUniformNoiseMap(int mapDepth, int mapWidth, float centerVertexZ, float maxDistanceZ, float offsetZ)
-    {
-        // create an empty noise map with the mapDepth and mapWidth coordinates
-        float[,] noiseMap = new float[mapDepth, mapWidth];
-        for (int zIndex = 0; zIndex < mapDepth; zIndex++) {
-            // calculate the sampleZ by summing the index and the offset
-            float sampleZ = zIndex + offsetZ;
-            // calculate the noise proportional to the distance of the sample to the center of the level
-            float noise = Mathf.Abs(sampleZ - centerVertexZ) / maxDistanceZ;
-            // apply the noise for all points with this Z coordinate
-            for (int xIndex = 0; xIndex < mapWidth; xIndex++) {
-                noiseMap[mapDepth - zIndex - 1, xIndex] = noise;
-            }
-        }
-        return noiseMap;
-    }
-
 
 }

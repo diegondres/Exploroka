@@ -98,12 +98,12 @@ public class Terreno : MonoBehaviour
         AddSorroundingEscaques(relativePositionInVertices);
         SubObjectsAdmReferences.isBuildingLocationSelected = false;
 
-        return CenterInEscaqueToGlobal(relativePositionInVertices, 6f);
+        return CenterInEscaqueToGlobal(relativePositionInVertices, 5f);
       }
       else
       {
         relativePositionInVertices = GetRelativePositionInVertices(position - movement);
-        return CenterInEscaqueToGlobal(relativePositionInVertices, 6f);
+        return CenterInEscaqueToGlobal(relativePositionInVertices, 5f);
       }
     }
   }

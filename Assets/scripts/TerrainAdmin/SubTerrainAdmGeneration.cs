@@ -57,12 +57,9 @@ public class SubTerrainAdmGeneration : MonoBehaviour
     TerrainGeneration scriptGeneration = newTerreno.GetComponent<TerrainGeneration>();
     scriptGeneration.heightTerrainTypes = terrainTypes;
     scriptGeneration.heightMultiplier = heightMultiplier;
-    scriptGeneration.heightCurve = heightCurve;
-    scriptGeneration.waves = waves;
+
 
     countTerrain++;
-
-    SubTerrainAdmReference.terrenosWithoutResources.Add(scriptNewTerreno);
   }
 
   private void ConnectWithNeighboors(Terreno scripTerreno, Vector3 posNewTerreno)

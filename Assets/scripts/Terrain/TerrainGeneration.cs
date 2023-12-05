@@ -28,42 +28,22 @@ public class TerrainGeneration : MonoBehaviour
     [NonSerialized]
     public TerrainType[] heightTerrainTypes;
     [NonSerialized]
-    public TerrainType[] heatTerrainTypes;
-    [NonSerialized]
     public float heightMultiplier;
-    [NonSerialized]
-    public AnimationCurve heightCurve;
-    [NonSerialized]
-    public AnimationCurve heatCurve;
     private Terreno terreno;
     //GENERACION PROCEDURAL
-    [NonSerialized]
-    public Wave[] waves;
-    [NonSerialized]
-    public Wave[] heatWaves;
-    [NonSerialized]
-    public TerrainType[] moistureTerrainTypes;
-    [NonSerialized]
-    public AnimationCurve moistureCurve;
-    [NonSerialized]
-    public Wave[] moistureWaves;
-    [NonSerialized]
-    public BiomeRow[] biomes;
     private NoiseGeneration noiseGeneration;
     private MeshRenderer tileRenderer;
     private int sizeTerrainInVertices;
 
     //COSITAS INTERNAS
-
     private TerrainAdministrator terrainAdministrator;
+    private ObjetsAdministrator objetsAdministrator;
     private MeshFilter meshFilter;
     private MeshCollider meshCollider;
-    private Color waterColor = Color.blue;
     private float[,] heightMap;
     private Color32[,] colorMapa;
     private int tileDepth, tileWidth;
     TerrainType[,] chosenHeightTerrainTypes;
-
 
 
     // Start is called before the first frame update
@@ -78,14 +58,15 @@ public class TerrainGeneration : MonoBehaviour
         meshFilter = GetComponent<MeshFilter>();
         terreno = GetComponent<Terreno>();
         terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
+        objetsAdministrator = FindObjectOfType<ObjetsAdministrator>();
         noiseGeneration = FindAnyObjectByType<NoiseGeneration>();
-        sizeTerrainInVertices = SubTerrainAdmReference.sizeTerrainInVertices    ;
+        sizeTerrainInVertices = SubTerrainAdmReference.sizeTerrainInVertices;
 
         tileDepth = sizeTerrainInVertices; tileWidth = sizeTerrainInVertices;
 
         meshFilter.mesh = CrearPlanoConDivisiones(tileDepth, tileWidth, tileDepth, tileWidth);
 
-        GetHeightMap(waves);
+        GetHeightMap();
 
         chosenHeightTerrainTypes = new TerrainType[tileDepth, tileWidth];
         Texture2D heightTexture = BuildTexture(heightTerrainTypes, chosenHeightTerrainTypes);
@@ -143,7 +124,7 @@ public class TerrainGeneration : MonoBehaviour
         return terrainTypes[^1];
     }
 
-    private void GetHeightMap(Wave[] waves){
+    private void GetHeightMap(){
         int heightMapDepth = tileDepth + 1;
         int heightMapWidth = tileWidth + 1;
         heightMap = new float[heightMapDepth, heightMapWidth];
@@ -166,13 +147,13 @@ public class TerrainGeneration : MonoBehaviour
                 
                 int vertexX = (int)vertex.x + sizeTerrainInVertices /2 + offsetX; 
                 int vertexZ = (int)vertex.z + sizeTerrainInVertices /2 + offsetZ;
-                // Debug.Log("vertexX: "+vertexX+" vertexZ: "+vertexZ);
+                
                 Tuple<float, Color32, string> datosEscaque = noiseGeneration.GetHeight(vertexX, vertexZ);
                 heightMap[xIndex, zIndex] = datosEscaque.Item1;
                 colorMapa[xIndex, zIndex] = datosEscaque.Item2;
                 if(datosEscaque.Item3.Length>0)
                 {
-                    Instantiate(terrainAdministrator.Figuras3D[0], new Vector3(vertexX*20-200 + Random.Range(-3f,3f), datosEscaque.Item1 * heightMultiplier * 20, vertexZ*20- 200 + Random.Range(-3f, 3f)),Quaternion.Euler(0,Random.Range(0,4)*90,0));
+                    Instantiate(terrainAdministrator.Figuras3D[0], new Vector3(vertexX*20-200 + Random.Range(-3f,3f), datosEscaque.Item1 * heightMultiplier * 20, vertexZ*20- 200 + Random.Range(-3f, 3f)),Quaternion.Euler(0,Random.Range(0,4)*90,0), objetsAdministrator.containerResources.transform);
                 }
                 vertexIndex++;
             }
@@ -229,7 +210,6 @@ public class TerrainGeneration : MonoBehaviour
                 vertices[index] = new Vector3(posX, 0f, posY);
                 uvs[index] = new Vector2(x / (float)divisionesX, y / (float)divisionesY);
                 normals[index] = Vector3.up; // Asigna una normal vertical
-
             }
         }
 
@@ -258,7 +238,6 @@ public class TerrainGeneration : MonoBehaviour
                 triangles[trianguloIndex++] = vertexIndex3;
             }
         }
-
         mesh.triangles = triangles;
         mesh.uv = uvs;
         mesh.normals = normals;
@@ -273,7 +252,7 @@ public class TerrainGeneration : MonoBehaviour
 
         float meanHeight = (heightMap[zIndex, xIndex] + heightMap[zIndex + 1, xIndex] + heightMap[zIndex, xIndex + 1] + heightMap[zIndex + 1, xIndex + 1]) / 4;
 
-        return heightCurve.Evaluate(meanHeight) * heightMultiplier * gameObject.transform.localScale.y;
+        return meanHeight * heightMultiplier * gameObject.transform.localScale.y;
     }
 
     public string GetTerrainType(Vector3 relativePositionInVertices){

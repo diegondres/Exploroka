@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Terreno
+  - bloquePrefab
   layers:
   - Default
   - TransparentFX

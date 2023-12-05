@@ -43,7 +43,7 @@ public class Terreno : MonoBehaviour
     tileRenderer = GetComponent<MeshRenderer>();
     terrainGeneration = GetComponent<TerrainGeneration>();
 
-    worldPositionTerrain = transform.parent.TransformPoint(transform.localPosition);
+        worldPositionTerrain = transform.parent.TransformPoint(transform.localPosition);
   }
 
   public void IdleTime(float num)

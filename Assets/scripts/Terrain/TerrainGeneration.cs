@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [System.Serializable]
 public class Biome
@@ -59,8 +60,11 @@ public class TerrainGeneration : MonoBehaviour
     private MeshCollider meshCollider;
     private Color waterColor = Color.blue;
     private float[,] heightMap;
+    private Color32[,] colorMapa;
     private int tileDepth, tileWidth;
     TerrainType[,] chosenHeightTerrainTypes;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -105,7 +109,7 @@ public class TerrainGeneration : MonoBehaviour
                 // choose a terrain type according to the height value
                 TerrainType terrainType = ChooseTerrainType(height, terrainTypes);
                 // assign as color a shade of grey proportional to the height value
-                colorMap[colorIndex] = terrainType.color;
+                colorMap[colorIndex] = colorMapa[zIndex, xIndex]; //terrainType.color;
 
                 // save the chosen terrain type
                 chosenTerrainTypes[zIndex, xIndex] = terrainType;
@@ -124,47 +128,6 @@ public class TerrainGeneration : MonoBehaviour
         return tileTexture;
     }
 
-    private Texture2D BuildBiomeTexture(TerrainType[,] heightTerrainTypes, TerrainType[,] heatTerrainTypes, TerrainType[,] moistureTerrainTypes)
-    {
-        int tileDepth = heatTerrainTypes.GetLength(0);
-        int tileWidth = heatTerrainTypes.GetLength(1);
-        Color32[] colorMap = new Color32[tileDepth * tileWidth];
-
-        for (int zIndex = 0; zIndex < tileDepth; zIndex++)
-        {
-            for (int xIndex = 0; xIndex < tileWidth; xIndex++)
-            {
-                int colorIndex = zIndex * tileWidth + xIndex;
-                TerrainType heightTerrainType = heightTerrainTypes[zIndex, xIndex];
-                // check if the current coordinate is a water region
-                if (heightTerrainType.name != "water")
-                {
-                    // if a coordinate is not water, its biome will be defined by the heat and moisture values
-                    TerrainType heatTerrainType = heatTerrainTypes[zIndex, xIndex];
-                    TerrainType moistureTerrainType = moistureTerrainTypes[zIndex, xIndex];
-                    // terrain type index is used to access the biomes table
-                    Biome biome = biomes[moistureTerrainType.index].biomes[heatTerrainType.index];
-                    // assign the color according to the selected biome
-                    colorMap[colorIndex] = biome.color;
-                }
-                else
-                {
-                    // water regions don't have biomes, they always have the same color
-                    colorMap[colorIndex] = waterColor;
-                }
-            }
-        }
-        // create a new texture and set its pixel colors
-        Texture2D tileTexture = new(tileWidth, tileDepth)
-        {
-            filterMode = FilterMode.Point,
-            wrapMode = TextureWrapMode.Clamp
-        };
-        tileTexture.SetPixels32(colorMap);
-        tileTexture.Apply();
-
-        return tileTexture;
-    }
 
     private TerrainType ChooseTerrainType(float noise, TerrainType[] terrainTypes)
     {
@@ -183,7 +146,8 @@ public class TerrainGeneration : MonoBehaviour
     private void GetHeightMap(Wave[] waves){
         int heightMapDepth = tileDepth + 1;
         int heightMapWidth = tileWidth + 1;
-        heightMap = new float[heightMapDepth,heightMapWidth];
+        heightMap = new float[heightMapDepth, heightMapWidth];
+        colorMapa = new Color32[heightMapDepth, heightMapWidth];
 
         Vector3[] meshVertices = meshFilter.mesh.vertices;
 
@@ -192,6 +156,8 @@ public class TerrainGeneration : MonoBehaviour
 
         // iterate through all the heightMap coordinates, updating the vertex index
         int vertexIndex = 0;
+        
+
         for (int xIndex = 0; xIndex < heightMapDepth; xIndex++)
         {
             for (int zIndex = 0; zIndex < heightMapWidth; zIndex++)
@@ -199,10 +165,15 @@ public class TerrainGeneration : MonoBehaviour
                 Vector3 vertex = meshVertices[vertexIndex];
                 
                 int vertexX = (int)vertex.x + sizeTerrainInVertices /2 + offsetX; 
-                int vertexZ = (int)vertex.z + sizeTerrainInVertices /2 + offsetZ; 
-              // Debug.Log("vertexX: "+vertexX+" vertexZ: "+vertexZ);
-                heightMap[xIndex, zIndex] = noiseGeneration.GetHeight(vertexX, vertexZ, waves);
-                
+                int vertexZ = (int)vertex.z + sizeTerrainInVertices /2 + offsetZ;
+                // Debug.Log("vertexX: "+vertexX+" vertexZ: "+vertexZ);
+                Tuple<float, Color32, string> datosEscaque = noiseGeneration.GetHeight(vertexX, vertexZ);
+                heightMap[xIndex, zIndex] = datosEscaque.Item1;
+                colorMapa[xIndex, zIndex] = datosEscaque.Item2;
+                if(datosEscaque.Item3.Length>0)
+                {
+                    Instantiate(terrainAdministrator.Figuras3D[0], new Vector3(vertexX*20-200 + Random.Range(-3f,3f), datosEscaque.Item1 * heightMultiplier * 20, vertexZ*20- 200 + Random.Range(-3f, 3f)),Quaternion.Euler(0,Random.Range(0,4)*90,0));
+                }
                 vertexIndex++;
             }
         }
@@ -224,7 +195,7 @@ public class TerrainGeneration : MonoBehaviour
                 float height = heightMap[zIndex, xIndex];
                 Vector3 vertex = meshVertices[vertexIndex];
                 // change the vertex Y coordinate, proportional to the height value
-                meshVertices[vertexIndex] = new Vector3(vertex.x, heightCurve.Evaluate(height) * heightMultiplier, vertex.z);
+                meshVertices[vertexIndex] = new Vector3(vertex.x, height * heightMultiplier, vertex.z);
 
                 vertexIndex++;
             }

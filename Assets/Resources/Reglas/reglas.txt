@@ -1,0 +1,16 @@
+{
+	"resources": [
+		{
+			"name": "arbol",
+			"models": ["arbol","arbol2"]
+		},
+		{
+			"name": "flor",
+			"models": ["flor"]
+		},
+		{
+			"name": "alamo",
+			"models": ["alamo"]
+		}		
+	]
+}

@@ -6,19 +6,14 @@ using UnityEngine;
 
 public class Resource : MonoBehaviour
 {
-     public enum Tags
+    public enum Tags
     {
-        arbol,
-        piedra,
-        tallable,
-        no_tallable,
-        animal,
-        planta,
-        medicinal,
-        hongo
+        arbol, piedra, tallable, no_tallable, animal, planta, medicinal, hongo
     }
     //REFERENCIAS
     private Inventory inventory;
+    private UIAdministrator uIAdministrator;
+
 
     //COSAS DE RECURSOS
     public string ResourceName;
@@ -26,14 +21,15 @@ public class Resource : MonoBehaviour
     private Tags tags;
     [SerializeField]
     private Tags tags2;
-    public int population = 0;  
+    public int population = 0;
     public int shields = 0;
-
-    //AGOTAMIENTO
     public int quantity;
     public bool canRunOut = false;
+    public Tuple<int, Terreno> myGlobalIndex;
+
+
     [NonSerialized]
-    public int indexDict;
+    public int indexInDict;
 
     //EXTRACCION
     public bool extractionInInfluenceZone = false;
@@ -41,13 +37,9 @@ public class Resource : MonoBehaviour
     void Start()
     {
         inventory = FindObjectOfType<Inventory>();
+        uIAdministrator = FindAnyObjectByType<UIAdministrator>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     public void SetInitialValues(string ResourceName, int quantity, bool canRunOut, bool extractionInInfluenceZone)
     {
@@ -55,22 +47,60 @@ public class Resource : MonoBehaviour
         this.quantity = quantity;
         this.canRunOut = canRunOut;
         this.extractionInInfluenceZone = extractionInInfluenceZone;
-
-        
     }
 
     public void PrintResourceValues()
     {
         Debug.Log("Name: " + ResourceName + ";\n" + "quantity: " + quantity + ";\n" + "Can Run Out?: " + canRunOut + " Tag: " + tags + " Tag2: " + tags2);
     }
-
-    public void Consume()
+    public void PreConsume()
     {
-        //TODO: detectar ciudad mas cercana o a la que queremos que vayan los recursos como los escudos o poblacion.
-        //Si es un objeto que entregue este tipo de recursos no se debe mandar al inventario.
-        inventory.AddToInventory(this);
+        if (tags2 != Tags.no_tallable) //Esto es por si nos encontramos con una pieda o similar que no hace nada
+        {
+            if (ThisResourceGoToInvetory())
+            {
+                Consume(true);
+            }
+            else
+            {
+                int numericIndex = SubTerrainAdmReference.GetNumericIndexFromGlobalPosition(transform.position);
+                if (SubTerrainAdmReference.influencedEscaques.ContainsKey(numericIndex))
+                {
+                    Town town = SubTerrainAdmReference.influencedEscaques[numericIndex];
+                    town.RemoveResourceAvailable(numericIndex);
+                    Consume(false, town.city);
+                }
+                else
+                {
+                    List<City> citiesAround = SubTerrainAdmReference.DetectCity(transform.position, 20);
+                    uIAdministrator.subUIAdminResources.ActivatePanelResourceDestination(citiesAround, this);
+                }
+            }
+        }
+    }
+
+    public void Consume(bool toInventory, City city = null)
+    {
+        if (toInventory)
+        {
+            inventory.AddToInventory(this);
+            uIAdministrator.subUIAdminInventory.UpdateText();
+        }
+        if (city != null)
+        {   
+            city.shields += shields;
+            city.population += population;
+            uIAdministrator.subUIAdminCity.ActivatePanelCityInformation(city);  
+            //Decirle al town que borre ese recurso disponible
+        }
+
         Destroy(gameObject);
     }
 
+
+    public bool ThisResourceGoToInvetory()
+    {
+        return population == 0 && shields == 0;
+    }
 
 }

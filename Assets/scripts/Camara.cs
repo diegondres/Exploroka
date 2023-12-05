@@ -12,6 +12,7 @@ public class Camara : MonoBehaviour
   void Start(){
     camara = FindAnyObjectByType<Camera>();
     camara.backgroundColor = Color.blue;
+    
   }
   
   private void LateUpdate()

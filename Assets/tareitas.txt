@@ -1,0 +1,4 @@
+-Al momento de fundar una ciudad que solo se pinten los escaques influenciados de dicha ciudad, tambien aplica para nuevos pueblos.
+-tambien que se agreguen los recursos que esten dentro del area de influencia como recursos disponibles de la ciudad.
+
+-medir distancia del movimiento del mouse en posiciones relativas   

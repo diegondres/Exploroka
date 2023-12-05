@@ -12,8 +12,11 @@ public class Town : MonoBehaviour
     public int cost = 5;
     private TerrainAdministrator terrainAdministrator;
     private ObjetsAdministrator objetsAdministrator;
+    private readonly int sizeInfluence = 15;
+    public List<Tuple<int, Terreno>> influencedEscaques = new();
+    private readonly Dictionary<int,Resource> resourcesAvailable = new();
     public City city;
-    
+
     void Start()
     {
         terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
@@ -21,30 +24,35 @@ public class Town : MonoBehaviour
         GenerateInfluenceZone();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     void GenerateInfluenceZone()
     {
-        Vector3 relativePosition = terrainAdministrator.terrenoOfHero.GetRelativePositionInVertices(transform.position);
-        
+        Vector3 relativePosition = SubTerrainAdmReference.terrainOfHero.GetRelativePositionInVertices(transform.position);
 
-        for (int i = -12; i <= 12; i++)
+        for (int i = -sizeInfluence; i <= sizeInfluence; i++)
         {
-            for (int j = -12; j <= 12; j++)
+            for (int j = -sizeInfluence; j <= sizeInfluence; j++)
             {
-                if (i * i + j * j < 144)
+                if (i * i + j * j < sizeInfluence * sizeInfluence)
                 {
                     Vector3 relativePositionIJ = new(relativePosition.x + i, relativePosition.y, relativePosition.z + j);
-                    Tuple<int, Terreno> index = terrainAdministrator.terrenoOfHero.GetIndexGlobal(relativePositionIJ);
-                    int indexNumeric = objetsAdministrator.GetNumericIndex(index);
-                    if (!terrainAdministrator.influencedEscaques.ContainsKey(indexNumeric)) terrainAdministrator.influencedEscaques.Add(indexNumeric, this);
+                    Tuple<int, Terreno> index = SubTerrainAdmReference.terrainOfHero.GetIndexGlobal(relativePositionIJ);
+                    int indexNumeric = SubTerrainAdmReference.GetNumericIndex(index);
+
+                    if (!SubTerrainAdmReference.influencedEscaques.ContainsKey(indexNumeric))
+                    {
+                        SubTerrainAdmReference.influencedEscaques.Add(indexNumeric, this);
+                        influencedEscaques.Add(index);
+                    }
+                    if(SubObjectsAdmReferences.IsAResourceHere(indexNumeric) != null){
+                        resourcesAvailable.Add(indexNumeric, SubObjectsAdmReferences.IsAResourceHere(indexNumeric));
+                    }
                 }
             }
         }
-        terrainAdministrator.PaintInfluence();
+        terrainAdministrator.PaintInfluenceTown();
+    }
+
+    public void RemoveResourceAvailable(int numericIndex){
+        resourcesAvailable.Remove(numericIndex);
     }
 }

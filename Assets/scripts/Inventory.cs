@@ -5,22 +5,17 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    private Dictionary<string, Tuple<int, Resource>> inventory = new();
+    public Dictionary<string, Tuple<int, Resource>> inventory = new();
+    public int governance = 5;
 
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.I)){
-            foreach(var resource in inventory){
-                Debug.Log(resource.Key + resource.Value.Item1);
-            }
-        }
     }
 
     public void AddToInventory(Resource resource){

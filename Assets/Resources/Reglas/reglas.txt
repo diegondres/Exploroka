@@ -11,6 +11,30 @@
 		{
 			"name": "alamo",
 			"models": ["alamo"]
-		}		
+		},
+		{
+			"name": "jengibre",
+			"models": ["jengibre"]
+		},
+		{
+			"name": "menta",
+			"models": ["menta"]
+		},
+		{
+			"name": "mamut",
+			"models": ["mamut"]
+		},
+		{
+			"name": "pudu",
+			"models": ["pudu"]
+		},
+		{
+			"name": "honguito",
+			"models": ["honguito"]
+		},
+		{
+			"name": "obsidiana",
+			"models": ["obsidiana"]
+		}	
 	]
 }

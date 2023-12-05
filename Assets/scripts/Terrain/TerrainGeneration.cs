@@ -153,10 +153,21 @@ public class TerrainGeneration : MonoBehaviour
                 colorMapa[xIndex, zIndex] = datosEscaque.Item2;
                 if(datosEscaque.Item3.Length>0)
                 {
-                    Instantiate(terrainAdministrator.Figuras3D[0], new Vector3(vertexX*20-200 + Random.Range(-3f,3f), datosEscaque.Item1 * heightMultiplier * 20, vertexZ*20- 200 + Random.Range(-3f, 3f)),Quaternion.Euler(0,Random.Range(0,4)*90,0), objetsAdministrator.containerResources.transform);
+                    Instantiate(terrainAdministrator.Figuras3D[GetModelFromResource(datosEscaque.Item3)], new Vector3(vertexX*20-200 + Random.Range(-3f,3f), datosEscaque.Item1 * heightMultiplier * 20, vertexZ*20- 200 + Random.Range(-3f, 3f)),Quaternion.Euler(0,Random.Range(0,4)*90,0), objetsAdministrator.containerResources.transform);
                 }
                 vertexIndex++;
             }
+        }
+    }
+
+    private int GetModelFromResource(string rec)
+    {
+        if(terrainAdministrator.modelosRecursos.ContainsKey(rec))
+        {
+            return terrainAdministrator.modelosRecursos[rec][Random.Range(0, terrainAdministrator.modelosRecursos[rec].Count)];
+        } else
+        {
+            return 0;
         }
     }
 

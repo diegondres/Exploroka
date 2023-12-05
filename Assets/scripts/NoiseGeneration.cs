@@ -109,7 +109,7 @@ public class NoiseGeneration : MonoBehaviour
                     } else if(temp>0.4f) {
                         color = new Color32(0, 80, 0, 0);   //bosque
                     } else {
-                        color = new Color32(0, 100, 70, 200);   //pinos
+                        color = new Color32(0, 100, 70, 0);   //pinos
                     }
                     //color = bosque;// Color.Lerp(color, bosque, Mathf.Clamp((pp - 0.5f)/0.2f,0,1) * xColoracion);
                 } else if (pp > barra) {
@@ -120,6 +120,10 @@ public class NoiseGeneration : MonoBehaviour
                         if (z > limiteWrap) {
                             color = new Color32(50, 100, 50, 0);    //bosque chico
                             recurso = "arbol";
+                            if (Random.value < 0.05f)
+                            {
+                                recurso = "honguito";
+                            }
                         } else {
                             color = new Color32(155, 215, 0, 0);    //pasto
                             if(Random.value < 0.05f)
@@ -129,6 +133,10 @@ public class NoiseGeneration : MonoBehaviour
                         }
                     } else {
                         color = new Color32(192, 233, 186, 0);    //nieve
+                        if (Random.value < 0.05f)
+                        {
+                            recurso = "mamut";
+                        }
                     }
                 } else {
                     if (temp > 1 - barra) {
@@ -140,8 +148,23 @@ public class NoiseGeneration : MonoBehaviour
                         if (z > limiteWrap) {
                             color = new Color32(50, 100, 50, 0);    //bosque chico
                             recurso = "arbol";
+                            if (Random.value < 0.05f)
+                            {
+                                recurso = "pudu";
+                            }
                         } else {
                             color = new Color32(155, 215, 0, 0);    //pasto
+                            if (Random.value < 0.2f)
+                            {
+                                if (Random.value < 0.3f)
+                                {
+                                    recurso = "menta";
+                                }
+                                else
+                                {
+                                    recurso = "alamo";
+                                }
+                            }
                         }
                     }
                 }
@@ -156,6 +179,10 @@ public class NoiseGeneration : MonoBehaviour
 
             if (h > hieloterma) {
                 color = nieve;
+                if (Random.value < 0.05f)
+                {
+                    recurso = "obsidiana";
+                }
             } else if (h > 0.71f) {
                 color = montanhos;// Color.Lerp(montanhos, nieve, (h-0.71f)/(hieloterma-0.71f));
             }

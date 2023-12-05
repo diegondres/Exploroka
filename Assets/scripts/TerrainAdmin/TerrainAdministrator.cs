@@ -11,13 +11,16 @@ public class TerrainAdministrator : MonoBehaviour
   private SubTerrainAdmGeneration subTerrainAdmGeneration;
 
   public List<GameObject> Figuras3D;
-
+  public Dictionary<string, List<int>> modelosRecursos;
 
     [System.Serializable]
     public class ResourcesClass
     {
         public string name;
         public List<string> models;
+        public bool tallable;
+        public float comida;
+        public float escudos;
         public List<GameObject> modelsPrefab;
     }
     [System.Serializable]
@@ -35,7 +38,7 @@ public class TerrainAdministrator : MonoBehaviour
     subTerrainAdmGeneration.SetNeighboorsReference();
     subTerrainAdmGeneration.CreateFirstTerrain();
     SubObjectsAdmReferences.Inicializate();
-
+        modelosRecursos = new Dictionary<string, List<int>>();
          LoadModels();
 
   }
@@ -45,10 +48,18 @@ void LoadModels()
         string path = "Reglas/reglas";
         TextAsset jsonFile = Resources.Load<TextAsset>(path);
         Reglas reglas = JsonUtility.FromJson<Reglas>(jsonFile.text);
+        int k = 0;
         foreach (ResourcesClass rec in reglas.resources)
         {
             foreach (string mod in rec.models) {
                 GameObject goPref = AgregarModelo(mod, 80);
+                //Agregar modelo
+                if(!modelosRecursos.ContainsKey(rec.name))
+                {
+                    modelosRecursos[rec.name] = new List<int>();
+                }
+                modelosRecursos[rec.name].Add(k);
+                k++;
             }
         }
     }

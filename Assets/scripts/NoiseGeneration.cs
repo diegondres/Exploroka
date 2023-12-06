@@ -55,14 +55,14 @@ public class NoiseGeneration : MonoBehaviour
     //
     // funci�n que vomite (bioma, altura, recurso)
     //
-    public Tuple<float,Color32, string> GetHeight(int x, int y)
+    public Tuple<float, Color32, string> GetHeight(int x, int y)
     {
-        float h;
+        float height;
         Color32 color;
         string recurso = "";
 
 
-        color = new Color32(0,100,255,0);
+        color = new Color32(0, 100, 255, 0);
         Color32 rojo = new Color32(255, 70, 70, 0);
         Color32 montanhos = new Color32(180, 80, 0, 0);
         Color32 nieve = new Color32(255, 255, 255, 0);
@@ -75,11 +75,11 @@ public class NoiseGeneration : MonoBehaviour
         Color32 jungla = new Color32(0, 80, 0, 0);
 
 
-        h = Perlinazo(x, y, escalaAgua, 0);
+        height = Perlinazo(x, y, escalaAgua, 0);
         float ruidoMontanhoso = Perlinazo(x, y, escalaRuidoMontanha, -7);
         float montanhaMisma = Perlinazo(x, y, escalaMontanha, 7);
         float montanhaCadena = EvaluarSpline(PerlinWrap2(x, y, escalaWrap, -12), "cadena");
-        float zonaMontanhosa = Mathf.Max(EvaluarSpline(Perlinazo(x, y, escalaMontanhoso, 8), "montanhaDonde"),EvaluarSpline(Perlinazo(x, y, escalaMetaMontanhoso, -8), "montanhaDonde"));
+        float zonaMontanhosa = Mathf.Max(EvaluarSpline(Perlinazo(x, y, escalaMontanhoso, 8), "montanhaDonde"), EvaluarSpline(Perlinazo(x, y, escalaMetaMontanhoso, -8), "montanhaDonde"));
 
         float zonaCarcavosa = EvaluarSpline(Perlinazo(x, y, escalaPantanoso, 9), "carcavasDonde");
         float carcavasCadena = EvaluarSpline(Perlinazo(x, y, escalaCadenaPantano, 10), "carcavas");
@@ -90,84 +90,122 @@ public class NoiseGeneration : MonoBehaviour
 
         float playa = Perlinazo(x, y, escalaPlaya, -13);
 
-        h += montanhaMisma * montanhaCadena * zonaMontanhosa * (ruidoMontanhoso*0.8f + 0.3f) - zonaCarcavosa*carcavasCadena;
-        if (h > nAgua) {
-            color = new Color32((byte)((h-nAgua)*155), 215, 0, 0);
-            if(zonaMontanhosa > 0.5f && false) {
+        height += montanhaMisma * montanhaCadena * zonaMontanhosa * (ruidoMontanhoso * 0.8f + 0.3f) - zonaCarcavosa * carcavasCadena;
+        if (height > nAgua)
+        {
+            color = new Color32((byte)((height - nAgua) * 155), 215, 0, 0);
+            if (zonaMontanhosa > 0.5f && false)
+            {
                 color = montanhos;
-            } else if (zonaCarcavosa > 0.2f) {
+            }
+            else if (zonaCarcavosa > 0.2f)
+            {
                 color = Color.Lerp(pantano, color, 0.5f);
-                if (carcavasCadena > 0.25f) {
+                if (carcavasCadena > 0.25f)
+                {
                     color = pantano;
                 }
-            } else {
-                pp+= EvaluarSpline(h, "alturaAfectaPp");
-                temp += EvaluarSpline(h, "alturaAfectaT");
-                if (pp > 1-barra) {
-                    if(temp> 1 - barra) {
+            }
+            else
+            {
+                pp += EvaluarSpline(height, "alturaAfectaPp");
+                temp += EvaluarSpline(height, "alturaAfectaT");
+                if (pp > 1 - barra)
+                {
+                    if (temp > 1 - barra)
+                    {
                         color = new Color32(60, 100, 0, 0);   //jungla
-                    } else if(temp>0.4f) {
+                    }
+                    else if (temp > 0.4f)
+                    {
                         color = new Color32(0, 80, 0, 0);   //bosque
-                    } else {
+                    }
+                    else
+                    {
                         color = new Color32(0, 100, 70, 200);   //pinos
                     }
                     //color = bosque;// Color.Lerp(color, bosque, Mathf.Clamp((pp - 0.5f)/0.2f,0,1) * xColoracion);
-                } else if (pp > barra) {
-                    if (temp > 1 - barra) {
+                }
+                else if (pp > barra)
+                {
+                    if (temp > 1 - barra)
+                    {
                         color = new Color32(250, 211, 133, 0);   //sabana
-                    } else if (temp > 0.4f) {
+                    }
+                    else if (temp > 0.4f)
+                    {
                         float z = PerlinWrap(x, y, escalaWrapChico, 3);
-                        if (z > limiteWrap) {
+                        if (z > limiteWrap)
+                        {
                             color = new Color32(50, 100, 50, 0);    //bosque chico
                             recurso = "arbol";
-                        } else {
+                        }
+                        else
+                        {
                             color = new Color32(155, 215, 0, 0);    //pasto
-                            if(Random.value < 0.05f)
+                            if (Random.value < 0.05f)
                             {
                                 recurso = "flor";
                             }
                         }
-                    } else {
+                    }
+                    else
+                    {
                         color = new Color32(192, 233, 186, 0);    //nieve
                     }
-                } else {
-                    if (temp > 1 - barra) {
+                }
+                else
+                {
+                    if (temp > 1 - barra)
+                    {
                         color = new Color32(255, 255, 0, 0);// Color.Lerp(color, desierto, Mathf.Clamp((-pp + 0.5f) / 0.2f, 0, 1) * xColoracion);
-                    } else if (temp > barra) {
+                    }
+                    else if (temp > barra)
+                    {
                         color = new Color32(200, 200, 100, 0);   //sabana;// Color.Lerp(color, desierto, Mathf.Clamp((-pp + 0.5f) / 0.2f, 0, 1) * xColoracion);
-                    } else {
+                    }
+                    else
+                    {
                         float z = PerlinWrap(x, y, escalaWrapChico, 3);
-                        if (z > limiteWrap) {
+                        if (z > limiteWrap)
+                        {
                             color = new Color32(50, 100, 50, 0);    //bosque chico
                             recurso = "arbol";
-                        } else {
+                        }
+                        else
+                        {
                             color = new Color32(155, 215, 0, 0);    //pasto
                         }
                     }
                 }
-                //if(playa>0.5f && h < nAgua + 0.1f) {
+                //if(playa>0.5f && height < nAgua + 0.1f) {
                 //    color = desierto;
                 //}
                 //if(PerlinWrap2(x, y, escalaWrap, -12)>0.48f && PerlinWrap2(x, y, escalaWrap, -12)<0.52f) {
-                 //   color = rojo;
+                //   color = rojo;
                 //}
             }
 
 
-            if (h > hieloterma) {
+            if (height > hieloterma)
+            {
                 color = nieve;
-            } else if (h > 0.71f) {
-                color = montanhos;// Color.Lerp(montanhos, nieve, (h-0.71f)/(hieloterma-0.71f));
+            }
+            else if (height > 0.71f)
+            {
+                color = montanhos;// Color.Lerp(montanhos, nieve, (height-0.71f)/(hieloterma-0.71f));
             }
 
 
-        } else {
-            h = nAgua;
+        }
+        else
+        {
+            height = nAgua;
         }
 
-        return new Tuple<float, Color32, string> ( h, color, recurso);
+        return new Tuple<float, Color32, string>(height, color, recurso);
     }
-    
+
     public float PerlinWrap(int i, int j, float escala, float capa)
     {
         Vector2 q = new Vector2(Perlinazo(i, j, escala, -4), Perlinazo(i + 5.2f + capa * 3, j + 1.3f + capa * 3, escala, -4));
@@ -182,8 +220,8 @@ public class NoiseGeneration : MonoBehaviour
     }
     public float PerlinWrap2(int i, int j, float escala, float capa)
     {
-        Vector2 q = new Vector2(Perlinazo(i, j, escala, -4), Perlinazo(i + 5.2f+capa*3, j + 1.3f + capa * 3, escala, -4));
-        Vector2 r = new Vector2(Perlinazo(i+4*q.x+1.7f + capa * 3, j + 4*q.y + 9.2f + capa * 3, escala, -5), Perlinazo(i + 4 * q.x + 8.3f + capa * 3, j + 4 * q.y + 2.8f + capa * 3, escala, -5));
+        Vector2 q = new Vector2(Perlinazo(i, j, escala, -4), Perlinazo(i + 5.2f + capa * 3, j + 1.3f + capa * 3, escala, -4));
+        Vector2 r = new Vector2(Perlinazo(i + 4 * q.x + 1.7f + capa * 3, j + 4 * q.y + 9.2f + capa * 3, escala, -5), Perlinazo(i + 4 * q.x + 8.3f + capa * 3, j + 4 * q.y + 2.8f + capa * 3, escala, -5));
 
         return Perlinazo(i + 4 * q.x, j + 4 * q.y, escala, -3);
         /*
@@ -228,16 +266,20 @@ public class NoiseGeneration : MonoBehaviour
     public float EvaluarSpline(float input, string cualEspline)
     {
         SplineSegment segment = null;
-        foreach (SplineSegment segmento in Esplines) {
-            if (segmento.nombre == cualEspline) {
+        foreach (SplineSegment segmento in Esplines)
+        {
+            if (segmento.nombre == cualEspline)
+            {
                 segment = segmento;
             }
         }
-        if(segment == null) {
+        if (segment == null)
+        {
             print("ERROR: No se encontro espline " + cualEspline);
             return 0;
         }
-        if (input >= segment.inputStart && input <= segment.inputEnd) {
+        if (input >= segment.inputStart && input <= segment.inputEnd)
+        {
             float normalizedInput = Mathf.InverseLerp(segment.inputStart, segment.inputEnd, input);
             return segment.curve.Evaluate(normalizedInput) * segment.escala;
         }

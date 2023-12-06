@@ -43,7 +43,7 @@ public class Terreno : MonoBehaviour
     tileRenderer = GetComponent<MeshRenderer>();
     terrainGeneration = GetComponent<TerrainGeneration>();
 
-        worldPositionTerrain = transform.parent.TransformPoint(transform.localPosition);
+    worldPositionTerrain = transform.parent.TransformPoint(transform.localPosition);
   }
 
   public void IdleTime(float num)
@@ -70,7 +70,7 @@ public class Terreno : MonoBehaviour
         IdleTime(acumulatedTime + Time.deltaTime);
         isSorroundingEscaquesPainted = false;
       }
-     
+
     }
   }
 
@@ -89,7 +89,7 @@ public class Terreno : MonoBehaviour
       Terreno neighboor = GetTerrain(relativePositionInVertices);
       terrainAdministrator.SetTerrenoOfHero(neighboor);
 
-      return neighboor.Move(position, Vector3.zero);
+      return neighboor.Move(position - movement, movement);
     }
     else
     {
@@ -110,7 +110,10 @@ public class Terreno : MonoBehaviour
 
   public bool IsWalkable(Vector3 relativePositionInVertices)
   {
-    return terrainGeneration.GetTerrainType(relativePositionInVertices) != "water";
+    Debug.Log(terrainGeneration.GetTerrainType(relativePositionInVertices));
+    //TODO: Funciona mal el reconocimiento de cuando es un terreno no recorrible, hay que corregir.
+    // return terrainGeneration.GetTerrainType(relativePositionInVertices) != "water";
+    return true;
   }
 
   public Vector3 CalculateDistance(Vector3 actualPosition, Vector3 destiny)
@@ -187,7 +190,7 @@ public class Terreno : MonoBehaviour
 
     return globalIndex.Item2.CenterInEscaqueToGlobal(new Vector3(relativePositionZ, 0f, relativePositionX), 5f);
   }
-   public Vector3 GetGlobalPositionFromGlobalIndexWithoutHeight(Tuple<int, Terreno> globalIndex)
+  public Vector3 GetGlobalPositionFromGlobalIndexWithoutHeight(Tuple<int, Terreno> globalIndex)
   {
     int ejeX = (int)(globalIndex.Item1 / sizeTerrainInVertices);
     float wea2 = globalIndex.Item1 / (sizeTerrainInVertices / 2);
@@ -220,9 +223,10 @@ public class Terreno : MonoBehaviour
         return neighboors[2];
       }
 
-      else {
+      else
+      {
         return neighboors[1];
-        }
+      }
     }
     else if (relativePositionInVertices.x > 10)
     {

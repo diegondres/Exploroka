@@ -64,7 +64,7 @@ public class TerrainGeneration : MonoBehaviour
             {
                 // transform the 2D map index is an Array index
                 int colorIndex = zIndex * tileWidth + xIndex;
-                                // assign as color a shade of grey proportional to the height value
+                // assign as color a shade of grey proportional to the height value
                 colorMap[colorIndex] = colorMapa[zIndex, xIndex]; //terrainType.color;
             }
         }
@@ -82,7 +82,8 @@ public class TerrainGeneration : MonoBehaviour
     }
 
 
-    private void GetHeightMap(){
+    private void GetHeightMap()
+    {
         int heightMapDepth = tileDepth + 1;
         int heightMapWidth = tileWidth + 1;
         heightMap = new float[heightMapDepth, heightMapWidth];
@@ -95,30 +96,33 @@ public class TerrainGeneration : MonoBehaviour
 
         // iterate through all the heightMap coordinates, updating the vertex index
         int vertexIndex = 0;
-        
 
         for (int xIndex = 0; xIndex < heightMapDepth; xIndex++)
         {
             for (int zIndex = 0; zIndex < heightMapWidth; zIndex++)
             {
                 Vector3 vertex = meshVertices[vertexIndex];
-                
-                int vertexX = (int)vertex.x + sizeTerrainInVertices /2 + offsetX; 
-                int vertexZ = (int)vertex.z + sizeTerrainInVertices /2 + offsetZ;
-                
+
+                int vertexX = (int)vertex.x + sizeTerrainInVertices / 2 + offsetX;
+                int vertexZ = (int)vertex.z + sizeTerrainInVertices / 2 + offsetZ;
+
                 Tuple<float, Color32, string> datosEscaque = noiseGeneration.GetHeight(vertexX, vertexZ);
                 heightMap[xIndex, zIndex] = datosEscaque.Item1;
                 colorMapa[xIndex, zIndex] = datosEscaque.Item2;
 
-                
-                if(datosEscaque.Item3.Length>0)
+                if (datosEscaque.Item3.Length > 0)
                 {
-                    Instantiate(terrainAdministrator.Figuras3D[0], new Vector3(vertexX*20-200 + Random.Range(-3f,3f), datosEscaque.Item1 * heightMultiplier * 20, vertexZ*20- 200 + Random.Range(-3f, 3f)),Quaternion.Euler(0,Random.Range(0,4)*90,0), objetsAdministrator.containerResources.transform);
+                    Vector3 positionResource = new(vertexX * 20 - 200 + Random.Range(-3f, 3f), datosEscaque.Item1 * heightMultiplier * 20, vertexZ * 20 - 200 + Random.Range(-3f, 3f));
+                    
+                    GameObject resource = Instantiate(terrainAdministrator.Figuras3D[0], positionResource, Quaternion.Euler(0, Random.Range(0, 4) * 90, 0), objetsAdministrator.containerResources.transform);
+                    // SubObjectsAdmReferences.AddResource(resource, terreno);
                 }
-                if(datosEscaque.Item1 == noiseGeneration.nAgua){
+                if (datosEscaque.Item1 == noiseGeneration.nAgua)
+                {
                     chosenHeightTerrainTypes[xIndex, zIndex] = "water";
                 }
-                else{
+                else
+                {
                     chosenHeightTerrainTypes[xIndex, zIndex] = "notWater";
                 }
                 vertexIndex++;
@@ -221,7 +225,8 @@ public class TerrainGeneration : MonoBehaviour
         return meanHeight * heightMultiplier * gameObject.transform.localScale.y;
     }
 
-    public string GetTerrainType(Vector3 relativePositionInVertices){
+    public string GetTerrainType(Vector3 relativePositionInVertices)
+    {
         int xIndex = (int)(relativePositionInVertices.x + sizeTerrainInVertices / 2);
         int zIndex = (int)(relativePositionInVertices.z + sizeTerrainInVertices / 2);
 

@@ -5,19 +5,18 @@ using UnityEngine;
 using UnityEngine.Windows;
 using Random = UnityEngine.Random;
 
-
-
 [System.Serializable]
-public class Wave
+public class SplineSegment
 {
-    public float seed;
-    public float frequency;
-    public float amplitude;
+    public string nombre;
+    public float inputStart = 0.0f;
+    public float inputEnd = 1.0f;
+    public float escala = 1;
+    public AnimationCurve curve = AnimationCurve.Linear(0, 0, 1, 1);
 }
 
 public class NoiseGeneration : MonoBehaviour
 {
-
     public float nAgua = 0.3f;
     public float escalaMontanhoso = 4;
     public float escalaMetaMontanhoso = 4;
@@ -36,22 +35,9 @@ public class NoiseGeneration : MonoBehaviour
     public float hieloterma = 0.75f;
     public float xColoracion;
 
-    [SerializeField]
-    private float scale = 10;
-
     public float semilla = 0;
     public SplineSegment[] Esplines;
-
-    [System.Serializable]
-    public class SplineSegment
-    {
-        public string nombre;
-        public float inputStart = 0.0f;
-        public float inputEnd = 1.0f;
-        public float escala = 1;
-        public AnimationCurve curve = AnimationCurve.Linear(0, 0, 1, 1);
-
-    }
+    
     //
     // funci�n que vomite (bioma, altura, recurso)
     //

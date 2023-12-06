@@ -1,7 +1,34 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+
+[System.Serializable]
+public class ResourcesClass
+{
+  public string name;
+  public List<string> models;
+  public List<GameObject> modelsPrefab;
+
+  public ResourcesClass Clone(){
+        ResourcesClass newResourcesClass = new()
+        {
+            name = name,
+            models = models,
+            modelsPrefab = modelsPrefab
+        };
+
+        return newResourcesClass;
+    }
+}
+
+[System.Serializable]
+public class Reglas
+{
+  public List<ResourcesClass> resources;
+}
+
 
 public class TerrainAdministrator : MonoBehaviour
 {
@@ -10,23 +37,8 @@ public class TerrainAdministrator : MonoBehaviour
   private ObjetsAdministrator objetsAdministrator;
   private SubTerrainAdmGeneration subTerrainAdmGeneration;
 
-  public List<GameObject> Figuras3D;
-
-
-    [System.Serializable]
-    public class ResourcesClass
-    {
-        public string name;
-        public List<string> models;
-        public List<GameObject> modelsPrefab;
-    }
-    [System.Serializable]
-    public class Reglas
-    {
-        public List<ResourcesClass> resources;
-    }
-
- 
+  public int modelScale = 80;
+  public List<GameObject> Figuras3D = new();
 
   void Awake()
   {
@@ -36,69 +48,47 @@ public class TerrainAdministrator : MonoBehaviour
     subTerrainAdmGeneration.CreateFirstTerrain();
     SubObjectsAdmReferences.Inicializate();
 
-         LoadModels();
-
+    LoadModels();
   }
-void LoadModels()
-    {
-        Figuras3D = new List<GameObject>();
-        string path = "Reglas/reglas";
-        TextAsset jsonFile = Resources.Load<TextAsset>(path);
-        Reglas reglas = JsonUtility.FromJson<Reglas>(jsonFile.text);
-        foreach (ResourcesClass rec in reglas.resources)
-        {
-            foreach (string mod in rec.models) {
-                GameObject goPref = AgregarModelo(mod, 80);
-            }
-        }
-    }
-
-    GameObject AgregarModelo(string dir, float escala = 1)
-    {
-        // Lo antiguo que funcionaba si quiero que cargue los datos de un archivo
-        /*
-		go = new GameObject ();
-		Mesh holderMesh = new Mesh();
-		ObjImporter newMesh = new ObjImporter();
-		//holderMesh = newMesh.ImportFile("Assets/Resources/Tresde/" + dir + ".obj");
-        holderMesh = FastObjImporter.Instance.ImportFile("Assets/Resources/TresDe/" + dir + ".obj");
-        MeshRenderer renderer = go.AddComponent<MeshRenderer>();
-		MeshFilter filter = go.AddComponent<MeshFilter>();
-		filter.mesh = holderMesh;
-		//filter.mesh = Resources.Load<Mesh>(dir);
-		*/
-        // Fin funcionar
-
-        Texture2D tex = null;
-
-        tex = Resources.Load("Modelos/" + dir, typeof(Texture2D)) as Texture2D;
-
-
-
-
-        // Probando sin resources p�blicos
-        GameObject go = new GameObject();
-        MeshRenderer renderer = go.AddComponent<MeshRenderer>();
-        MeshFilter filter = go.AddComponent<MeshFilter>();
-        filter.mesh = (Mesh)Resources.Load("Modelos/" + dir, typeof(Mesh));
-
-        go.GetComponent<Renderer>().material.mainTexture = tex;
-        go.GetComponent<Renderer>().material.shader = Shader.Find("Diffuse");
-
-
-        go.transform.localScale = new Vector3(-0.1f * escala, 0.1f * escala, 0.1f * escala);
-        go.transform.rotation = Quaternion.Euler(0, 180, 0);
-        
-        go.transform.position = new Vector3(0, 0, -500);
-        go.transform.tag = "bloquePrefab";
-
-        Figuras3D.Add(go);
-        return go;
-    }
-  void Update()
+  void LoadModels()
   {
+    string path = "Reglas/reglas";
+    TextAsset jsonFile = Resources.Load<TextAsset>(path);
+    Reglas reglas = JsonUtility.FromJson<Reglas>(jsonFile.text);
+
+    foreach (ResourcesClass rec in reglas.resources)
+    {
+      foreach (string model in rec.models)
+      {
+        Figuras3D.Add(AgregarModelo(model, modelScale));
+        ResourcesClass wea = rec.Clone();
+      }
+    }
   }
-  
+
+  GameObject AgregarModelo(string dir, float escala = 1)
+  {
+    Texture2D tex = Resources.Load("Modelos/" + dir, typeof(Texture2D)) as Texture2D;
+
+    // Probando sin resources publicos
+    GameObject go = new GameObject();
+    go.AddComponent<MeshRenderer>();
+    MeshFilter filter = go.AddComponent<MeshFilter>();
+    filter.mesh = (Mesh)Resources.Load("Modelos/" + dir, typeof(Mesh));
+
+    go.GetComponent<Renderer>().material.mainTexture = tex;
+    go.GetComponent<Renderer>().material.shader = Shader.Find("Diffuse");
+
+
+    go.transform.localScale = new Vector3(-0.1f * escala, 0.1f * escala, 0.1f * escala);
+    go.transform.rotation = Quaternion.Euler(0, 180, 0);
+
+    go.transform.position = new Vector3(0, 0, -500);
+    go.transform.tag = "bloquePrefab";
+
+    return go;
+  }
+
   public void PutFrontierInEscaque(Tuple<int, Terreno> index, Vector3 offset, Quaternion rotation, int city)
   {
     Vector3 position = index.Item2.GetGlobalPositionFromGlobalIndex(index) + offset;
@@ -138,10 +128,10 @@ void LoadModels()
     foreach (Terreno item in terreno.neighboors)
     {
       subTerrainAdmGeneration.FillNeighborhood(item);
-         foreach (Terreno item2 in item.neighboors)
-            {
-                subTerrainAdmGeneration.FillNeighborhood(item2);
-            }
+      foreach (Terreno item2 in item.neighboors)
+      {
+        subTerrainAdmGeneration.FillNeighborhood(item2);
+      }
     }
   }
   private IEnumerator ReturnToOriginal(Tuple<int, Terreno> tuple)

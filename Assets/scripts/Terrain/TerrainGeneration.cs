@@ -153,6 +153,7 @@ public class TerrainGeneration : MonoBehaviour
                 colorMapa[xIndex, zIndex] = datosEscaque.Item2;
                 if(datosEscaque.Item3.Length>0)
                 {
+                    // En la coordenada (xIndex, zIndex) de este plano hay un recurso datosEscaque.Item
                     Instantiate(terrainAdministrator.Figuras3D[GetModelFromResource(datosEscaque.Item3)], new Vector3(vertexX*20-200 + Random.Range(-3f,3f), datosEscaque.Item1 * heightMultiplier * 20, vertexZ*20- 200 + Random.Range(-3f, 3f)),Quaternion.Euler(0,Random.Range(0,4)*90,0), objetsAdministrator.containerResources.transform);
                 }
                 vertexIndex++;

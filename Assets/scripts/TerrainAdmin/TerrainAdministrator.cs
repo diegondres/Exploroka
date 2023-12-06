@@ -18,9 +18,9 @@ public class TerrainAdministrator : MonoBehaviour
     {
         public string name;
         public List<string> models;
-        public bool tallable;
-        public float comida;
-        public float escudos;
+        public bool carvable;
+        public float population;
+        public float shields;
         public List<GameObject> modelsPrefab;
     }
     [System.Serializable]

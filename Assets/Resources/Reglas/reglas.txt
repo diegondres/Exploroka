@@ -2,6 +2,8 @@
 	"resources": [
 		{
 			"name": "arbol",
+			"carvable": true,
+			"shields": 1,
 			"models": ["arbol","arbol2"]
 		},
 		{
@@ -14,26 +16,34 @@
 		},
 		{
 			"name": "jengibre",
+			"carvable": true,
 			"models": ["jengibre"]
 		},
 		{
 			"name": "menta",
+			"carvable": true,
 			"models": ["menta"]
 		},
 		{
 			"name": "mamut",
+			"carvable": true,
+			"population": 100,
 			"models": ["mamut"]
 		},
 		{
 			"name": "pudu",
+			"carvable": true,
+			"population": 40,
 			"models": ["pudu"]
 		},
 		{
 			"name": "honguito",
+			"carvable": true,
 			"models": ["honguito"]
 		},
 		{
 			"name": "obsidiana",
+			"carvable": true,
 			"models": ["obsidiana"]
 		}	
 	]

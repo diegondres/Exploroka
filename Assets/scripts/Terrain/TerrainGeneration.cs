@@ -114,7 +114,7 @@ public class TerrainGeneration : MonoBehaviour
                 {
                     Vector3 positionResource = new(vertexX * 20 - 200 + Random.Range(-3f, 3f), datosEscaque.Item1 * heightMultiplier * 20, vertexZ * 20 - 200 + Random.Range(-3f, 3f));
                     
-                    GameObject resource = Instantiate(terrainAdministrator.Figuras3D[0], positionResource, Quaternion.Euler(0, Random.Range(0, 4) * 90, 0), objetsAdministrator.containerResources.transform);
+                    GameObject resource = Instantiate(terrainAdministrator.Figuras3D[GetModelFromResource(datosEscaque.Item3)], positionResource, Quaternion.Euler(0, Random.Range(0, 4) * 90, 0), objetsAdministrator.containerResources.transform);
                     // SubObjectsAdmReferences.AddResource(resource, terreno);
                 }
                 if (datosEscaque.Item1 == noiseGeneration.nAgua)
@@ -127,6 +127,17 @@ public class TerrainGeneration : MonoBehaviour
                 }
                 vertexIndex++;
             }
+        }
+    }
+
+    private int GetModelFromResource(string rec)
+    {
+        if(terrainAdministrator.modelosRecursos.ContainsKey(rec))
+        {
+            return terrainAdministrator.modelosRecursos[rec][Random.Range(0, terrainAdministrator.modelosRecursos[rec].Count)];
+        } else
+        {
+            return 0;
         }
     }
 

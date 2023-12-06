@@ -40,6 +40,8 @@ public class TerrainAdministrator : MonoBehaviour
   public int modelScale = 80;
   public List<GameObject> Figuras3D = new();
 
+  public Dictionary<string, List<int>> modelosRecursos = new();
+ 
   void Awake()
   {
     objetsAdministrator = FindAnyObjectByType<ObjetsAdministrator>();
@@ -53,17 +55,23 @@ public class TerrainAdministrator : MonoBehaviour
   void LoadModels()
   {
     string path = "Reglas/reglas";
-    TextAsset jsonFile = Resources.Load<TextAsset>(path);
-    Reglas reglas = JsonUtility.FromJson<Reglas>(jsonFile.text);
-
-    foreach (ResourcesClass rec in reglas.resources)
-    {
-      foreach (string model in rec.models)
-      {
-        Figuras3D.Add(AgregarModelo(model, modelScale));
-        ResourcesClass wea = rec.Clone();
-      }
-    }
+        TextAsset jsonFile = Resources.Load<TextAsset>(path);
+        Reglas reglas = JsonUtility.FromJson<Reglas>(jsonFile.text);
+        int k = 0;
+        foreach (ResourcesClass rec in reglas.resources)
+        {
+            foreach (string mod in rec.models) {
+                GameObject goPref = AgregarModelo(mod, 80);
+                Figuras3D.Add(goPref);
+                //Agregar modelo
+                if(!modelosRecursos.ContainsKey(rec.name))
+                {
+                    modelosRecursos[rec.name] = new List<int>();
+                }
+                modelosRecursos[rec.name].Add(k);
+                k++;
+            }
+        }
   }
 
   GameObject AgregarModelo(string dir, float escala = 1)

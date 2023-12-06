@@ -102,18 +102,14 @@ public class Terreno : MonoBehaviour
       }
       else
       {
-        relativePositionInVertices = GetRelativePositionInVertices(position - movement);
-        return CenterInEscaqueToGlobal(relativePositionInVertices, 5f);
+        return Move(position - movement, Vector3.zero);
       }
     }
   }
 
   public bool IsWalkable(Vector3 relativePositionInVertices)
   {
-    Debug.Log(terrainGeneration.GetTerrainType(relativePositionInVertices));
-    //TODO: Funciona mal el reconocimiento de cuando es un terreno no recorrible, hay que corregir.
-    // return terrainGeneration.GetTerrainType(relativePositionInVertices) != "water";
-    return true;
+    return terrainGeneration.GetTerrainType(relativePositionInVertices) != "water";
   }
 
   public Vector3 CalculateDistance(Vector3 actualPosition, Vector3 destiny)

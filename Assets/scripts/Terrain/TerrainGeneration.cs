@@ -109,15 +109,17 @@ public class TerrainGeneration : MonoBehaviour
                 Tuple<float, Color32, string> datosEscaque = noiseGeneration.GetHeight(vertexX, vertexZ);
                 heightMap[xIndex, zIndex] = datosEscaque.Item1;
                 colorMapa[xIndex, zIndex] = datosEscaque.Item2;
+
+                
                 if(datosEscaque.Item3.Length>0)
                 {
                     Instantiate(terrainAdministrator.Figuras3D[0], new Vector3(vertexX*20-200 + Random.Range(-3f,3f), datosEscaque.Item1 * heightMultiplier * 20, vertexZ*20- 200 + Random.Range(-3f, 3f)),Quaternion.Euler(0,Random.Range(0,4)*90,0), objetsAdministrator.containerResources.transform);
                 }
                 if(datosEscaque.Item1 == noiseGeneration.nAgua){
-                    chosenHeightTerrainTypes[zIndex, xIndex] = "water";
+                    chosenHeightTerrainTypes[xIndex, zIndex] = "water";
                 }
                 else{
-                    chosenHeightTerrainTypes[zIndex, xIndex] = "notWater";
+                    chosenHeightTerrainTypes[xIndex, zIndex] = "notWater";
                 }
                 vertexIndex++;
             }

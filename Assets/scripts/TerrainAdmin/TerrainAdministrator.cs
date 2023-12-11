@@ -84,7 +84,10 @@ void LoadModels()
 
         tex = Resources.Load("Modelos/" + dir, typeof(Texture2D)) as Texture2D;
 
-
+        if(tex == null)
+        {
+            tex = Resources.Load("Modelos/Texture", typeof(Texture2D)) as Texture2D;
+        }
 
 
         // Probando sin resources p�blicos

@@ -99,6 +99,10 @@ public class NoiseGeneration : MonoBehaviour
                 color = Color.Lerp(pantano, color, 0.5f);
                 if (carcavasCadena > 0.25f) {
                     color = pantano;
+                    if (Random.value < 0.2f)
+                    {
+                        recurso = "junco";
+                    }
                 }
             } else {
                 pp+= EvaluarSpline(h, "alturaAfectaPp");
@@ -106,23 +110,42 @@ public class NoiseGeneration : MonoBehaviour
                 if (pp > 1-barra) {
                     if(temp> 1 - barra) {
                         color = new Color32(60, 100, 0, 0);   //jungla
+                        if (Random.value < 0.5f)
+                        {
+                            recurso = "selva";
+                        }
                     } else if(temp>0.4f) {
                         color = new Color32(0, 80, 0, 0);   //bosque
+                        if (Random.value < 0.5f)
+                        {
+                            recurso = "bambu";
+                        }
                     } else {
                         color = new Color32(0, 100, 70, 0);   //pinos
+                        if (Random.value < 0.5f)
+                        {
+                            recurso = "pino";
+                        }
                     }
                     //color = bosque;// Color.Lerp(color, bosque, Mathf.Clamp((pp - 0.5f)/0.2f,0,1) * xColoracion);
                 } else if (pp > barra) {
                     if (temp > 1 - barra) {
                         color = new Color32(250, 211, 133, 0);   //sabana
+                        if (Random.value < 0.05f)
+                        {
+                            recurso = "acacia";
+                        }
                     } else if (temp > 0.4f) {
                         float z = PerlinWrap(x, y, escalaWrapChico, 3);
                         if (z > limiteWrap) {
                             color = new Color32(50, 100, 50, 0);    //bosque chico
-                            recurso = "arbol";
-                            if (Random.value < 0.05f)
+                            if (Random.value < 0.3f)
                             {
-                                recurso = "honguito";
+                                recurso = "arbol";
+                                if (Random.value < 0.05f)
+                                {
+                                    recurso = "honguito";
+                                }
                             }
                         } else {
                             color = new Color32(155, 215, 0, 0);    //pasto
@@ -133,16 +156,28 @@ public class NoiseGeneration : MonoBehaviour
                         }
                     } else {
                         color = new Color32(192, 233, 186, 0);    //nieve
-                        if (Random.value < 0.05f)
+                        if (Random.value < 0.3f)
                         {
-                            recurso = "mamut";
+                            recurso = "pinoNevado";
+                            if (Random.value < 0.05f)
+                            {
+                                recurso = "mamut";
+                            }
                         }
                     }
                 } else {
                     if (temp > 1 - barra) {
-                        color = new Color32(255, 255, 0, 0);// Color.Lerp(color, desierto, Mathf.Clamp((-pp + 0.5f) / 0.2f, 0, 1) * xColoracion);
+                        color = new Color32(255, 255, 0, 0);    //desierto
+                        if (Random.value < 0.05f)
+                        {
+                            recurso = "palmera";
+                        }
                     } else if (temp > barra) {
                         color = new Color32(200, 200, 100, 0);   //sabana;// Color.Lerp(color, desierto, Mathf.Clamp((-pp + 0.5f) / 0.2f, 0, 1) * xColoracion);
+                        if (Random.value < 0.05f)
+                        {
+                            recurso = "cactus";
+                        }
                     } else {
                         float z = PerlinWrap(x, y, escalaWrapChico, 3);
                         if (z > limiteWrap) {
@@ -154,7 +189,7 @@ public class NoiseGeneration : MonoBehaviour
                             }
                         } else {
                             color = new Color32(155, 215, 0, 0);    //pasto
-                            if (Random.value < 0.2f)
+                            if (Random.value < 0.05f)
                             {
                                 if (Random.value < 0.3f)
                                 {
@@ -176,15 +211,16 @@ public class NoiseGeneration : MonoBehaviour
                 //}
             }
 
-
             if (h > hieloterma) {
                 color = nieve;
+                recurso = "";
                 if (Random.value < 0.05f)
                 {
                     recurso = "obsidiana";
                 }
             } else if (h > 0.71f) {
                 color = montanhos;// Color.Lerp(montanhos, nieve, (h-0.71f)/(hieloterma-0.71f));
+                recurso = "";
             }
 
 

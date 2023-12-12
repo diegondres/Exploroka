@@ -4,38 +4,6 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class ResourcesClass
-{
-  public bool carvable;
-  public int shields;
-  public int population;
-  public string name;
-  public List<string> tags = new();
-  public List<string> models = new();
-  public List<GameObject> modelsPrefab = new();
-
-  public ResourcesClass Clone()
-  {
-    ResourcesClass newResourcesClass = new()
-    {
-      carvable = carvable,
-      shields = shields,
-      population = population,
-      name = name,
-      models = models,
-      tags = tags,
-      modelsPrefab = modelsPrefab,
-    };
-
-    return newResourcesClass;
-  }
-}
-[System.Serializable]
-public class Reglas
-{
-  public List<ResourcesClass> resources;  
-}
-
 public class TerrainAdministrator : MonoBehaviour
 {
   [SerializeField]
@@ -45,7 +13,7 @@ public class TerrainAdministrator : MonoBehaviour
 
   public int modelScale = 80;
 
-  public List<GameObject> prefabsResources = new();
+  public List<Tuple<GameObject, ResourcesClass>> prefabsResources = new();
   public Dictionary<string, List<int>> modelosRecursos = new();
 
   void Awake()
@@ -69,7 +37,7 @@ public class TerrainAdministrator : MonoBehaviour
     {
       foreach (string model in resource.models)
       {
-        prefabsResources.Add(GeneratePrefab(model, 80));
+        prefabsResources.Add(new Tuple<GameObject, ResourcesClass>(GeneratePrefab(model, 80), resource));
 
         if (!modelosRecursos.ContainsKey(resource.name))
         {

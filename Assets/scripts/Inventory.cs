@@ -5,15 +5,15 @@ using UnityEngine;
 
 public static class Inventory 
 {
-    public static Dictionary<string, Tuple<int, Resource>> inventory = new();
+    public static Dictionary<string, Tuple<int, ResourcesClass>> inventory = new();
     public static int governance = 5;
 
-    public static void AddToInventory(Resource resource){
-        if(inventory.ContainsKey(resource.ResourceName)){
-            inventory[resource.ResourceName] = new Tuple<int, Resource>(inventory[resource.ResourceName].Item1 + resource.quantity, resource);
+    public static void AddToInventory(ResourcesClass resource){
+        if(inventory.ContainsKey(resource.name)){
+            inventory[resource.name] = new Tuple<int, ResourcesClass>(inventory[resource.name].Item1 + 1, resource);
         }
         else{
-            inventory.Add(resource.ResourceName, new Tuple<int, Resource>(resource.quantity, resource));
+            inventory.Add(resource.name, new Tuple<int, ResourcesClass>(1, resource));
         }
     } 
 }

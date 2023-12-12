@@ -5,29 +5,30 @@ using UnityEngine;
 
 public class InputAdministrator : MonoBehaviour
 {
+    [Header("Referencias")]
+    [SerializeField]
+    private SubResourcesObjAdmin subResourcesObjAdmin;
+    [SerializeField]
+    private UIAdministrator uIAdministrator;
+    [SerializeField]
+    private ObjetsAdministrator objetsAdministrator;
+    [SerializeField]
+    private Camera camara;
+    [Header("Hero cosas")]
     [SerializeField]
     private Heroe heroe;
     [SerializeField]
     private float minimumTime = 0.0f;
-    private UIAdministrator uIAdministrator;
-    private ObjetsAdministrator objetsAdministrator;
     //RECURSOS
     bool isAResourceSelected = false;
-    Resource resourceSelected;
-    private Camera camara;
+    ResourcesClass resourceSelected;
     Vector3 destino;
 
     private float acumulatedTime = 0.0f;
 
-
-
-
     // Start is called before the first frame update
     void Start()
     {
-        objetsAdministrator = FindAnyObjectByType<ObjetsAdministrator>();
-        uIAdministrator = FindAnyObjectByType<UIAdministrator>();
-        camara = FindAnyObjectByType<Camera>();
 
     }
 
@@ -66,14 +67,16 @@ public class InputAdministrator : MonoBehaviour
                     Tuple<int, Terreno> globalIndex = SubTerrainAdmReference.terrainOfHero.GetIndexGlobal(relativePosition);
 
                     //TODO: es posible que queramos mejorar esta logica en el futuro, si es que hay mas tipos de cosas mas alla de recursos y construcciones.
-                    GameObject thing = SubObjectsAdmReferences.IsSomethingBuiltInHere(globalIndex);
+                    Tuple<GameObject, int> thing = SubObjectsAdmReferences.IsSomethingBuiltInHere(globalIndex);
 
                     if (thing != null)
                     {
-                        if (thing.GetComponent<Building>() != null) thing.GetComponent<Building>().PrintBuildingValues();
-                        else if (thing.GetComponent<Resource>() != null)
-                        {
-                            resourceSelected = thing.GetComponent<Resource>();
+                        if(thing.Item2 == 0){ //0 is for buildings!
+                            thing.Item1.GetComponent<Building>().PrintBuildingValues();
+                        }
+                        else if(thing.Item2 == 1){
+                            resourceSelected = SubResourcesObjAdmin.GetResourceInfo(globalIndex);
+                            resourceSelected.PrintValues();
                             isAResourceSelected = true;
                         }
                     }
@@ -83,7 +86,7 @@ public class InputAdministrator : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E) && isAResourceSelected)
             {
                 isAResourceSelected = false;
-                resourceSelected.PreConsume();
+                subResourcesObjAdmin.PreConsume(resourceSelected.numericIndex);
             }
         }
 

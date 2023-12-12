@@ -113,9 +113,14 @@ public class TerrainGeneration : MonoBehaviour
                 if (datosEscaque.Item3.Length > 0)
                 {
                     Vector3 positionResource = new(vertexX * 20 - 200 + Random.Range(-3f, 3f), datosEscaque.Item1 * heightMultiplier * 20, vertexZ * 20 - 200 + Random.Range(-3f, 3f));
+                    int indexPrefabResource = GetModelFromResource(datosEscaque.Item3);
+
+                    GameObject resource = Instantiate(terrainAdministrator.prefabsResources[indexPrefabResource].Item1, positionResource, Quaternion.Euler(0, Random.Range(0, 4) * 90, 0), objetsAdministrator.containerResources.transform);
                     
-                    GameObject resource = Instantiate(terrainAdministrator.prefabsResources[GetModelFromResource(datosEscaque.Item3)], positionResource, Quaternion.Euler(0, Random.Range(0, 4) * 90, 0), objetsAdministrator.containerResources.transform);
-                    // SubObjectsAdmReferences.AddResource(resource, terreno);
+                    ResourcesClass resourceInfo = terrainAdministrator.prefabsResources[indexPrefabResource].Item2.Clone();
+                    resourceInfo.numericIndex = SubObjectsAdmReferences.GetNumericIndexFromGlobalPosition(positionResource, terreno);
+                    resourceInfo.globalPosition = positionResource;
+                    SubResourcesObjAdmin.AddResource(resource, resourceInfo, terreno);
                 }
                 if (datosEscaque.Item1 == noiseGeneration.nAgua)
                 {

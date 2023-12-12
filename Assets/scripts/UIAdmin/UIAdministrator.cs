@@ -9,10 +9,6 @@ using UnityEngine.UI;
 
 public class UIAdministrator : MonoBehaviour
 {
-
-    [Header("Inventario")]
-    public TextMeshProUGUI textInventory;
-
     [NonSerialized]
     public SubUIAdminInventory subUIAdminInventory;
     [NonSerialized]

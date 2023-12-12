@@ -12,8 +12,11 @@ public class SubUIAdminResources : MonoBehaviour
     private List<City> citiesNearResource;
     private City citySelectedResource = null;
     private bool isCityResourceSelected = false;
-    private Resource resource;
+    private ResourcesClass resource;
     private UIAdministrator uIAdministrator;
+    
+    [Header("Referencias")]
+    public SubResourcesObjAdmin subResourcesObjAdmin;
 
     // Start is called before the first frame update
     void Start()
@@ -24,13 +27,9 @@ public class SubUIAdminResources : MonoBehaviour
         uIAdministrator.panels.Add(panelSelectCityResource);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
 
-    }
 
-    public void ActivatePanelResourceDestination(List<City> cities, Resource resource)
+    public void ActivatePanelResourceDestination(List<City> cities, ResourcesClass resource)
     {
         citiesNearResource = cities;
         this.resource = resource;
@@ -56,7 +55,7 @@ public class SubUIAdminResources : MonoBehaviour
     {
         if (isCityResourceSelected)
         {
-            resource.Consume(false, citySelectedResource);
+            subResourcesObjAdmin.Consume(resource, false, citySelectedResource);
             panelSelectCityResource.SetActive(false);
             isCityResourceSelected = false;
         }

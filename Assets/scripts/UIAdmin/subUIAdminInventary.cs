@@ -9,28 +9,13 @@ public class SubUIAdminInventory : MonoBehaviour
     [Header("Inventario")]
     public TextMeshProUGUI textInventory;
     public TextMeshProUGUI textGovernance;
-    private Inventory inventory;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        inventory = FindAnyObjectByType<Inventory>();
-        
-        UpdateText();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     public void UpdateText()
     {
         UpdateTextGovernance();
         string texto = "";
 
-        foreach (var item in inventory.inventory)
+        foreach (var item in Inventory.inventory)
         {
             if (item.Value.Item1 > 0)
             {
@@ -41,6 +26,7 @@ public class SubUIAdminInventory : MonoBehaviour
     }
 
     public void UpdateTextGovernance(){
-        textGovernance.text = "X " + inventory.governance + "   Gobernabilidad";
+        textGovernance.text = "X " + Inventory.governance + "   Gobernabilidad";
     }
+    
 }

@@ -39,7 +39,7 @@ public class NoiseGeneration : MonoBehaviour
     public SplineSegment[] Esplines;
     
     //
-    // funci�n que vomite (bioma, altura, recurso)
+    // funcion que vomite (bioma, altura, recurso)
     //
     public Tuple<float, Color32, string> GetHeight(int x, int y)
     {

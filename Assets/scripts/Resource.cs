@@ -11,7 +11,7 @@ public class Resource : MonoBehaviour
         arbol, piedra, tallable, no_tallable, animal, planta, medicinal, hongo
     }
     //REFERENCIAS
-    private Inventory inventory;
+
     private UIAdministrator uIAdministrator;
 
 
@@ -36,23 +36,10 @@ public class Resource : MonoBehaviour
 
     void Start()
     {
-        inventory = FindObjectOfType<Inventory>();
         uIAdministrator = FindAnyObjectByType<UIAdministrator>();
     }
 
 
-    public void SetInitialValues(string ResourceName, int quantity, bool canRunOut, bool extractionInInfluenceZone)
-    {
-        this.ResourceName = ResourceName;
-        this.quantity = quantity;
-        this.canRunOut = canRunOut;
-        this.extractionInInfluenceZone = extractionInInfluenceZone;
-    }
-
-    public void PrintResourceValues()
-    {
-        Debug.Log("Name: " + ResourceName + ";\n" + "quantity: " + quantity + ";\n" + "Can Run Out?: " + canRunOut + " Tag: " + tags + " Tag2: " + tags2);
-    }
     public void PreConsume()
     {
         if (tags2 != Tags.no_tallable) //Esto es por si nos encontramos con una pieda o similar que no hace nada
@@ -83,7 +70,7 @@ public class Resource : MonoBehaviour
     {
         if (toInventory)
         {
-            inventory.AddToInventory(this);
+            Inventory.AddToInventory(this);
             uIAdministrator.subUIAdminInventory.UpdateText();
         }
         if (city != null)

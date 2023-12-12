@@ -74,7 +74,6 @@ public class InputAdministrator : MonoBehaviour
                         else if (thing.GetComponent<Resource>() != null)
                         {
                             resourceSelected = thing.GetComponent<Resource>();
-                            resourceSelected.PrintResourceValues();
                             isAResourceSelected = true;
                         }
                     }

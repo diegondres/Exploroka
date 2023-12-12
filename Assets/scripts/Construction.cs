@@ -17,7 +17,6 @@ public class Construction : MonoBehaviour
   private TerrainAdministrator terrainAdministrator;
   private ObjetsAdministrator objetsAdministrator;
   private UIAdministrator uIAdministrator;
-  private Inventory inventory;
   private int townCounter = 0;
   private int cityCounter = 0;
   private int cityPrice = 5;
@@ -28,7 +27,6 @@ public class Construction : MonoBehaviour
     terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
     objetsAdministrator = FindAnyObjectByType<ObjetsAdministrator>();
     uIAdministrator = FindAnyObjectByType<UIAdministrator>();
-    inventory = FindAnyObjectByType<Inventory>();
   }
 
   // Update is called once per frame
@@ -98,7 +96,7 @@ public class Construction : MonoBehaviour
         townScript.city = attachedCity;
         town.transform.SetParent(attachedCity.transform);
 
-        inventory.governance -= 1;
+        Inventory.governance -= 1;
 
     }
     else
@@ -114,7 +112,7 @@ public class Construction : MonoBehaviour
       townScript.city = cityScript;
       
       SubObjectsAdmReferences.AddCity(cityScript);
-      inventory.governance -= cityPrice;
+      Inventory.governance -= cityPrice;
       cityCounter++;
     }
 

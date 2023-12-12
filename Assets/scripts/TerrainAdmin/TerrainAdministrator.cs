@@ -4,31 +4,37 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-[System.Serializable]
 public class ResourcesClass
 {
+  public bool carvable;
+  public int shields;
+  public int population;
   public string name;
-  public List<string> models;
-  public List<GameObject> modelsPrefab;
+  public List<string> tags = new();
+  public List<string> models = new();
+  public List<GameObject> modelsPrefab = new();
 
-  public ResourcesClass Clone(){
-        ResourcesClass newResourcesClass = new()
-        {
-            name = name,
-            models = models,
-            modelsPrefab = modelsPrefab
-        };
+  public ResourcesClass Clone()
+  {
+    ResourcesClass newResourcesClass = new()
+    {
+      carvable = carvable,
+      shields = shields,
+      population = population,
+      name = name,
+      models = models,
+      tags = tags,
+      modelsPrefab = modelsPrefab,
+    };
 
-        return newResourcesClass;
-    }
+    return newResourcesClass;
+  }
 }
-
 [System.Serializable]
 public class Reglas
 {
-  public List<ResourcesClass> resources;
+  public List<ResourcesClass> resources;  
 }
-
 
 public class TerrainAdministrator : MonoBehaviour
 {
@@ -38,10 +44,10 @@ public class TerrainAdministrator : MonoBehaviour
   private SubTerrainAdmGeneration subTerrainAdmGeneration;
 
   public int modelScale = 80;
-  public List<GameObject> Figuras3D = new();
 
+  public List<GameObject> prefabsResources = new();
   public Dictionary<string, List<int>> modelosRecursos = new();
- 
+
   void Awake()
   {
     objetsAdministrator = FindAnyObjectByType<ObjetsAdministrator>();
@@ -55,46 +61,45 @@ public class TerrainAdministrator : MonoBehaviour
   void LoadModels()
   {
     string path = "Reglas/reglas";
-        TextAsset jsonFile = Resources.Load<TextAsset>(path);
-        Reglas reglas = JsonUtility.FromJson<Reglas>(jsonFile.text);
-        int k = 0;
-        foreach (ResourcesClass rec in reglas.resources)
+    TextAsset jsonFile = Resources.Load<TextAsset>(path);
+    Reglas reglas = JsonUtility.FromJson<Reglas>(jsonFile.text);
+    int iterator = 0;
+
+    foreach (ResourcesClass resource in reglas.resources)
+    {
+      foreach (string model in resource.models)
+      {
+        prefabsResources.Add(GeneratePrefab(model, 80));
+
+        if (!modelosRecursos.ContainsKey(resource.name))
         {
-            foreach (string mod in rec.models) {
-                GameObject goPref = AgregarModelo(mod, 80);
-                Figuras3D.Add(goPref);
-                //Agregar modelo
-                if(!modelosRecursos.ContainsKey(rec.name))
-                {
-                    modelosRecursos[rec.name] = new List<int>();
-                }
-                modelosRecursos[rec.name].Add(k);
-                k++;
-            }
+          modelosRecursos[resource.name] = new List<int>();
         }
+
+        modelosRecursos[resource.name].Add(iterator);
+        iterator++;
+      }
+    }
   }
 
-  GameObject AgregarModelo(string dir, float escala = 1)
+  GameObject GeneratePrefab(string dir, float escala = 1)
   {
     Texture2D tex = Resources.Load("Modelos/" + dir, typeof(Texture2D)) as Texture2D;
 
     // Probando sin resources publicos
-    GameObject go = new GameObject();
-    go.AddComponent<MeshRenderer>();
-    MeshFilter filter = go.AddComponent<MeshFilter>();
+    GameObject prefab = new GameObject();
+    prefab.AddComponent<MeshRenderer>();
+    MeshFilter filter = prefab.AddComponent<MeshFilter>();
     filter.mesh = (Mesh)Resources.Load("Modelos/" + dir, typeof(Mesh));
 
-    go.GetComponent<Renderer>().material.mainTexture = tex;
-    go.GetComponent<Renderer>().material.shader = Shader.Find("Diffuse");
+    prefab.GetComponent<Renderer>().material.mainTexture = tex;
+    prefab.GetComponent<Renderer>().material.shader = Shader.Find("Diffuse");
 
+    prefab.transform.localScale = new Vector3(-0.1f * escala, 0.1f * escala, 0.1f * escala);
+    prefab.transform.SetPositionAndRotation(new Vector3(0, 0, -500), Quaternion.Euler(0, 180, 0));
+    prefab.transform.tag = "bloquePrefab";
 
-    go.transform.localScale = new Vector3(-0.1f * escala, 0.1f * escala, 0.1f * escala);
-    go.transform.rotation = Quaternion.Euler(0, 180, 0);
-
-    go.transform.position = new Vector3(0, 0, -500);
-    go.transform.tag = "bloquePrefab";
-
-    return go;
+    return prefab;
   }
 
   public void PutFrontierInEscaque(Tuple<int, Terreno> index, Vector3 offset, Quaternion rotation, int city)

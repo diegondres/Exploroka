@@ -4,47 +4,73 @@
 			"name": "arbol",
 			"carvable": true,
 			"shields": 1,
-			"models": ["arbol","arbol2"]
+			"population":0,
+			"models": ["arbol","arbol2"],
+			"tags": ["tree"]
 		},
 		{
 			"name": "flor",
-			"models": ["flor"]
+			"carvable": false,
+			"shields":0,
+			"population":0,
+			"models": ["flor"],
+			"tags": ["tree"]
 		},
 		{
 			"name": "alamo",
-			"models": ["alamo"]
+			"carvable": true,
+			"shields":1,
+			"population":0,
+			"models": ["alamo"],
+			"tags": ["tree"]
 		},
 		{
 			"name": "jengibre",
 			"carvable": true,
-			"models": ["jengibre"]
+			"shields":0,
+			"population":0,
+			"models": ["jengibre"],
+			"tags": ["tree"]
 		},
 		{
 			"name": "menta",
 			"carvable": true,
-			"models": ["menta"]
+			"shields":0,
+			"population":0,
+			"models": ["menta"],
+			"tags": ["tree"]
 		},
 		{
 			"name": "mamut",
 			"carvable": true,
 			"population": 100,
-			"models": ["mamut"]
+			"shields":0,
+			"models": ["mamut"],
+			"tags": ["tree"]
 		},
 		{
 			"name": "pudu",
 			"carvable": true,
 			"population": 40,
-			"models": ["pudu"]
+			"shields":0,
+			"models": ["pudu"],
+			"tags": ["tree"]
 		},
 		{
 			"name": "honguito",
 			"carvable": true,
-			"models": ["honguito"]
+			"shields":0,
+			"population":0,
+			"models": ["honguito"],
+			"tags": ["tree"]
 		},
 		{
 			"name": "obsidiana",
 			"carvable": true,
-			"models": ["obsidiana"]
+			"shields":0,
+			"population":0,
+			"models": ["obsidiana"],
+			"tags": ["tree"]
 		}	
 	]
 }

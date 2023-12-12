@@ -6,7 +6,8 @@ public static class SubObjectsAdmReferences
 {
     private static readonly List<Dictionary<int, GameObject>> allObjects = new();
     private static readonly Dictionary<int, GameObject> constructions = new();
-    private static readonly Dictionary<int, GameObject> resources = new();
+    private static readonly Dictionary<int, GameObject> resources = new(); //Diccionario indexNumerico - GameObject Recurso.
+    public static readonly Dictionary<int, ResourcesClass> resourcesInfo = new();  //Diccionario indexNumerico - Data del recurso almacenado en la instancia de la clase recurso.
     public static readonly Dictionary<int, List<GameObject>> frontiers = new();
     private static readonly List<City> cities = new();
     private static Tuple<int, Terreno> buildingGlobalIndex;
@@ -54,7 +55,7 @@ public static class SubObjectsAdmReferences
     public static Vector3 GetBuildingLocation()
     {
         isBuildingLocationSelected = false;
-            buildingGlobalIndex.Item2.PaintPixelInfluence(buildingGlobalIndex.Item1, Color.red);
+        buildingGlobalIndex.Item2.PaintPixelInfluence(buildingGlobalIndex.Item1, Color.red);
 
         return buildingGlobalIndex.Item2.GetGlobalPositionFromGlobalIndex(buildingGlobalIndex);
     }
@@ -68,10 +69,12 @@ public static class SubObjectsAdmReferences
         int indexBuildingDict = GetNumericIndex(indexBuilding);
         constructions.Add(indexBuildingDict, building);
     }
-    public static void AddCity(City city){
+    public static void AddCity(City city)
+    {
         cities.Add(city);
     }
-    public static bool IsNameCityTaken(string nameCity){
+    public static bool IsNameCityTaken(string nameCity)
+    {
         foreach (City city in cities)
         {
             if (city.nameCity == nameCity)
@@ -81,6 +84,36 @@ public static class SubObjectsAdmReferences
         }
 
         return false;
+    }
+
+    public static int GetNumericIndex(Tuple<int, Terreno> index)
+    {
+        return index.Item2.id * multiplier + index.Item1;
+    }
+
+    public static GameObject IsSomethingBuiltInHere(Tuple<int, Terreno> globalIndex)
+    {
+        int indexDict = GetNumericIndex(globalIndex);
+        foreach (Dictionary<int, GameObject> dict in allObjects)
+        {
+            if (dict.ContainsKey(indexDict)) return dict[indexDict];
+        }
+        return null;
+    }
+    
+    //-------------------------------------------------------------------------------//
+    //-------- Aqui comienza la zona de los recursos --------------------------------//
+    //-------------------------------------------------------------------------------//
+
+    public static Resource IsAResourceHere(int numericIndex)
+    {
+        //Es en el 1 porque esa es la posicion de los recursos en la lista allObjects
+        if (allObjects[1].ContainsKey(numericIndex))
+        {
+            return allObjects[1][numericIndex].GetComponent<Resource>();
+        }
+
+        return null;
     }
 
     public static void AddResource(GameObject resource, Terreno terreno)
@@ -93,29 +126,7 @@ public static class SubObjectsAdmReferences
         resources.Add(indexBuildingDict, resource);
     }
 
-    public static int GetNumericIndex(Tuple<int, Terreno> index)
-    {
-        return index.Item2.id * multiplier + index.Item1;
-    }
 
 
-    public static GameObject IsSomethingBuiltInHere(Tuple<int, Terreno> globalIndex)
-    {
-        int indexDict = GetNumericIndex(globalIndex);
-        foreach (Dictionary<int, GameObject> dict in allObjects)
-        {
-            if (dict.ContainsKey(indexDict)) return dict[indexDict];
-        }
-        return null;
-    }
-    
-    public static Resource IsAResourceHere(int numericIndex){
-        //Es en el 1 porque esa es la posicion de los recursos en la lista allObjects
-        if(allObjects[1].ContainsKey(numericIndex)){
-            return allObjects[1][numericIndex].GetComponent<Resource>();
-        }
-        
-        return null;
-    }
 
 }

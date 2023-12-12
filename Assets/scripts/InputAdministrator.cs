@@ -7,14 +7,19 @@ public class InputAdministrator : MonoBehaviour
 {
     [SerializeField]
     private Heroe heroe;
+    public Transform protagonista; // Referencia al transform del protagonista
     [SerializeField]
     private float minimumTime = 0.0f;
+    public Vector3 offset = new Vector3(-1.5f, 18f, -9f); // Ajusta la posición relativa de la cámara
+    public float suavidad = 5f; // Controla la suavidad del seguimiento
+
     private UIAdministrator uIAdministrator;
     private ObjetsAdministrator objetsAdministrator;
     //RECURSOS
     bool isAResourceSelected = false;
     Resource resourceSelected;
-    private Camera camara;
+    private Camera cameraGameObject;
+    private Camara camara; 
     Vector3 destino;
 
     private float acumulatedTime = 0.0f;
@@ -27,7 +32,7 @@ public class InputAdministrator : MonoBehaviour
     {
         objetsAdministrator = FindAnyObjectByType<ObjetsAdministrator>();
         uIAdministrator = FindAnyObjectByType<UIAdministrator>();
-        camara = FindAnyObjectByType<Camera>();
+        cameraGameObject = FindAnyObjectByType<Camera>();
 
     }
 
@@ -39,10 +44,35 @@ public class InputAdministrator : MonoBehaviour
             acumulatedTime += Time.deltaTime;
             heroe.ArrowMoving();
 
+           
+
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                camara=cameraGameObject.GetComponent<Camara>();
+                
+                camara.offset = new Vector3(0, 300, 0);
+                cameraGameObject.transform.rotation = Quaternion.Euler(new Vector3(90, 0, 0));
+                cameraGameObject.orthographic = false;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                camara.offset = new Vector3(0, 200, -275);
+                cameraGameObject.transform.rotation = Quaternion.Euler(new Vector3(27, 0, 0));
+                cameraGameObject.orthographic = false;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                camara.offset = new Vector3(100, 350, -600);
+                cameraGameObject.transform.rotation = Quaternion.Euler(new Vector3(30, -10, 0));
+                cameraGameObject.orthographic = true;
+                cameraGameObject.orthographicSize = 145;
+                cameraGameObject.farClipPlane = 10000;
+            }
+
             //MOUSE
             if (Input.GetMouseButtonDown(1))  //Mouse click left for hero moving
             {
-                Ray rayo = camara.ScreenPointToRay(Input.mousePosition);
+                Ray rayo = cameraGameObject.ScreenPointToRay(Input.mousePosition);
 
                 if (Physics.Raycast(rayo, out RaycastHit hit, 1000))
                 {
@@ -57,7 +87,7 @@ public class InputAdministrator : MonoBehaviour
             }
             if (Input.GetMouseButtonDown(0)) //Mouse click left for select something
             {
-                Ray rayo = camara.ScreenPointToRay(Input.mousePosition);
+                Ray rayo = cameraGameObject.ScreenPointToRay(Input.mousePosition);
 
                 if (Physics.Raycast(rayo, out RaycastHit hit, 1000))
                 {

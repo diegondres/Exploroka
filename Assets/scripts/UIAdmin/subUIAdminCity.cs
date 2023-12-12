@@ -40,7 +40,7 @@ public class SubUIAdminCity : MonoBehaviour
     {
         construction = FindAnyObjectByType<Construction>();
         uIAdministrator = GetComponent<UIAdministrator>();
-
+ 
         dropdownCities.onValueChanged.AddListener(HandleCityConnectionDropdown);
         uIAdministrator.panels.Add(panelBuildOrConectTown);
         uIAdministrator.panels.Add(panelConfirmationBuildTown);
@@ -69,6 +69,9 @@ public class SubUIAdminCity : MonoBehaviour
 
     public void ActivatePanelConfirmationBuildTown()
     {
+        
+        nameCity.text = "";
+
         if (isCitySelected)
         {
             textBuildingTownPanel.text = "¿Esta seguro que quiere crear un PUEBLO por 1 de gobernabilidad [Icon_gov]?";
@@ -78,6 +81,7 @@ public class SubUIAdminCity : MonoBehaviour
         {
             textBuildingTownPanel.text = "¿Esta seguro que quiere fundar una CIUDAD por 5 de gobernabilidad [Icon_gov]?";
             inputCity.SetActive(true);
+
 
         }
 
@@ -111,7 +115,7 @@ public class SubUIAdminCity : MonoBehaviour
 
     public void ActivatePanelCityInformation(City city)
     {
-        panelCityInfoTitle.text = city.name;
+        panelCityInfoTitle.text = city.nameCity;
         populationText.text = "X " + city.population;
         ShieldsText.text = "X " + city.shields;
         foodConsumptionText.text = "X " + city.foodConsumption;

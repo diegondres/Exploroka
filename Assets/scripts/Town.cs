@@ -14,7 +14,7 @@ public class Town : MonoBehaviour
     private ObjetsAdministrator objetsAdministrator;
     private readonly int sizeInfluence = 15;
     public List<Tuple<int, Terreno>> influencedEscaques = new();
-    private readonly Dictionary<int,Resource> resourcesAvailable = new();
+    private readonly Dictionary<int,ResourcesClass> resourcesAvailable = new();
     public City city;
 
     void Start()
@@ -43,8 +43,8 @@ public class Town : MonoBehaviour
                         SubTerrainAdmReference.influencedEscaques.Add(indexNumeric, this);
                         influencedEscaques.Add(index);
                     }
-                    if(SubObjectsAdmReferences.IsAResourceHere(indexNumeric) != null){
-                        resourcesAvailable.Add(indexNumeric, SubObjectsAdmReferences.IsAResourceHere(indexNumeric));
+                    if(SubResourcesObjAdmin.IsAResourceHere(indexNumeric) != null){
+                        resourcesAvailable.Add(indexNumeric, SubResourcesObjAdmin.IsAResourceHere(indexNumeric));
                     }
                 }
             }

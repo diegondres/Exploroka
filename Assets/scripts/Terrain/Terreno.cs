@@ -27,9 +27,9 @@ public class Terreno : MonoBehaviour
   //Tamaño de cada uno de los escaques
   private int sizeEscaque;
   //tamaño del terreno en cantidad de escaques
-  private float sizeTerrainInVertices;
+  private float sizeTerrainInVertices = 20;
 
-  void Start()
+  void Awake()
   {
     Inicialization();
   }
@@ -70,7 +70,7 @@ public class Terreno : MonoBehaviour
         IdleTime(acumulatedTime + Time.deltaTime);
         isSorroundingEscaquesPainted = false;
       }
-     
+
     }
   }
 
@@ -89,7 +89,7 @@ public class Terreno : MonoBehaviour
       Terreno neighboor = GetTerrain(relativePositionInVertices);
       terrainAdministrator.SetTerrenoOfHero(neighboor);
 
-      return neighboor.Move(position, Vector3.zero);
+      return neighboor.Move(position - movement, movement);
     }
     else
     {
@@ -98,12 +98,11 @@ public class Terreno : MonoBehaviour
         AddSorroundingEscaques(relativePositionInVertices);
         SubObjectsAdmReferences.isBuildingLocationSelected = false;
 
-        return CenterInEscaqueToGlobal(relativePositionInVertices, 6f);
+        return CenterInEscaqueToGlobal(relativePositionInVertices, 5f);
       }
       else
       {
-        relativePositionInVertices = GetRelativePositionInVertices(position - movement);
-        return CenterInEscaqueToGlobal(relativePositionInVertices, 6f);
+        return Move(position - movement, Vector3.zero);
       }
     }
   }
@@ -156,7 +155,9 @@ public class Terreno : MonoBehaviour
   {
     Terreno terreno = GetTerrain(relativePositionInVertices) != null ? GetTerrain(relativePositionInVertices) : this;
     Vector3 globalPosition = GetGlobalPositionFromRelative(relativePositionInVertices);
+
     Vector3 relativePositionInVerticesInTerrain = terreno.GetRelativePositionInVertices(globalPosition);
+
     int index = terreno.GetIndex(relativePositionInVerticesInTerrain);
 
     return new Tuple<int, Terreno>(index, terreno);
@@ -187,7 +188,7 @@ public class Terreno : MonoBehaviour
 
     return globalIndex.Item2.CenterInEscaqueToGlobal(new Vector3(relativePositionZ, 0f, relativePositionX), 5f);
   }
-   public Vector3 GetGlobalPositionFromGlobalIndexWithoutHeight(Tuple<int, Terreno> globalIndex)
+  public Vector3 GetGlobalPositionFromGlobalIndexWithoutHeight(Tuple<int, Terreno> globalIndex)
   {
     int ejeX = (int)(globalIndex.Item1 / sizeTerrainInVertices);
     float wea2 = globalIndex.Item1 / (sizeTerrainInVertices / 2);
@@ -220,9 +221,10 @@ public class Terreno : MonoBehaviour
         return neighboors[2];
       }
 
-      else {
+      else
+      {
         return neighboors[1];
-        }
+      }
     }
     else if (relativePositionInVertices.x > 10)
     {

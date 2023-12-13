@@ -6,13 +6,7 @@ public class SubTerrainAdmGeneration : MonoBehaviour
 {
   [SerializeField]
   private GameObject prefabTerreno;
-  [SerializeField]
-  private TerrainType[] terrainTypes;
   public float heightMultiplier;
-  [SerializeField]
-  private AnimationCurve heightCurve;
-  [SerializeField]
-  private Wave[] waves;
   public readonly Dictionary<int, Terreno> idTerrainDict = new();
   private int countTerrain = 0;
   [SerializeField]
@@ -55,14 +49,10 @@ public class SubTerrainAdmGeneration : MonoBehaviour
     idTerrainDict.Add(countTerrain, scriptNewTerreno);
 
     TerrainGeneration scriptGeneration = newTerreno.GetComponent<TerrainGeneration>();
-    scriptGeneration.heightTerrainTypes = terrainTypes;
     scriptGeneration.heightMultiplier = heightMultiplier;
-    scriptGeneration.heightCurve = heightCurve;
-    scriptGeneration.waves = waves;
+
 
     countTerrain++;
-
-    SubTerrainAdmReference.terrenosWithoutResources.Add(scriptNewTerreno);
   }
 
   private void ConnectWithNeighboors(Terreno scripTerreno, Vector3 posNewTerreno)

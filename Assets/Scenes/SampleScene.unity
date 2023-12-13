@@ -1110,7 +1110,6 @@ GameObject:
   m_Component:
   - component: {fileID: 247045837}
   - component: {fileID: 247045838}
-  - component: {fileID: 247045840}
   - component: {fileID: 247045841}
   m_Layer: 0
   m_Name: Controlador de juego
@@ -1148,20 +1147,374 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ec995b87f2376e43ba25a92dcb6d0cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: 15
---- !u!114 &247045840
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 247045835}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0326e1b30a9b0ce41b7fd3924f45e682, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  governance: 5
+  nAgua: 0.43
+  escalaMontanhoso: 0.2
+  escalaMetaMontanhoso: 0.1
+  escalaAgua: 0.3
+  escalaCadenaMontanha: 2
+  escalaMontanha: 2
+  escalaPantanoso: 0.3
+  escalaCadenaPantano: 2
+  escalaBiomas: 0.1
+  escalaWrapChico: 1
+  escalaRuidoMontanha: 5
+  escalaPlaya: 0.2
+  escalaWrap: 0.3
+  limiteWrap: 0.53
+  barra: 0.45
+  hieloterma: 0.8
+  xColoracion: 5
+  semilla: 0
+  Esplines:
+  - nombre: 
+    inputStart: 0
+    inputEnd: 0
+    escala: 0
+    curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+  - nombre: montanhaDonde
+    inputStart: 0
+    inputEnd: 1
+    escala: 1
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: -0.029167175
+        value: 0.030658722
+        inSlope: 0.012831941
+        outSlope: 0.012831941
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.556584
+        value: 0.038175046
+        inSlope: -0.012940543
+        outSlope: -0.012940543
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.53075546
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.6638262
+        value: 0.9747523
+        inSlope: -0.013047579
+        outSlope: -0.013047579
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 1
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0.075103104
+        outSlope: 0.075103104
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  - nombre: cadena
+    inputStart: 0
+    inputEnd: 1
+    escala: 1
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0.009021759
+        value: 0.0031929016
+        inSlope: 0.002044564
+        outSlope: 0.002044564
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.46571216
+        value: 0.0041266344
+        inSlope: -0.01799246
+        outSlope: -0.01799246
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 1
+      - serializedVersion: 3
+        time: 0.49363926
+        value: 0.86222607
+        inSlope: 2.7171307
+        outSlope: 2.7171307
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.8363114
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.50582653
+        value: 0.99988896
+        inSlope: -0.009739956
+        outSlope: -0.009739956
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.085970886
+      - serializedVersion: 3
+        time: 0.50632554
+        value: 0.9990972
+        inSlope: -0.0017646108
+        outSlope: -0.0017646108
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.52242
+        value: 0.8539467
+        inSlope: -2.8957336
+        outSlope: -2.8957336
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 1
+      - serializedVersion: 3
+        time: 0.5463878
+        value: 0.006323606
+        inSlope: -0.009787492
+        outSlope: -0.009787492
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 1
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.0180359
+        value: 0.0031852722
+        inSlope: -0.006653973
+        outSlope: -0.006653973
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  - nombre: carcavas
+    inputStart: 0
+    inputEnd: 1
+    escala: 1
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0.020832062
+        value: 0.0047187805
+        inSlope: 0.014919713
+        outSlope: 0.014919713
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.3667127
+        value: 0.00987922
+        inSlope: -0.007928476
+        outSlope: -0.007928476
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.6740926
+        outWeight: 1
+      - serializedVersion: 3
+        time: 0.41218394
+        value: 0.09038472
+        inSlope: 2.268805
+        outSlope: 2.268805
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.36368138
+      - serializedVersion: 3
+        time: 0.47330144
+        value: 0.9118041
+        inSlope: -0.014761389
+        outSlope: -0.014761389
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 1
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.57556015
+        value: 0.8889667
+        inSlope: 0.0049009947
+        outSlope: 0.0049009947
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.73358023
+        outWeight: 0.47123542
+      - serializedVersion: 3
+        time: 0.6589194
+        value: 0.21192878
+        inSlope: -0.27744478
+        outSlope: -0.27744478
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 1
+      - serializedVersion: 3
+        time: 0.9791565
+        value: 0
+        inSlope: -0.6617871
+        outSlope: -0.6617871
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  - nombre: carcavasDonde
+    inputStart: 0
+    inputEnd: 1
+    escala: 1
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: -0.051216125
+        value: -0.0001296997
+        inSlope: 0.010436815
+        outSlope: 0.010436815
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.519367
+        value: 0.0058253706
+        inSlope: 0.028327148
+        outSlope: 0.028327148
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.594177
+      - serializedVersion: 3
+        time: 0.85569465
+        value: 0.9944784
+        inSlope: 0.08991722
+        outSlope: 0.08991722
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0.038263276
+        outSlope: 0.038263276
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  - nombre: alturaAfectaPp
+    inputStart: 0
+    inputEnd: 1
+    escala: 1
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: -0.051216125
+        value: -0.0001296997
+        inSlope: 0.010436815
+        outSlope: 0.010436815
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.519367
+        value: 0.0058253706
+        inSlope: 0.028327148
+        outSlope: 0.028327148
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.594177
+      - serializedVersion: 3
+        time: 0.84751594
+        value: 0.43208522
+        inSlope: 0.08991722
+        outSlope: 0.08991722
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 0.4390564
+        inSlope: 0.045717437
+        outSlope: 0.045717437
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  - nombre: alturaAfectaT
+    inputStart: 0
+    inputEnd: 1
+    escala: 1
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: -0.051216125
+        value: -0.0001296997
+        inSlope: 0.010436815
+        outSlope: 0.010436815
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.519367
+        value: 0.0058253706
+        inSlope: 0.028327148
+        outSlope: 0.028327148
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.594177
+      - serializedVersion: 3
+        time: 0.8029603
+        value: -0.29986364
+        inSlope: 0.08991722
+        outSlope: 0.08991722
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.975647
+        value: -0.29434204
+        inSlope: 0.031974643
+        outSlope: 0.031974643
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
 --- !u!114 &247045841
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1174,6 +1527,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25ede208088115c44b5eda39f5d3b1c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  subResourcesObjAdmin: {fileID: 903460727}
+  uIAdministrator: {fileID: 276738875}
+  objetsAdministrator: {fileID: 903460726}
+  camara: {fileID: 1455671845}
   heroe: {fileID: 202133885}
   protagonista: {fileID: 202133884}
   minimumTime: 0.2
@@ -1214,7 +1571,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e02a8544ce8e56544af479937be6016e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textInventory: {fileID: 0}
 --- !u!114 &276738876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1313,6 +1669,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   panelSelectCityResource: {fileID: 1271866406}
   dropdownCitiesResource: {fileID: 1659228065}
+  subResourcesObjAdmin: {fileID: 903460727}
 --- !u!114 &276738881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4142,6 +4499,7 @@ GameObject:
   m_Component:
   - component: {fileID: 903460725}
   - component: {fileID: 903460726}
+  - component: {fileID: 903460727}
   m_Layer: 0
   m_Name: ObjectAdmin
   m_TagString: Untagged
@@ -4179,16 +4537,19 @@ MonoBehaviour:
   containerResources: {fileID: 1581138136}
   containerConstructions: {fileID: 1636852927}
   containerFrontiers: {fileID: 170745168}
-  resourcePrefab:
-  - {fileID: 3511560276588028008, guid: 44bc2926ab142884ea07f0f34a615de8, type: 3}
-  - {fileID: 6999482172890475551, guid: 33614fb84dbf4f24b8604123a06fd8b5, type: 3}
-  - {fileID: 7286429990847138010, guid: af166188b37cff542af11dddc47c8ff7, type: 3}
-  - {fileID: 7860866898358656854, guid: cf62923454f283a43831db159a40bb7d, type: 3}
-  - {fileID: 1561618024781362960, guid: f80c99770376de041ade9ba13e9a6b08, type: 3}
-  - {fileID: 6039895048328208422, guid: 228720f715accea448a01ff66fdc7ab3, type: 3}
-  - {fileID: 5576103755310846304, guid: 7978399bbcb749b42aed5f8d0c9475bb, type: 3}
-  - {fileID: 8452348325840286211, guid: 40d5aba4ed76ca244bee35c9080bdd06, type: 3}
-  probabilidadRecursos: 75
+--- !u!114 &903460727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903460724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9369eb4d4d6055042a2ddc5b38a00384, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uIAdministrator: {fileID: 276738875}
 --- !u!1 &907584665
 GameObject:
   m_ObjectHideFlags: 0
@@ -6115,7 +6476,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 806678823}
+  m_Material: {fileID: 1693037421}
   m_Color: {r: 0.5686275, g: 0.47058824, b: 0.3647059, a: 0.3137255}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -7123,71 +7484,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1582506959}
   m_CullTransparentMesh: 1
---- !u!1001 &1606570552
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 34.37
-      objectReference: {fileID: 0}
-    - target: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.67
-      objectReference: {fileID: 0}
-    - target: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 83.873764
-      objectReference: {fileID: 0}
-    - target: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4459864850019384750, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
-      propertyPath: m_Name
-      value: FirstPersonController
-      objectReference: {fileID: 0}
-    - target: {fileID: 4459864850019384750, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
 --- !u!1 &1636645257
 GameObject:
   m_ObjectHideFlags: 0
@@ -7634,6 +7930,47 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1659228063}
   m_CullTransparentMesh: 1
+--- !u!21 &1693037421
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UI/RoundedCorners/IndependentRoundedCorners
+  m_Shader: {fileID: 4800000, guid: d3beb88e61f88ca4393acdefb005fa70, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _ColorMask: 15
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
+    m_Colors:
+    - _halfSize: {r: 122.15021, g: 35, b: 0, a: 0}
+    - _r: {r: 20, g: 20, b: 20, a: 20}
+    - _rect2props: {r: 0.000015258789, g: 0, b: 96.97985, a: 96.97985}
+  m_BuildTextureStacks: []
 --- !u!1 &1716763911
 GameObject:
   m_ObjectHideFlags: 0
@@ -9145,6 +9482,47 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!21 &1899583007
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UI/RoundedCorners/IndependentRoundedCorners
+  m_Shader: {fileID: 4800000, guid: d3beb88e61f88ca4393acdefb005fa70, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _ColorMask: 15
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
+    m_Colors:
+    - _halfSize: {r: 122.15021, g: 35, b: 0, a: 0}
+    - _r: {r: 20, g: 20, b: 20, a: 20}
+    - _rect2props: {r: 0.000015258789, g: 0, b: 96.97985, a: 96.97985}
+  m_BuildTextureStacks: []
 --- !u!224 &1908413542 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4447978324491683069, guid: 89c190d1543f89549857de0cd1e4271e, type: 3}
@@ -9599,99 +9977,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabTerreno: {fileID: 5626073509183861393, guid: f7fb85bb61f6e614d8148c0ef1d7ce99, type: 3}
-  terrainTypes:
-  - name: water
-    threshold: 0.3
-    color: {r: 0.053800307, g: 0.20733821, b: 0.8773585, a: 0}
-    index: 0
-  - name: grass
-    threshold: 0.7
-    color: {r: 0.23932172, g: 0.7169812, b: 0.09807763, a: 0}
-    index: 1
-  - name: mountain
-    threshold: 1
-    color: {r: 0.5283019, g: 0.27140886, b: 0.042363837, a: 0}
-    index: 2
-  heightMultiplier: 250
-  heightCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.762214
-      value: 0.039191082
-      inSlope: 0.3352542
-      outSlope: 0.3352542
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.9052577
-      value: 0.12135577
-      inSlope: 1.7697915
-      outSlope: 1.7697915
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.94666755
-      value: 0.20563442
-      inSlope: 0.6304865
-      outSlope: 0.6304865
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.98284197
-      value: 0.8010374
-      inSlope: 8.310996
-      outSlope: 8.310996
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  waves:
-  - seed: 5931
-    frequency: 1
-    amplitude: 1
-  - seed: 8242
-    frequency: 0.5
-    amplitude: 2
-  - seed: 1649
-    frequency: 0.25
-    amplitude: 4
-  - seed: 5624
-    frequency: 0.5
-    amplitude: 2
-  - seed: 3328
-    frequency: 1
-    amplitude: 1
-  - seed: 96358
-    frequency: 0.25
-    amplitude: 4
+  heightMultiplier: 20
   containerTerrenos: {fileID: 1931665749}
 --- !u!114 &1945920571
 MonoBehaviour:
@@ -9706,6 +9992,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabFrontier: {fileID: 6482802981903597354, guid: c95a8970c5afdd54aa70f6bc5c676d34, type: 3}
+  modelScale: 80
 --- !u!1 &1982175720
 GameObject:
   m_ObjectHideFlags: 0
@@ -9883,6 +10170,47 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!21 &1984100083
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UI/RoundedCorners/IndependentRoundedCorners
+  m_Shader: {fileID: 4800000, guid: d3beb88e61f88ca4393acdefb005fa70, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _ColorMask: 15
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
+    m_Colors:
+    - _halfSize: {r: 122.15021, g: 35, b: 0, a: 0}
+    - _r: {r: 20, g: 20, b: 20, a: 20}
+    - _rect2props: {r: 0.000015258789, g: 0, b: 96.97985, a: 96.97985}
+  m_BuildTextureStacks: []
 --- !u!1 &1991329413
 GameObject:
   m_ObjectHideFlags: 0
@@ -10017,6 +10345,47 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1991329413}
   m_CullTransparentMesh: 1
+--- !u!21 &2012228658
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UI/RoundedCorners/IndependentRoundedCorners
+  m_Shader: {fileID: 4800000, guid: d3beb88e61f88ca4393acdefb005fa70, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _ColorMask: 15
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
+    m_Colors:
+    - _halfSize: {r: 122.15021, g: 35, b: 0, a: 0}
+    - _r: {r: 20, g: 20, b: 20, a: 20}
+    - _rect2props: {r: 0.000015258789, g: 0, b: 96.97985, a: 96.97985}
+  m_BuildTextureStacks: []
 --- !u!1 &2032775462
 GameObject:
   m_ObjectHideFlags: 0
@@ -11007,7 +11376,6 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1606570552}
   - {fileID: 705507995}
   - {fileID: 1455671843}
   - {fileID: 1931665750}

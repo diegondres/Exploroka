@@ -5,6 +5,15 @@ using UnityEngine;
 
 public class InputAdministrator : MonoBehaviour
 {
+    [Header("Referencias")]
+    [SerializeField]
+    private SubResourcesObjAdmin subResourcesObjAdmin;
+    [SerializeField]
+    private UIAdministrator uIAdministrator;
+    [SerializeField]
+    private ObjetsAdministrator objetsAdministrator;
+
+    [Header("Hero cosas")]
     [SerializeField]
     private Heroe heroe;
     public Transform protagonista; // Referencia al transform del protagonista
@@ -13,19 +22,15 @@ public class InputAdministrator : MonoBehaviour
     public Vector3 offset = new Vector3(-1.5f, 18f, -9f); // Ajusta la posición relativa de la cámara
     public float suavidad = 5f; // Controla la suavidad del seguimiento
 
-    private UIAdministrator uIAdministrator;
-    private ObjetsAdministrator objetsAdministrator;
     //RECURSOS
     bool isAResourceSelected = false;
-    Resource resourceSelected;
     private Camera cameraGameObject;
-    private Camara camara; 
+    private Camara camara;
+    //RECURSOS
+    ResourcesClass resourceSelected;
     Vector3 destino;
 
     private float acumulatedTime = 0.0f;
-
-
-
 
     // Start is called before the first frame update
     void Start()
@@ -33,7 +38,7 @@ public class InputAdministrator : MonoBehaviour
         objetsAdministrator = FindAnyObjectByType<ObjetsAdministrator>();
         uIAdministrator = FindAnyObjectByType<UIAdministrator>();
         cameraGameObject = FindAnyObjectByType<Camera>();
-
+        camara = cameraGameObject.GetComponent<Camara>();
     }
 
     // Update is called once per frame
@@ -44,29 +49,31 @@ public class InputAdministrator : MonoBehaviour
             acumulatedTime += Time.deltaTime;
             heroe.ArrowMoving();
 
-           
-
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                camara=cameraGameObject.GetComponent<Camara>();
-                
                 camara.offset = new Vector3(0, 300, 0);
                 cameraGameObject.transform.rotation = Quaternion.Euler(new Vector3(90, 0, 0));
                 cameraGameObject.orthographic = false;
+                cameraGameObject.nearClipPlane = 0.3f;
+                cameraGameObject.farClipPlane = 1000;
             }
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
                 camara.offset = new Vector3(0, 200, -275);
                 cameraGameObject.transform.rotation = Quaternion.Euler(new Vector3(27, 0, 0));
                 cameraGameObject.orthographic = false;
+                cameraGameObject.nearClipPlane = 0.3f;
+                cameraGameObject.farClipPlane = 10000;
             }
             if (Input.GetKeyDown(KeyCode.Alpha3))
             {
                 camara.offset = new Vector3(100, 350, -600);
                 cameraGameObject.transform.rotation = Quaternion.Euler(new Vector3(30, -10, 0));
                 cameraGameObject.orthographic = true;
-                cameraGameObject.orthographicSize = 145;
+                cameraGameObject.orthographicSize = 150;
                 cameraGameObject.farClipPlane = 10000;
+                cameraGameObject.nearClipPlane = -20;
+
             }
 
             //MOUSE
@@ -96,15 +103,18 @@ public class InputAdministrator : MonoBehaviour
                     Tuple<int, Terreno> globalIndex = SubTerrainAdmReference.terrainOfHero.GetIndexGlobal(relativePosition);
 
                     //TODO: es posible que queramos mejorar esta logica en el futuro, si es que hay mas tipos de cosas mas alla de recursos y construcciones.
-                    GameObject thing = SubObjectsAdmReferences.IsSomethingBuiltInHere(globalIndex);
+                    Tuple<GameObject, int> thing = SubObjectsAdmReferences.IsSomethingBuiltInHere(globalIndex);
 
                     if (thing != null)
                     {
-                        if (thing.GetComponent<Building>() != null) thing.GetComponent<Building>().PrintBuildingValues();
-                        else if (thing.GetComponent<Resource>() != null)
+                        if (thing.Item2 == 0)
+                        { //0 is for buildings!
+                            thing.Item1.GetComponent<Building>().PrintBuildingValues();
+                        }
+                        else if (thing.Item2 == 1)
                         {
-                            resourceSelected = thing.GetComponent<Resource>();
-                            resourceSelected.PrintResourceValues();
+                            resourceSelected = SubResourcesObjAdmin.GetResourceInfo(globalIndex);
+                            resourceSelected.PrintValues();
                             isAResourceSelected = true;
                         }
                     }
@@ -114,7 +124,7 @@ public class InputAdministrator : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E) && isAResourceSelected)
             {
                 isAResourceSelected = false;
-                resourceSelected.PreConsume();
+                subResourcesObjAdmin.PreConsume(resourceSelected.numericIndex);
             }
         }
 

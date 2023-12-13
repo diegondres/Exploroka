@@ -35,13 +35,11 @@ public class MouseHoverImage : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("AAAAAAAAAAAAAAAAA");
         isOver = true;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        isOver = false;
-        Debug.Log("BBBBBBBBBBBBBBB");
+        isOver = false; 
     }
 }

@@ -9,11 +9,6 @@ using UnityEngine.UI;
 
 public class UIAdministrator : MonoBehaviour
 {
-
-    [Header("Inventario")]
-    public TextMeshProUGUI textInventory;
-    private Inventory inventory;
-
     [NonSerialized]
     public SubUIAdminInventory subUIAdminInventory;
     [NonSerialized]
@@ -24,7 +19,6 @@ public class UIAdministrator : MonoBehaviour
     public List<GameObject> panels = new();
     void Start()
     {
-        inventory = FindAnyObjectByType<Inventory>();
 
         subUIAdminCity = GetComponent<SubUIAdminCity>();
         subUIAdminResources = GetComponent<SubUIAdminResources>();

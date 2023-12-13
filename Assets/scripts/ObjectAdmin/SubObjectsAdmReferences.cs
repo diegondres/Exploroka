@@ -10,7 +10,7 @@ public static class SubObjectsAdmReferences
     private static readonly List<City> cities = new();
     private static Tuple<int, Terreno> buildingGlobalIndex;
     public static bool isBuildingLocationSelected = false;
-    private static readonly int multiplier = 10000;
+    private static readonly int multiplier = 1000;
 
     public static GameObject containerConstructions;
     public static GameObject containerFrontiers;
@@ -94,7 +94,9 @@ public static class SubObjectsAdmReferences
         Vector3 relativePosition = terreno.GetRelativePositionInVertices(globalPosition);
         Tuple<int, Terreno> globalIndex = terreno.GetIndexGlobal(relativePosition);
         
-        return GetNumericIndex(globalIndex);
+        int wea = GetNumericIndex(globalIndex);
+  
+        return wea;
     }
 
     public static Tuple<GameObject, int> IsSomethingBuiltInHere(Tuple<int, Terreno> globalIndex)

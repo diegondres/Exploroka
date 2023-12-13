@@ -27,9 +27,9 @@ public class Terreno : MonoBehaviour
   //Tamaño de cada uno de los escaques
   private int sizeEscaque;
   //tamaño del terreno en cantidad de escaques
-  private float sizeTerrainInVertices;
+  private float sizeTerrainInVertices = 20;
 
-  void Start()
+  void Awake()
   {
     Inicialization();
   }
@@ -155,7 +155,9 @@ public class Terreno : MonoBehaviour
   {
     Terreno terreno = GetTerrain(relativePositionInVertices) != null ? GetTerrain(relativePositionInVertices) : this;
     Vector3 globalPosition = GetGlobalPositionFromRelative(relativePositionInVertices);
+
     Vector3 relativePositionInVerticesInTerrain = terreno.GetRelativePositionInVertices(globalPosition);
+
     int index = terreno.GetIndex(relativePositionInVerticesInTerrain);
 
     return new Tuple<int, Terreno>(index, terreno);

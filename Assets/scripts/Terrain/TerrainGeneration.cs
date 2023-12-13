@@ -112,15 +112,19 @@ public class TerrainGeneration : MonoBehaviour
 
                 if (datosEscaque.Item3.Length > 0)
                 {
-                    Vector3 positionResource = new(vertexX * 20 - 200 + Random.Range(-3f, 3f), datosEscaque.Item1 * heightMultiplier * 20, vertexZ * 20 - 200 + Random.Range(-3f, 3f));
+                    Vector3 positionResource = new(vertexX * 20 - 190, datosEscaque.Item1 * heightMultiplier * 20, vertexZ * 20 - 190);
                     int indexPrefabResource = GetModelFromResource(datosEscaque.Item3);
+                    int numericIndexResource = SubObjectsAdmReferences.GetNumericIndexFromGlobalPosition(positionResource, terreno);
 
-                    GameObject resource = Instantiate(terrainAdministrator.prefabsResources[indexPrefabResource].Item1, positionResource, Quaternion.Euler(0, Random.Range(0, 4) * 90, 0), objetsAdministrator.containerResources.transform);
-                    
-                    ResourcesClass resourceInfo = terrainAdministrator.prefabsResources[indexPrefabResource].Item2.Clone();
-                    resourceInfo.numericIndex = SubObjectsAdmReferences.GetNumericIndexFromGlobalPosition(positionResource, terreno);
-                    resourceInfo.globalPosition = positionResource;
-                    SubResourcesObjAdmin.AddResource(resource, resourceInfo, terreno);
+                    if (!SubResourcesObjAdmin.resources.ContainsKey(numericIndexResource))
+                    {
+                        GameObject resource = Instantiate(terrainAdministrator.prefabsResources[indexPrefabResource].Item1, positionResource, Quaternion.Euler(0, Random.Range(0, 4) * 90, 0), objetsAdministrator.containerResources.transform);
+                        ResourcesClass resourceInfo = terrainAdministrator.prefabsResources[indexPrefabResource].Item2.Clone();
+                        resourceInfo.numericIndex = numericIndexResource;
+                        resourceInfo.globalPosition = positionResource;
+
+                        SubResourcesObjAdmin.AddResource(resource, resourceInfo, terreno);
+                    }
                 }
                 if (datosEscaque.Item1 == noiseGeneration.nAgua)
                 {
@@ -137,10 +141,11 @@ public class TerrainGeneration : MonoBehaviour
 
     private int GetModelFromResource(string rec)
     {
-        if(terrainAdministrator.modelosRecursos.ContainsKey(rec))
+        if (terrainAdministrator.modelosRecursos.ContainsKey(rec))
         {
             return terrainAdministrator.modelosRecursos[rec][Random.Range(0, terrainAdministrator.modelosRecursos[rec].Count)];
-        } else
+        }
+        else
         {
             return 0;
         }

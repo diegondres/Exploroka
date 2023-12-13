@@ -26,10 +26,11 @@ public class SubResourcesObjAdmin : MonoBehaviour
         Vector3 relativePositionResource = terreno.GetRelativePositionInVertices(resource.transform.position);
         Tuple<int, Terreno> indexResource = terreno.GetIndexGlobal(relativePositionResource);
         int numericIndexResource = SubObjectsAdmReferences.GetNumericIndex(indexResource);
-
-        if (!resources.ContainsKey(numericIndexResource)) resources.Add(numericIndexResource, resource);
-        if (!resourcesInfo.ContainsKey(numericIndexResource)) resourcesInfo.Add(numericIndexResource, resourcesClass);
+ 
+        resources.Add(numericIndexResource, resource);
+        resourcesInfo.Add(numericIndexResource, resourcesClass);
     }
+    
 
     public static ResourcesClass GetResourceInfo(Tuple<int, Terreno> globalIndex)
     {
@@ -60,7 +61,6 @@ public class SubResourcesObjAdmin : MonoBehaviour
 
         if (resource.carvable) //Esto es por si nos encontramos con una piedra o similar que no hace nada
         {
-
             if (resource.population == 0 && resource.shields == 0)
             {
                 Consume(resource, true);

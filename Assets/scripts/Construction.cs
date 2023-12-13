@@ -60,7 +60,7 @@ public class Construction : MonoBehaviour
 
   private bool IsBuildingLocationInCity()
   {
-    int numericIndex = SubTerrainAdmReference.GetNumericIndexFromGlobalPosition(SubObjectsAdmReferences.GetBuildingLocation());
+    int numericIndex = SubTerrainAdmReference.GetNumericIndexFromGlobalPosition(SubObjectsAdmReferences.GetBuildingLocation(), null);
 
     return SubTerrainAdmReference.influencedEscaques.ContainsKey(numericIndex);
   }

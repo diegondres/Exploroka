@@ -22,8 +22,7 @@ public class TerrainGeneration : MonoBehaviour
     private float[,] heightMap;
     private Color32[,] colorMapa;
     private int tileDepth, tileWidth;
-    string[,] chosenHeightTerrainTypes;
-
+    private string[,] chosenHeightTerrainTypes;
 
     // Start is called before the first frame update
     void Start()
@@ -114,8 +113,8 @@ public class TerrainGeneration : MonoBehaviour
                 {
                     Vector3 positionResource = new(vertexX * 20 - 190, datosEscaque.Item1 * heightMultiplier * 20, vertexZ * 20 - 190);
                     int indexPrefabResource = GetModelFromResource(datosEscaque.Item3);
-                    int numericIndexResource = SubObjectsAdmReferences.GetNumericIndexFromGlobalPosition(positionResource, terreno);
-
+                    int numericIndexResource = SubTerrainAdmReference.GetNumericIndexFromGlobalPosition(positionResource, terreno);
+                    
                     if (!SubResourcesObjAdmin.resources.ContainsKey(numericIndexResource))
                     {
                         GameObject resource = Instantiate(terrainAdministrator.prefabsResources[indexPrefabResource].Item1, positionResource, Quaternion.Euler(0, Random.Range(0, 4) * 90, 0), objetsAdministrator.containerResources.transform);
@@ -123,7 +122,7 @@ public class TerrainGeneration : MonoBehaviour
                         resourceInfo.numericIndex = numericIndexResource;
                         resourceInfo.globalPosition = positionResource;
 
-                        SubResourcesObjAdmin.AddResource(resource, resourceInfo, terreno);
+                        SubResourcesObjAdmin.AddResource(resource, resourceInfo, numericIndexResource);
                     }
                 }
                 if (datosEscaque.Item1 == noiseGeneration.nAgua)

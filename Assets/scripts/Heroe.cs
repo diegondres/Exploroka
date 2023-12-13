@@ -69,7 +69,7 @@ public class Heroe : MonoBehaviour
     transform.position = SubTerrainAdmReference.MoveHero(transform.position, movement);
     transform.eulerAngles = new Vector3(0, rotation, 0);
 
-    int numericIndex = SubTerrainAdmReference.GetNumericIndexFromGlobalPosition(transform.position);
+    int numericIndex = SubTerrainAdmReference.GetNumericIndexFromGlobalPosition(transform.position, null);
     if(SubTerrainAdmReference.influencedEscaques.ContainsKey(numericIndex)){
       uIAdministrator.subUIAdminCity.ActivatePanelCityInformation(SubTerrainAdmReference.influencedEscaques[numericIndex].city);
     }

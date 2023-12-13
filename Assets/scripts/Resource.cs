@@ -46,11 +46,11 @@ public class Resource : MonoBehaviour
         {
             if (ThisResourceGoToInvetory())
             {
-        //        Consume(true);
+                //        Consume(true);
             }
             else
             {
-                int numericIndex = SubTerrainAdmReference.GetNumericIndexFromGlobalPosition(transform.position);
+                /*int numericIndex = SubTerrainAdmReference.GetNumericIndexFromGlobalPosition(transform.position);
                 if (SubTerrainAdmReference.influencedEscaques.ContainsKey(numericIndex))
                 {
                     Town town = SubTerrainAdmReference.influencedEscaques[numericIndex];
@@ -61,7 +61,7 @@ public class Resource : MonoBehaviour
                 {
                     List<City> citiesAround = SubTerrainAdmReference.DetectCity(transform.position, 20);
                   //  uIAdministrator.subUIAdminResources.ActivatePanelResourceDestination(citiesAround, this);
-                }
+        }*/
             }
         }
     }
@@ -70,14 +70,14 @@ public class Resource : MonoBehaviour
     {
         if (toInventory)
         {
-         //   Inventory.AddToInventory(this);
+            //   Inventory.AddToInventory(this);
             uIAdministrator.subUIAdminInventory.UpdateText();
         }
         if (city != null)
-        {   
+        {
             city.shields += shields;
             city.population += population;
-            uIAdministrator.subUIAdminCity.ActivatePanelCityInformation(city);  
+            uIAdministrator.subUIAdminCity.ActivatePanelCityInformation(city);
             //Decirle al town que borre ese recurso disponible
         }
 

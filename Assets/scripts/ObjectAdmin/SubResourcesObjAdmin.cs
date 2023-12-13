@@ -21,20 +21,17 @@ public class SubResourcesObjAdmin : MonoBehaviour
         return null;
     }
 
-    public static void AddResource(GameObject resource, ResourcesClass resourcesClass, Terreno terreno)
+    public static void AddResource(GameObject resource, ResourcesClass resourcesClass, int numericIndex)
     {
-        Vector3 relativePositionResource = terreno.GetRelativePositionInVertices(resource.transform.position);
-        Tuple<int, Terreno> indexResource = terreno.GetIndexGlobal(relativePositionResource);
-        int numericIndexResource = SubObjectsAdmReferences.GetNumericIndex(indexResource);
  
-        resources.Add(numericIndexResource, resource);
-        resourcesInfo.Add(numericIndexResource, resourcesClass);
+        resources.Add(numericIndex, resource);
+        resourcesInfo.Add(numericIndex, resourcesClass);
     }
     
 
     public static ResourcesClass GetResourceInfo(Tuple<int, Terreno> globalIndex)
     {
-        int numericIndex = SubObjectsAdmReferences.GetNumericIndex(globalIndex);
+        int numericIndex = SubTerrainAdmReference.GetNumericIndex(globalIndex);
 
         if (resourcesInfo.ContainsKey(numericIndex))
         {

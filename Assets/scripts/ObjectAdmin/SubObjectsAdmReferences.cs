@@ -64,7 +64,7 @@ public static class SubObjectsAdmReferences
         Vector3 relativePositionBuilding = terreno.GetRelativePositionInVertices(building.transform.position);
         Tuple<int, Terreno> indexBuilding = terreno.GetIndexGlobal(relativePositionBuilding);
 
-        int indexBuildingDict = GetNumericIndex(indexBuilding);
+        int indexBuildingDict = SubTerrainAdmReference.GetNumericIndex(indexBuilding);
         constructions.Add(indexBuildingDict, building);
     }
     public static void AddCity(City city)
@@ -84,24 +84,10 @@ public static class SubObjectsAdmReferences
         return false;
     }
 
-    public static int GetNumericIndex(Tuple<int, Terreno> index)
-    {
-        return index.Item2.id * multiplier + index.Item1;
-    }
-
-    public static int GetNumericIndexFromGlobalPosition(Vector3 globalPosition, Terreno terreno)
-    {
-        Vector3 relativePosition = terreno.GetRelativePositionInVertices(globalPosition);
-        Tuple<int, Terreno> globalIndex = terreno.GetIndexGlobal(relativePosition);
-        
-        int wea = GetNumericIndex(globalIndex);
-  
-        return wea;
-    }
 
     public static Tuple<GameObject, int> IsSomethingBuiltInHere(Tuple<int, Terreno> globalIndex)
     {
-        int indexDict = GetNumericIndex(globalIndex);
+        int indexDict = SubTerrainAdmReference.GetNumericIndex(globalIndex);
         int count = 0;
         foreach (Dictionary<int, GameObject> dict in allObjects)
         {

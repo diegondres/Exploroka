@@ -73,7 +73,6 @@ public class InputAdministrator : MonoBehaviour
                 cameraGameObject.orthographicSize = 150;
                 cameraGameObject.farClipPlane = 10000;
                 cameraGameObject.nearClipPlane = -20;
-
             }
 
             //MOUSE

@@ -37,7 +37,7 @@ public class NoiseGeneration : MonoBehaviour
 
     public float semilla = 0;
     public SplineSegment[] Esplines;
-    
+
     //
     // funcion que vomite (bioma, altura, recurso)
     //
@@ -129,7 +129,9 @@ public class NoiseGeneration : MonoBehaviour
                             {
                                 recurso = "honguito";
                             }
-                        } else {
+                        }
+                        else
+                        {
                             color = new Color32(155, 215, 0, 0);    //pasto
                             if (Random.value < 0.05f)
                             {
@@ -199,7 +201,9 @@ public class NoiseGeneration : MonoBehaviour
                 {
                     recurso = "obsidiana";
                 }
-            } else if (height > 0.71f) {
+            }
+            else if (height > 0.71f)
+            {
                 color = montanhos;// Color.Lerp(montanhos, nieve, (h-0.71f)/(hieloterma-0.71f));
             }
 
@@ -209,7 +213,7 @@ public class NoiseGeneration : MonoBehaviour
         {
             height = nAgua;
         }
-
+        
         return new Tuple<float, Color32, string>(height, color, recurso);
     }
 

@@ -16,7 +16,7 @@ static class SubTerrainAdmReference
   public static Terreno terrainOfHero;
   private static Vector3 positionHero = Vector3.zero;
 
-  private static readonly int multiplier = 10000;
+  private static readonly int multiplier = 1000;
 
   [NonSerialized]
   public static readonly Dictionary<int, Town> influencedEscaques = new();
@@ -41,20 +41,25 @@ static class SubTerrainAdmReference
   {
     return index.Item2.id * multiplier + index.Item1;
   }
-  public static int GetNumericIndexFromGlobalPosition(Vector3 globalPosition){
-    Vector3 relativePosition = terrainOfHero.GetRelativePositionInVertices(globalPosition);
-    Tuple<int, Terreno> index = terrainOfHero.GetIndexGlobal(relativePosition);
-    
+  public static int GetNumericIndexFromGlobalPosition(Vector3 globalPosition, Terreno terreno)
+  {
+    if (terreno == null)
+    {
+      terreno = terrainOfHero;
+    }
+    Vector3 relativePosition = terreno.GetRelativePositionInVertices(globalPosition);
+    Tuple<int, Terreno> index = terreno.GetIndexGlobal(relativePosition);
+
     return GetNumericIndex(index);
   }
-   public static Tuple<int, Terreno> GetIndexFromNumeric(int num, TerrainAdministrator terrainAdministrator)
-    {
-        int id = num / multiplier;
-        int index = num - id * multiplier;
-        Terreno terreno = terrainAdministrator.GetTerrenoScriptFromId(id);
+  public static Tuple<int, Terreno> GetIndexFromNumeric(int num, TerrainAdministrator terrainAdministrator)
+  {
+    int id = num / multiplier;
+    int index = num - id * multiplier;
+    Terreno terreno = terrainAdministrator.GetTerrenoScriptFromId(id);
 
-        return new Tuple<int, Terreno>(index, terreno);
-    }
+    return new Tuple<int, Terreno>(index, terreno);
+  }
 
   public static bool CompareTwoEscaques(Tuple<int, Terreno> escaque1, Tuple<int, Terreno> escaque2)
   {
@@ -109,7 +114,7 @@ static class SubTerrainAdmReference
   public static Vector3 MoveHero(Vector3 position, Vector3 movement)
   {
     positionHero = terrainOfHero.Move(position, movement);
-    
+
     return positionHero;
   }
   public static void SetTerrenoOfHero(Terreno terreno, SubTerrainAdmGeneration subTerrainAdmGeneration)

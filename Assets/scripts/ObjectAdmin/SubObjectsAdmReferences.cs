@@ -10,8 +10,6 @@ public static class SubObjectsAdmReferences
     private static readonly List<City> cities = new();
     private static Tuple<int, Terreno> buildingGlobalIndex;
     public static bool isBuildingLocationSelected = false;
-    private static readonly int multiplier = 1000;
-
     public static GameObject containerConstructions;
     public static GameObject containerFrontiers;
 

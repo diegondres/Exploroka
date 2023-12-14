@@ -92,15 +92,6 @@ public class TerrainAdministrator : MonoBehaviour
   {
     return subTerrainAdmGeneration.GetTerrenoScriptFromId(id);
   }
-  public void PaintInfluenceTown()
-  {
-    foreach (var pair in SubTerrainAdmReference.influencedEscaques)
-    {
-      Tuple<int, Terreno> globalIndex = SubTerrainAdmReference.GetIndexFromNumeric(pair.Key, this);
-      globalIndex.Item2.PaintPixelInfluence(globalIndex.Item1, Color.magenta);
-      StartCoroutine(ReturnToOriginal(globalIndex));
-    }
-  }
   public void SetTerrenoOfHero(Terreno terreno)
   {
     SubTerrainAdmReference.terrainOfHero = terreno;
@@ -115,9 +106,23 @@ public class TerrainAdministrator : MonoBehaviour
       }
     }
   }
+
+  //--------------------------------------------------------------------//
+  //---------------------METODOS DEPRECADOS-----------------------------//
+  //--------------------------------------------------------------------//
+  /*
+  public void PaintInfluenceTown()
+  {
+    foreach (var pair in SubTerrainAdmReference.influencedEscaques)
+    {
+      Tuple<int, Terreno> globalIndex = SubTerrainAdmReference.GetIndexFromNumeric(pair.Key, this);
+      globalIndex.Item2.PaintPixelInfluence(globalIndex.Item1, Color.magenta);
+      StartCoroutine(ReturnToOriginal(globalIndex));
+    }
+  }
   private IEnumerator ReturnToOriginal(Tuple<int, Terreno> tuple)
   {
     yield return new WaitForSeconds(1f);
     tuple.Item2.ReturnPixelToOriginal(tuple.Item1);
-  }
+  }*/
 }

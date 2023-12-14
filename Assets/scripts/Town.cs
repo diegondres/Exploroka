@@ -48,8 +48,7 @@ public class Town : MonoBehaviour
                     }
                 }
             }
-        }
-        terrainAdministrator.PaintInfluenceTown();
+        }   
     }
 
     public void RemoveResourceAvailable(int numericIndex){

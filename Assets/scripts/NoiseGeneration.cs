@@ -60,7 +60,6 @@ public class NoiseGeneration : MonoBehaviour
         Color32 tundra = new Color32(0, 200, 200, 0);
         Color32 jungla = new Color32(0, 80, 0, 0);
 
-
         height = Perlinazo(x, y, escalaAgua, 0);
         float ruidoMontanhoso = Perlinazo(x, y, escalaRuidoMontanha, -7);
         float montanhaMisma = Perlinazo(x, y, escalaMontanha, 7);

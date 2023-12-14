@@ -4,54 +4,68 @@
 			"name": "arbol",
 			"carvable": true,
 			"shields": 1,
+			"tags": ["arbol"],
 			"models": ["tree_013","tree_014","tree_015","tree_016","tree_017","tree_018"]
 		},
 		{
 			"name": "palmera",
 			"carvable": true,
 			"shields": 1,
+			"tags": ["arbol"],
 			"models": ["palm_009","palm_010","palm_011","palm_012","palm_013","palm_015"]
 		},
 		{
 			"name": "pino",
 			"carvable": true,
 			"shields": 1,
+			"tags": ["arbol"],
 			"models": ["pine_tree_013","fir_002","fir_003","fir_004","fir_005","fir_008"]
 		},
 		{
 			"name": "bambu",
 			"carvable": true,
 			"shields": 1,
+			"tags": ["arbol","flexible"],
 			"models": ["bamboo_001","bamboo_002","bamboo_003","bamboo_004","bamboo_005"]
 		},
 		{
 			"name": "cactus",
 			"carvable": true,
 			"shields": 1,
+			"tags": ["cactus"],
 			"models": ["cactus_010","cactus_011","cactus_012","cactus_013","cactus_014","cactus_015"]
 		},
 		{
 			"name": "selva",
 			"carvable": true,
 			"shields": 1,
+			"tags": ["arbol"],
 			"models": ["tree_001","tree_003"]
 		},
 		{
 			"name": "pinoNevado",
 			"carvable": true,
 			"shields": 1,
+			"tags": ["arbol"],
 			"models": ["fir_snow_001","fir_snow_002","fir_snow_004","fir_snow_005","fir_snow_006","fir_snow_007"]
 		},
 		{
 			"name": "flor",
+			"tags": ["flor"],
 			"models": ["flower_003","flower_008"]
 		},
 		{
 			"name": "alamo",
+			"tags": ["arbol"],
+			"carvable": true,
+			"shields": 1,
 			"models": ["fir_052"]
 		},
 		{
 			"name": "acacia",
+			"tags": ["arbol"],
+			"carvable": true,
+			"shields": 1,
 			"models": ["acacia_004"]
 		},
 		{
@@ -60,14 +74,14 @@
 			"shields":0,
 			"population":0,
 			"models": ["jengibre"],
-			"tags": ["tree"]
+			"tags": ["planta","medicinal"]
 		},
 		{
 			"name": "menta",
 			"carvable": true,
 			"shields":0,
 			"population":0,
-			"tags": ["tree"],
+			"tags": ["planta","medicinal"],
 			"models": ["grass_007"]
 		},
 		{
@@ -76,7 +90,7 @@
 			"population": 100,
 			"shields":0,
 			"models": ["mamut"],
-			"tags": ["tree"]
+			"tags": ["animal"]
 		},
 		{
 			"name": "pudu",
@@ -84,18 +98,19 @@
 			"population": 40,
 			"shields":0,
 			"models": ["pudu"],
-			"tags": ["tree"]
+			"tags": ["animal"]
 		},
 		{
 			"name": "honguito",
 			"carvable": true,
 			"shields":0,
 			"population":0,
-			"tags": ["tree"],
+			"tags": ["hongo","medicinal"],
 			"models": ["mushroom_001"]
 		},
 		{
 			"name": "junco",
+			"tags": ["planta"],
 			"models": ["reed_001","reed_002"]
 		},
 		{
@@ -104,7 +119,93 @@
 			"shields":0,
 			"population":0,
 			"models": ["obsidiana"],
-			"tags": ["tree"]
-		}	
+			"tags": ["piedra","tallable"]
+		}
+	],
+	"buildings":
+	[
+		
+		{
+			"name": "Ciudad",
+			"size": [3,3],
+			"city": true,
+			"models": ["ciudad"]
+		},
+		{
+			"name": "Pueblo",
+			"size": [1,1],
+			"town": true,
+			"models": ["pueblo"]
+		},
+		{
+			"name": "Campamento maderero",
+			"size": [1,1],
+			"cost": 5,
+			"regionalNeeds": {
+				"resourceTagsAnd": ["arbol"],
+				"q": 10,
+				"different": false,
+				"inTown": true},
+			"maxBuildingsInTown": 1,
+			"produces": {
+				"resource": "shields",
+				"q": 2},
+			"models": ["campamentoMaderero"]
+		},
+		{
+			"name": "Puesto de caza",
+			"size": [1,1],
+			"cost": 5,
+			"regionalNeeds": {
+				"resourceTagsAnd": ["animal"],
+				"q": 1,
+				"different": false,
+				"inTown": true},
+			"maxBuildingsInTown": 1,
+			"produces": {
+				"resource": "food",
+				"q": 2},
+			"models": ["puestoCaza"]
+		},
+		{
+			"name": "Taller de herramientas",
+			"size": [2,2],
+			"cost": 10,
+			"regionalNeeds": {
+				"resourceTagsAnd": ["animal"],
+				"q": 1,
+				"different": false,
+				"inTown": true},
+			"maxBuildingsInTown": 1,
+			"produces": {
+				"resource": "shields",
+				"q": 2},
+			"consumes": {
+				"resourceTagsAnd": ["piedra","tallable"],
+				"q": 1},
+			"models": ["tallerHerramientas"]
+		},
+		{
+			"name": "Herbaculo",
+			"size": [1,1],
+			"cost": 5,
+			"maxBuildingsInTown": 1,
+			"produces": {
+				"resource": "services",
+				"q": 1},
+			"consumes": {
+				"resourceTagsAnd": ["medicinal"],
+				"q": 2,
+				"different": true},
+			"models": ["herbaculo"]
+		},
+		{
+			"name": "Extractor",
+			"size": [1,1],
+			"cost": 5,
+			"maxBuildingsInTown": 0,
+			"extracts": ["piedra","tallable","medicinal"],
+			"models": ["extractor"]
+		}
 	]
 }

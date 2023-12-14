@@ -4,25 +4,55 @@
 			"name": "arbol",
 			"carvable": true,
 			"shields": 1,
-			"population":0,
-			"models": ["arbol","arbol2"],
-			"tags": ["tree"]
+			"models": ["tree_013","tree_014","tree_015","tree_016","tree_017","tree_018"]
+		},
+		{
+			"name": "palmera",
+			"carvable": true,
+			"shields": 1,
+			"models": ["palm_009","palm_010","palm_011","palm_012","palm_013","palm_015"]
+		},
+		{
+			"name": "pino",
+			"carvable": true,
+			"shields": 1,
+			"models": ["pine_tree_013","fir_002","fir_003","fir_004","fir_005","fir_008"]
+		},
+		{
+			"name": "bambu",
+			"carvable": true,
+			"shields": 1,
+			"models": ["bamboo_001","bamboo_002","bamboo_003","bamboo_004","bamboo_005"]
+		},
+		{
+			"name": "cactus",
+			"carvable": true,
+			"shields": 1,
+			"models": ["cactus_010","cactus_011","cactus_012","cactus_013","cactus_014","cactus_015"]
+		},
+		{
+			"name": "selva",
+			"carvable": true,
+			"shields": 1,
+			"models": ["tree_001","tree_003"]
+		},
+		{
+			"name": "pinoNevado",
+			"carvable": true,
+			"shields": 1,
+			"models": ["fir_snow_001","fir_snow_002","fir_snow_004","fir_snow_005","fir_snow_006","fir_snow_007"]
 		},
 		{
 			"name": "flor",
-			"carvable": false,
-			"shields":0,
-			"population":0,
-			"models": ["flor"],
-			"tags": ["tree"]
+			"models": ["flower_003","flower_008"]
 		},
 		{
 			"name": "alamo",
-			"carvable": true,
-			"shields":1,
-			"population":0,
-			"models": ["alamo"],
-			"tags": ["tree"]
+			"models": ["fir_052"]
+		},
+		{
+			"name": "acacia",
+			"models": ["acacia_004"]
 		},
 		{
 			"name": "jengibre",
@@ -37,8 +67,8 @@
 			"carvable": true,
 			"shields":0,
 			"population":0,
-			"models": ["menta"],
-			"tags": ["tree"]
+			"tags": ["tree"],
+			"models": ["grass_007"]
 		},
 		{
 			"name": "mamut",
@@ -61,8 +91,12 @@
 			"carvable": true,
 			"shields":0,
 			"population":0,
-			"models": ["honguito"],
-			"tags": ["tree"]
+			"tags": ["tree"],
+			"models": ["mushroom_001"]
+		},
+		{
+			"name": "junco",
+			"models": ["reed_001","reed_002"]
 		},
 		{
 			"name": "obsidiana",

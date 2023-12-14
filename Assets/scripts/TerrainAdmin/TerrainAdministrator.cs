@@ -52,10 +52,10 @@ public class TerrainAdministrator : MonoBehaviour
 
   GameObject GeneratePrefab(string dir, float escala = 1)
   {
-    Texture2D tex = Resources.Load("Modelos/" + dir, typeof(Texture2D)) as Texture2D;
+    Texture2D tex = Resources.Load("Modelos/" + dir, typeof(Texture2D)) as Texture2D ?? Resources.Load("Modelos/Texture", typeof(Texture2D)) as Texture2D;
 
-    // Probando sin resources publicos
-    GameObject prefab = new GameObject();
+        // Probando sin resources publicos
+        GameObject prefab = new GameObject();
     prefab.AddComponent<MeshRenderer>();
     MeshFilter filter = prefab.AddComponent<MeshFilter>();
     filter.mesh = (Mesh)Resources.Load("Modelos/" + dir, typeof(Mesh));

@@ -841,7 +841,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   heroe: {fileID: 202133885}
-  minimumTime: 1
+  minimumTime: 0.5
 --- !u!1 &257363962
 GameObject:
   m_ObjectHideFlags: 0

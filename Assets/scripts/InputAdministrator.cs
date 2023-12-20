@@ -29,13 +29,11 @@ public class InputAdministrator : MonoBehaviour
         objetsAdministrator = FindAnyObjectByType<ObjetsAdministrator>();
         uIAdministrator = FindAnyObjectByType<UIAdministrator>();
         camara = FindAnyObjectByType<Camera>();
-
     }
 
     // Update is called once per frame
     void Update()
     {
-
         acumulatedTime += Time.deltaTime;
         if (!uIAdministrator.IsAnyPanelOpen())
         {

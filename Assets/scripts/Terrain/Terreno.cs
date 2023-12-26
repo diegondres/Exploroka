@@ -60,7 +60,7 @@ public class Terreno : MonoBehaviour
       if (acumulatedTime > limitTime && !isSorroundingEscaquesPainted)
       {
         foreach (Tuple<int, Terreno> escaque in SubTerrainAdmReference.GetSorroundingEscaques())
-        {
+        { 
           escaque.Item2.PaintPixelInfluence(escaque.Item1, Color.red);
         }
         isSorroundingEscaquesPainted = true;
@@ -82,7 +82,7 @@ public class Terreno : MonoBehaviour
     IdleTime(0);
     position += movement;
     Vector3 relativePositionInVertices = GetRelativePositionInVertices(position);
-
+    
 
     if (GetTerrain(relativePositionInVertices) != null)
     {

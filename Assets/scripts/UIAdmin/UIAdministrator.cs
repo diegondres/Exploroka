@@ -17,7 +17,7 @@ public class UIAdministrator : MonoBehaviour
     public SubUIAdminResources subUIAdminResources;
     [NonSerialized]
     public List<GameObject> panels = new();
-    void Start()
+    void Awake()
     {
 
         subUIAdminCity = GetComponent<SubUIAdminCity>();

@@ -18,24 +18,26 @@ public class Heroe : MonoBehaviour
 
   //REFERENCIAS
 
-  private Vector3 movement = Vector3.zero;
+  private Vector3 movement = new Vector3(10,0,10);
   private UIAdministrator uIAdministrator;
   public List<Tuple<Vector3, float>> route = new();
   public int indexRoute = 0;
   public bool IsRouteFinish = true;
+
+  
   void Start()
   {
     uIAdministrator = FindAnyObjectByType<UIAdministrator>();
     SubTerrainAdmReference.InWhatTerrenoAmI(transform.position);
-    sizeEscaque = SubTerrainAdmReference.sizeEscaque;
-
-    //TODO: se tiene que hacer un arreglo para que el personaje inicie en una referencia correcta del terreno
-    //MoveHero(movement, 0.0f);
+    sizeEscaque = SubTerrainAdmReference.sizeEscaque;  
+    MoveHero(movement, 0f);
+    
   }
 
   void Update()
   {
   }
+
   public void GenerateRoute(Vector3 destino)
   {
     indexRoute = 0;
@@ -65,7 +67,7 @@ public class Heroe : MonoBehaviour
 
   private void MoveHero(Vector3 movement, float rotation)
   {
-    //TODO: cuando se solucione el movimiento con el mouse, esta funcion deberia desaparecer y solo dejar la corutina.
+
     transform.position = SubTerrainAdmReference.MoveHero(transform.position, movement);
     transform.eulerAngles = new Vector3(0, rotation, 0);
 

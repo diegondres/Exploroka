@@ -17,14 +17,17 @@ public class TerrainAdministrator : MonoBehaviour
   public Dictionary<string, List<int>> modelosRecursos = new();
 
   void Awake()
-  {
+   
+  { 
+    LoadModels();
+    
     objetsAdministrator = FindAnyObjectByType<ObjetsAdministrator>();
     subTerrainAdmGeneration = FindAnyObjectByType<SubTerrainAdmGeneration>();
     subTerrainAdmGeneration.SetNeighboorsReference();
     subTerrainAdmGeneration.CreateFirstTerrain();
     SubObjectsAdmReferences.Inicializate();
-
-    LoadModels();
+    
+    
   }
   void LoadModels()
   {

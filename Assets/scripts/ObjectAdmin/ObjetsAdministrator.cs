@@ -11,6 +11,7 @@ public class ObjetsAdministrator : MonoBehaviour
     private GameObject containerConstructions;
     [SerializeField]
     private GameObject containerFrontiers;
+    
     //COSITAS
     private TerrainAdministrator terrainAdministrator;
     [SerializeField]

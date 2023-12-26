@@ -44,9 +44,9 @@ public class Construction : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Z) && CheckBuildingLocation())
         {
             int idConstru = Random.Range(0, terrainAdministrator.reglas.buildings.Count);
+
             GameObject building = InstanciateObject(terrainAdministrator.reglas.buildings[idConstru].modelsPrefab[0]);
             SubObjectsAdmReferences.AddBuilding(building);
-            print("Construi un " + terrainAdministrator.reglas.buildings[idConstru].name);
         }
 
 

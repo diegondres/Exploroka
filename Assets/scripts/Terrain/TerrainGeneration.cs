@@ -12,7 +12,6 @@ public class TerrainGeneration : MonoBehaviour
     //GENERACION PROCEDURAL
     private NoiseGeneration noiseGeneration;
     private MeshRenderer tileRenderer;
-    private int sizeTerrainInVertices;
 
     //COSITAS INTERNAS
     private TerrainAdministrator terrainAdministrator;
@@ -23,6 +22,7 @@ public class TerrainGeneration : MonoBehaviour
     private Color32[,] colorMapa;
     private int tileDepth, tileWidth;
     private string[,] chosenHeightTerrainTypes;
+    private List<GameObject> childs;
 
     // Start is called before the first frame update
     void Start()
@@ -38,16 +38,13 @@ public class TerrainGeneration : MonoBehaviour
         terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
         objetsAdministrator = FindObjectOfType<ObjetsAdministrator>();
         noiseGeneration = FindAnyObjectByType<NoiseGeneration>();
-        sizeTerrainInVertices = SubTerrainAdmReference.sizeTerrainInVertices;
-
-        tileDepth = sizeTerrainInVertices; tileWidth = sizeTerrainInVertices;
-
+        tileDepth = SubTerrainAdmReference.sizeTerrainInVertices; tileWidth = SubTerrainAdmReference.sizeTerrainInVertices;
         meshFilter.mesh = CrearPlanoConDivisiones(tileDepth, tileWidth, tileDepth, tileWidth);
+        childs = SubObjectsAdmReferences.GetChildsOfGameObject(gameObject);
 
         GetHeightMap();
 
         Texture2D heightTexture = BuildTexture();
-
         tileRenderer.material.mainTexture = heightTexture;
 
         UpdateMeshVertices();
@@ -87,13 +84,13 @@ public class TerrainGeneration : MonoBehaviour
         int heightMapWidth = tileWidth + 1;
         heightMap = new float[heightMapDepth, heightMapWidth];
         colorMapa = new Color32[heightMapDepth, heightMapWidth];
+
         chosenHeightTerrainTypes = new string[heightMapDepth, heightMapWidth];
         Vector3[] meshVertices = meshFilter.mesh.vertices;
 
         int offsetX = (int)(transform.position.x / 20);
         int offsetZ = (int)(transform.position.z / 20);
 
-        // iterate through all the heightMap coordinates, updating the vertex index
         int vertexIndex = 0;
 
         for (int xIndex = 0; xIndex < heightMapDepth; xIndex++)
@@ -102,8 +99,8 @@ public class TerrainGeneration : MonoBehaviour
             {
                 Vector3 vertex = meshVertices[vertexIndex];
 
-                int vertexX = (int)vertex.x + sizeTerrainInVertices / 2 + offsetX;
-                int vertexZ = (int)vertex.z + sizeTerrainInVertices / 2 + offsetZ;
+                int vertexX = (int)vertex.x + tileDepth / 2 + offsetX;
+                int vertexZ = (int)vertex.z + tileWidth / 2 + offsetZ;
 
                 Tuple<float, Color32, string> datosEscaque = noiseGeneration.GetHeight(vertexX, vertexZ);
                 heightMap[xIndex, zIndex] = datosEscaque.Item1;
@@ -114,7 +111,7 @@ public class TerrainGeneration : MonoBehaviour
                     Vector3 positionResource = new(vertexX * 20 - 190, datosEscaque.Item1 * heightMultiplier * 20, vertexZ * 20 - 190);
                     int indexPrefabResource = GetModelFromResource(datosEscaque.Item3);
                     int numericIndexResource = SubTerrainAdmReference.GetNumericIndexFromGlobalPosition(positionResource, terreno);
-                    
+
                     if (!SubResourcesObjAdmin.resources.ContainsKey(numericIndexResource))
                     {
                         GameObject resource = Instantiate(terrainAdministrator.prefabsResources[indexPrefabResource].Item1, positionResource, Quaternion.Euler(0, Random.Range(0, 4) * 90, 0), objetsAdministrator.containerResources.transform);
@@ -137,6 +134,8 @@ public class TerrainGeneration : MonoBehaviour
             }
         }
     }
+
+  
 
     private int GetModelFromResource(string rec)
     {
@@ -237,8 +236,8 @@ public class TerrainGeneration : MonoBehaviour
 
     public float GetHeight(Vector3 relativePositionInVertices)
     {
-        int xIndex = (int)(relativePositionInVertices.x + sizeTerrainInVertices / 2);
-        int zIndex = (int)(relativePositionInVertices.z + sizeTerrainInVertices / 2);
+        int xIndex = (int)(relativePositionInVertices.x + tileDepth / 2);
+        int zIndex = (int)(relativePositionInVertices.z + tileWidth / 2);
 
         float meanHeight = (heightMap[zIndex, xIndex] + heightMap[zIndex + 1, xIndex] + heightMap[zIndex, xIndex + 1] + heightMap[zIndex + 1, xIndex + 1]) / 4;
 
@@ -247,8 +246,8 @@ public class TerrainGeneration : MonoBehaviour
 
     public string GetTerrainType(Vector3 relativePositionInVertices)
     {
-        int xIndex = (int)(relativePositionInVertices.x + sizeTerrainInVertices / 2);
-        int zIndex = (int)(relativePositionInVertices.z + sizeTerrainInVertices / 2);
+        int xIndex = (int)(relativePositionInVertices.x + tileDepth / 2);
+        int zIndex = (int)(relativePositionInVertices.z + tileWidth / 2);
 
         return chosenHeightTerrainTypes[zIndex, xIndex];
     }

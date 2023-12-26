@@ -95,5 +95,14 @@ public static class SubObjectsAdmReferences
         return null;
     }
 
+    public static List<GameObject> GetChildsOfGameObject(GameObject gameObject){
+        List<GameObject> gameObjects = new();
+        
+        foreach(Transform transform in gameObject.transform){
+            gameObjects.Add(transform.gameObject);
+        }
+
+        return gameObjects;
+    }
 
 }

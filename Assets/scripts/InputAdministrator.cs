@@ -39,6 +39,7 @@ public class InputAdministrator : MonoBehaviour
         uIAdministrator = FindAnyObjectByType<UIAdministrator>();
         cameraGameObject = FindAnyObjectByType<Camera>();
         camara = cameraGameObject.GetComponent<Camara>();
+        
     }
 
     // Update is called once per frame
@@ -47,7 +48,7 @@ public class InputAdministrator : MonoBehaviour
         if (!uIAdministrator.IsAnyPanelOpen())
         {
             acumulatedTime += Time.deltaTime;
-            heroe.ArrowMoving();
+            heroe.ArrowMoving(heroe.heightHero);
 
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
@@ -88,7 +89,7 @@ public class InputAdministrator : MonoBehaviour
             }
             if (!heroe.IsRouteFinish && acumulatedTime >= minimumTime && !heroe.isMoving && heroe.route.Count > 0)
             {
-                heroe.MoveThroughRoute();
+                heroe.MoveThroughRoute(heroe.heightHero);
                 acumulatedTime = 0.0f;
             }
             if (Input.GetMouseButtonDown(0)) //Mouse click left for select something

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.Purchasing;
 using UnityEngine.UIElements;
 
 public class Heroe : MonoBehaviour
@@ -14,6 +15,7 @@ public class Heroe : MonoBehaviour
   private float moveDuration = 0.1f;
   public bool isMoving = false;
   private int sizeEscaque;
+  public float heightHero; 
   private float rotation;
 
   //REFERENCIAS
@@ -29,8 +31,10 @@ public class Heroe : MonoBehaviour
     uIAdministrator = FindAnyObjectByType<UIAdministrator>();
     SubTerrainAdmReference.InWhatTerrenoAmI(transform.position);
     sizeEscaque = SubTerrainAdmReference.sizeEscaque;  
+    heightHero=FactorHeightProta(transform.localScale.y);
     
-    StartCoroutine(InvokeMove(movement, 0f));
+    
+    StartCoroutine(InvokeMove(movement, 0f, heightHero));
   }
 
   void Update()
@@ -57,17 +61,22 @@ public class Heroe : MonoBehaviour
   }
 
 
-  public void MoveThroughRoute()
+  public float FactorHeightProta(float heightProta)
+  { 
+    return heightProta * 1.5f;
+  }
+  
+  public void MoveThroughRoute(float heightProta)
   {
-    StartCoroutine(ContinuosMove(route[indexRoute].Item1, route[indexRoute].Item2));
+    StartCoroutine(ContinuosMove(route[indexRoute].Item1, route[indexRoute].Item2, heightProta));
     indexRoute++;
     if(indexRoute == route.Count) IsRouteFinish = true;
   }
 
-  private void MoveHero(Vector3 movement, float rotation)
+  private void MoveHero(Vector3 movement, float rotation, float heightProta)
   {
 
-    transform.position = SubTerrainAdmReference.MoveHero(transform.position, movement);
+    transform.position = SubTerrainAdmReference.MoveHero(transform.position, movement, heightProta);
     transform.eulerAngles = new Vector3(0, rotation, 0);
 
     int numericIndex = SubTerrainAdmReference.GetNumericIndexFromGlobalPosition(transform.position, null);
@@ -79,7 +88,7 @@ public class Heroe : MonoBehaviour
     }
   }
 
-  public void ArrowMoving()
+  public void ArrowMoving(float heightProta)
   {
     rotation = 0.0f;
     movement = Vector3.zero;
@@ -106,7 +115,7 @@ public class Heroe : MonoBehaviour
 
     if (Vector3.Magnitude(movement) > 0)
     {
-      StartCoroutine(ContinuosMove(movement, rotation));
+      StartCoroutine(ContinuosMove(movement, rotation, heightProta));
       if (isMoving)
       {
         IsRouteFinish = true;
@@ -147,12 +156,12 @@ public class Heroe : MonoBehaviour
 
   }
 
-  private IEnumerator ContinuosMove(Vector3 movement, float rotation)
+  private IEnumerator ContinuosMove(Vector3 movement, float rotation, float heightProta)
   {
     isMoving = true;
 
     Vector3 startPosition = transform.position;
-    Vector3 endPosition = SubTerrainAdmReference.MoveHero(transform.position, movement);
+    Vector3 endPosition = SubTerrainAdmReference.MoveHero(transform.position, movement, heightProta);
 
     float elapsedTime = 0f;
     while (elapsedTime < moveDuration)
@@ -166,13 +175,13 @@ public class Heroe : MonoBehaviour
 
     transform.position = endPosition;
 
-    MoveHero(Vector3.zero, rotation);
+    MoveHero(Vector3.zero, rotation, heightProta);
     isMoving = false;
   }
 
-  private IEnumerator InvokeMove(Vector3 movement, float rotation){
+  private IEnumerator InvokeMove(Vector3 movement, float rotation,float heightProta){
     yield return new WaitForSeconds(0.5f);
-    MoveHero(movement, rotation);
+    MoveHero(movement, rotation, heightProta);
   }
 
 }

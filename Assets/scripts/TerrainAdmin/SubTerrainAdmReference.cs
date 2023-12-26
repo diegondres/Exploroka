@@ -111,9 +111,9 @@ static class SubTerrainAdmReference
   {
     return terrainOfHero.CalculateDistance(actualPosition, destiny);
   }
-  public static Vector3 MoveHero(Vector3 position, Vector3 movement)
+  public static Vector3 MoveHero(Vector3 position, Vector3 movement, float heightProta)
   {
-    positionHero = terrainOfHero.Move(position, movement);
+    positionHero = terrainOfHero.Move(position, movement, heightProta);
 
     return positionHero;
   }

@@ -77,7 +77,7 @@ public class Terreno : MonoBehaviour
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////----------MOVIMIENTO-----------/////////////////////////////////////////////////////////
 
-  public Vector3 Move(Vector3 position, Vector3 movement)
+  public Vector3 Move(Vector3 position, Vector3 movement, float heightProta)
   {
     IdleTime(0);
     position += movement;
@@ -89,7 +89,7 @@ public class Terreno : MonoBehaviour
       Terreno neighboor = GetTerrain(relativePositionInVertices);
       terrainAdministrator.SetTerrenoOfHero(neighboor);
 
-      return neighboor.Move(position - movement, movement);
+      return neighboor.Move(position - movement, movement, heightProta);
     }
     else
     {
@@ -98,11 +98,11 @@ public class Terreno : MonoBehaviour
         AddSorroundingEscaques(relativePositionInVertices);
         SubObjectsAdmReferences.isBuildingLocationSelected = false;
 
-        return CenterInEscaqueToGlobal(relativePositionInVertices, 5f);
+        return CenterInEscaqueToGlobal(relativePositionInVertices, heightProta);
       }
       else
       {
-        return Move(position - movement, Vector3.zero);
+        return Move(position - movement, Vector3.zero, heightProta);
       }
     }
   }

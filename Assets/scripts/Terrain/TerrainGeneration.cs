@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 public class TerrainGeneration : MonoBehaviour
 {
     [NonSerialized]
-    public float heightMultiplier;
+    public float heightMultiplier = 20;
     private Terreno terreno;
     //GENERACION PROCEDURAL
     private NoiseGeneration noiseGeneration;
@@ -25,10 +25,16 @@ public class TerrainGeneration : MonoBehaviour
     private List<GameObject> childs;
 
     // Start is called before the first frame update
-    void Start()
-    {
+
+
+    void Awake(){
         Inicialization();
     }
+    void Start()
+    {
+
+    }
+
     void Inicialization()
     {
         tileRenderer = GetComponent<MeshRenderer>();
@@ -92,6 +98,7 @@ public class TerrainGeneration : MonoBehaviour
         int offsetZ = (int)(transform.position.z / 20);
 
         int vertexIndex = 0;
+        
 
         for (int xIndex = 0; xIndex < heightMapDepth; xIndex++)
         {
@@ -153,7 +160,7 @@ public class TerrainGeneration : MonoBehaviour
     {
         int heightMapDepth = heightMap.GetLength(0);
         int heightMapWidth = heightMap.GetLength(1);
-
+        //Debug.Log("Map Depth: " + heightMap.GetLength(0) + " Map Width: " + heightMap.GetLength(1));
         Vector3[] meshVertices = meshFilter.mesh.vertices;
 
         // iterate through all the heightMap coordinates, updating the vertex index
@@ -165,6 +172,7 @@ public class TerrainGeneration : MonoBehaviour
                 float height = heightMap[zIndex, xIndex];
                 Vector3 vertex = meshVertices[vertexIndex];
                 // change the vertex Y coordinate, proportional to the height value
+                
                 meshVertices[vertexIndex] = new Vector3(vertex.x, height * heightMultiplier, vertex.z);
 
                 vertexIndex++;

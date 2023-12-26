@@ -19,13 +19,15 @@ public class TerrainAdministrator : MonoBehaviour
 
     void Awake()
     {
+        LoadModels();
+
         objetsAdministrator = FindAnyObjectByType<ObjetsAdministrator>();
         subTerrainAdmGeneration = FindAnyObjectByType<SubTerrainAdmGeneration>();
         subTerrainAdmGeneration.SetNeighboorsReference();
         subTerrainAdmGeneration.CreateFirstTerrain();
         SubObjectsAdmReferences.Inicializate();
 
-        LoadModels();
+
     }
     void LoadModels()
     {

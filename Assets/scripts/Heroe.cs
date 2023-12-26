@@ -18,20 +18,19 @@ public class Heroe : MonoBehaviour
 
   //REFERENCIAS
 
-  private Vector3 movement = new Vector3(10,0,10);
+  private Vector3 movement = new(-90,0,190);
   private UIAdministrator uIAdministrator;
   public List<Tuple<Vector3, float>> route = new();
   public int indexRoute = 0;
   public bool IsRouteFinish = true;
 
-  
   void Start()
   {
     uIAdministrator = FindAnyObjectByType<UIAdministrator>();
     SubTerrainAdmReference.InWhatTerrenoAmI(transform.position);
     sizeEscaque = SubTerrainAdmReference.sizeEscaque;  
-    MoveHero(movement, 0f);
     
+    StartCoroutine(InvokeMove(movement, 0f));
   }
 
   void Update()
@@ -169,6 +168,11 @@ public class Heroe : MonoBehaviour
 
     MoveHero(Vector3.zero, rotation);
     isMoving = false;
+  }
+
+  private IEnumerator InvokeMove(Vector3 movement, float rotation){
+    yield return new WaitForSeconds(0.5f);
+    MoveHero(movement, rotation);
   }
 
 }

@@ -28,10 +28,10 @@ public class TerrainGeneration : MonoBehaviour
 
 
     void Awake(){
-        Inicialization();
     }
     void Start()
     {
+        Inicialization();
 
     }
 

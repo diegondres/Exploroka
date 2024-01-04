@@ -179,14 +179,14 @@ public class Terreno : MonoBehaviour
     return new Vector3((int)relativePositionInVertices.x * sizeEscaque + worldPositionTerrain.x + sizeSquareX, 0, (int)relativePositionInVertices.z * sizeEscaque + worldPositionTerrain.z + sizeSquareZ);
   }
 
-  public Vector3 GetGlobalPositionFromGlobalIndex(Tuple<int, Terreno> globalIndex)
+  public Vector3 GetGlobalPositionFromGlobalIndex(Tuple<int, Terreno> globalIndex, float offsetY)
   {
     int ejeX = (int)(globalIndex.Item1 / sizeTerrainInVertices);
     float wea2 = globalIndex.Item1 / (sizeTerrainInVertices / 2);
     float relativePositionX = globalIndex.Item1 % 200 > 0 ? ejeX - sizeTerrainInVertices / 2 + 0.5f : ejeX - sizeTerrainInVertices / 2 + 1 - 0.5f;
     float relativePositionZ = wea2 % 2 == 0 ? globalIndex.Item1 - ejeX * sizeTerrainInVertices - (sizeTerrainInVertices / 2 - 1) - 0.5f : globalIndex.Item1 - ejeX * sizeTerrainInVertices - sizeTerrainInVertices / 2 + 0.5f;
 
-    return globalIndex.Item2.CenterInEscaqueToGlobal(new Vector3(relativePositionZ, 0f, relativePositionX), 5f);
+    return globalIndex.Item2.CenterInEscaqueToGlobal(new Vector3(relativePositionZ, 0f, relativePositionX), offsetY);
   }
   public Vector3 GetGlobalPositionFromGlobalIndexWithoutHeight(Tuple<int, Terreno> globalIndex)
   {

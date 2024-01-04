@@ -53,7 +53,7 @@ public static class SubObjectsAdmReferences
         isBuildingLocationSelected = false;
         buildingGlobalIndex.Item2.PaintPixelInfluence(buildingGlobalIndex.Item1, Color.red);
 
-        return buildingGlobalIndex.Item2.GetGlobalPositionFromGlobalIndex(buildingGlobalIndex);
+        return buildingGlobalIndex.Item2.GetGlobalPositionFromGlobalIndex(buildingGlobalIndex,0f);
     }
 
     public static void AddBuilding(GameObject building)

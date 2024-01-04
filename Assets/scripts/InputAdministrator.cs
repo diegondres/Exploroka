@@ -109,7 +109,7 @@ public class InputAdministrator : MonoBehaviour
                     {
                         if (thing.Item2 == 0)
                         { //0 is for buildings!
-                            thing.Item1.GetComponent<Building>().PrintBuildingValues();
+                           // thing.Item1.GetComponent<Building>().PrintBuildingValues();
                         }
                         else if (thing.Item2 == 1)
                         {

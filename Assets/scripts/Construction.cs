@@ -83,7 +83,7 @@ public class Construction : MonoBehaviour
 
         Vector3 relativePosition = terreno.GetRelativePositionInVertices(buildingLocation);
         Tuple<int, Terreno> index = terreno.GetIndexGlobal(relativePosition);
-        relativePosition = index.Item2.GetGlobalPositionFromGlobalIndex(index);
+        relativePosition = index.Item2.GetGlobalPositionFromGlobalIndex(index,0f);
         relativePosition = index.Item2.GetRelativePositionInVertices(relativePosition);
 
         if (!index.Item2.IsWalkable(relativePosition)) return false;

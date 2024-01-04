@@ -84,7 +84,7 @@ public class TerrainAdministrator : MonoBehaviour
 
     public void PutFrontierInEscaque(Tuple<int, Terreno> index, Vector3 offset, Quaternion rotation, int city)
     {
-        Vector3 position = index.Item2.GetGlobalPositionFromGlobalIndex(index) + offset;
+        Vector3 position = index.Item2.GetGlobalPositionFromGlobalIndex(index, 1f) + offset;
 
         if (SubObjectsAdmReferences.frontiers.ContainsKey(city))
         {

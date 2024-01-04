@@ -52,5 +52,6 @@
         "Temp/": true
     },
     "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets": true,
-    "dotnet.defaultSolution": "Exploroka.sln"
+    "dotnet.defaultSolution": "Exploroka.sln",
+    "dotnet.preferCSharpExtension": false
 }

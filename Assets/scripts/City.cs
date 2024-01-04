@@ -9,6 +9,9 @@ public class City : MonoBehaviour
     public string nameCity;
     public int population = 0;
     public int shields = 0;
+    public float foodConsumption = 0;
+    public float happiness = 0;
+    public int services;
 
     public List<Tuple<int, Terreno>> influencedEscaquesOfCity;
     private ObjetsAdministrator objetsAdministrator;
@@ -42,5 +45,5 @@ public class City : MonoBehaviour
 
         SubTerrainAdmReference.CheckNewInfluencedEscaques(allInfluencedEscaques, id, terrainAdministrator);
     }
-
+    
 }

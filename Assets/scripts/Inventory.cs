@@ -3,29 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Inventory : MonoBehaviour
+public static class Inventory 
 {
-    public Dictionary<string, Tuple<int, Resource>> inventory = new();
-    public int governance = 5;
-    public int shields = 0;
-    public int population = 0;
+    public static Dictionary<string, Tuple<int, ResourcesClass>> inventory = new();
+    public static int governance = 5;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
-    public void AddToInventory(Resource resource){
-        if(inventory.ContainsKey(resource.ResourceName)){
-            inventory[resource.ResourceName] = new Tuple<int, Resource>(inventory[resource.ResourceName].Item1 + resource.quantity, resource);
+    public static void AddToInventory(ResourcesClass resource){
+        if(inventory.ContainsKey(resource.name)){
+            inventory[resource.name] = new Tuple<int, ResourcesClass>(inventory[resource.name].Item1 + 1, resource);
         }
         else{
-            inventory.Add(resource.ResourceName, new Tuple<int, Resource>(resource.quantity, resource));
+            inventory.Add(resource.name, new Tuple<int, ResourcesClass>(1, resource));
         }
-    }
+    } 
 }
+ 

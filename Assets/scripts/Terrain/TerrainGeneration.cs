@@ -2,71 +2,39 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-[System.Serializable]
-public class Biome
-{
-    public string name;
-    public Color color;
-}
-[System.Serializable]
-public class BiomeRow
-{
-    public Biome[] biomes;
-}
-[System.Serializable]
-public class TerrainType
-{
-    public string name;
-    public float threshold;
-    public Color color;
-    public int index;
-}
 public class TerrainGeneration : MonoBehaviour
 {
     [NonSerialized]
-    public TerrainType[] heightTerrainTypes;
-    [NonSerialized]
-    public TerrainType[] heatTerrainTypes;
-    [NonSerialized]
-    public float heightMultiplier;
-    [NonSerialized]
-    public AnimationCurve heightCurve;
-    [NonSerialized]
-    public AnimationCurve heatCurve;
+    public float heightMultiplier = 20;
     private Terreno terreno;
     //GENERACION PROCEDURAL
-    [NonSerialized]
-    public Wave[] waves;
-    [NonSerialized]
-    public Wave[] heatWaves;
-    [NonSerialized]
-    public TerrainType[] moistureTerrainTypes;
-    [NonSerialized]
-    public AnimationCurve moistureCurve;
-    [NonSerialized]
-    public Wave[] moistureWaves;
-    [NonSerialized]
-    public BiomeRow[] biomes;
     private NoiseGeneration noiseGeneration;
     private MeshRenderer tileRenderer;
-    private int sizeTerrainInVertices;
 
     //COSITAS INTERNAS
-
     private TerrainAdministrator terrainAdministrator;
+    private ObjetsAdministrator objetsAdministrator;
     private MeshFilter meshFilter;
     private MeshCollider meshCollider;
-    private Color waterColor = Color.blue;
     private float[,] heightMap;
+    private Color32[,] colorMapa;
     private int tileDepth, tileWidth;
-    TerrainType[,] chosenHeightTerrainTypes;
+    private string[,] chosenHeightTerrainTypes;
+    private List<GameObject> childs;
 
     // Start is called before the first frame update
+
+
+    void Awake(){
+    }
     void Start()
     {
         Inicialization();
+
     }
+
     void Inicialization()
     {
         tileRenderer = GetComponent<MeshRenderer>();
@@ -74,24 +42,21 @@ public class TerrainGeneration : MonoBehaviour
         meshFilter = GetComponent<MeshFilter>();
         terreno = GetComponent<Terreno>();
         terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
+        objetsAdministrator = FindObjectOfType<ObjetsAdministrator>();
         noiseGeneration = FindAnyObjectByType<NoiseGeneration>();
-        sizeTerrainInVertices = SubTerrainAdmReference.sizeTerrainInVertices    ;
-
-        tileDepth = sizeTerrainInVertices; tileWidth = sizeTerrainInVertices;
-
+        tileDepth = SubTerrainAdmReference.sizeTerrainInVertices; tileWidth = SubTerrainAdmReference.sizeTerrainInVertices;
         meshFilter.mesh = CrearPlanoConDivisiones(tileDepth, tileWidth, tileDepth, tileWidth);
+        childs = SubObjectsAdmReferences.GetChildsOfGameObject(gameObject);
 
-        GetHeightMap(waves);
+        GetHeightMap();
 
-        chosenHeightTerrainTypes = new TerrainType[tileDepth, tileWidth];
-        Texture2D heightTexture = BuildTexture(heightTerrainTypes, chosenHeightTerrainTypes);
-
+        Texture2D heightTexture = BuildTexture();
         tileRenderer.material.mainTexture = heightTexture;
 
         UpdateMeshVertices();
     }
 
-    private Texture2D BuildTexture(TerrainType[] terrainTypes, TerrainType[,] chosenTerrainTypes)
+    private Texture2D BuildTexture()
     {
         Color32[] colorMap = new Color32[tileDepth * tileWidth];
 
@@ -101,14 +66,8 @@ public class TerrainGeneration : MonoBehaviour
             {
                 // transform the 2D map index is an Array index
                 int colorIndex = zIndex * tileWidth + xIndex;
-                float height = (heightMap[zIndex, xIndex] + heightMap[zIndex + 1, xIndex] + heightMap[zIndex, xIndex + 1] + heightMap[zIndex + 1, xIndex + 1]) / 4;
-                // choose a terrain type according to the height value
-                TerrainType terrainType = ChooseTerrainType(height, terrainTypes);
                 // assign as color a shade of grey proportional to the height value
-                colorMap[colorIndex] = terrainType.color;
-
-                // save the chosen terrain type
-                chosenTerrainTypes[zIndex, xIndex] = terrainType;
+                colorMap[colorIndex] = colorMapa[zIndex, xIndex]; //terrainType.color;
             }
         }
 
@@ -124,87 +83,76 @@ public class TerrainGeneration : MonoBehaviour
         return tileTexture;
     }
 
-    private Texture2D BuildBiomeTexture(TerrainType[,] heightTerrainTypes, TerrainType[,] heatTerrainTypes, TerrainType[,] moistureTerrainTypes)
+
+    private void GetHeightMap()
     {
-        int tileDepth = heatTerrainTypes.GetLength(0);
-        int tileWidth = heatTerrainTypes.GetLength(1);
-        Color32[] colorMap = new Color32[tileDepth * tileWidth];
-
-        for (int zIndex = 0; zIndex < tileDepth; zIndex++)
-        {
-            for (int xIndex = 0; xIndex < tileWidth; xIndex++)
-            {
-                int colorIndex = zIndex * tileWidth + xIndex;
-                TerrainType heightTerrainType = heightTerrainTypes[zIndex, xIndex];
-                // check if the current coordinate is a water region
-                if (heightTerrainType.name != "water")
-                {
-                    // if a coordinate is not water, its biome will be defined by the heat and moisture values
-                    TerrainType heatTerrainType = heatTerrainTypes[zIndex, xIndex];
-                    TerrainType moistureTerrainType = moistureTerrainTypes[zIndex, xIndex];
-                    // terrain type index is used to access the biomes table
-                    Biome biome = biomes[moistureTerrainType.index].biomes[heatTerrainType.index];
-                    // assign the color according to the selected biome
-                    colorMap[colorIndex] = biome.color;
-                }
-                else
-                {
-                    // water regions don't have biomes, they always have the same color
-                    colorMap[colorIndex] = waterColor;
-                }
-            }
-        }
-        // create a new texture and set its pixel colors
-        Texture2D tileTexture = new(tileWidth, tileDepth)
-        {
-            filterMode = FilterMode.Point,
-            wrapMode = TextureWrapMode.Clamp
-        };
-        tileTexture.SetPixels32(colorMap);
-        tileTexture.Apply();
-
-        return tileTexture;
-    }
-
-    private TerrainType ChooseTerrainType(float noise, TerrainType[] terrainTypes)
-    {
-        // for each terrain type, check if the height is lower than the one for the terrain type
-        foreach (TerrainType terrainType in terrainTypes)
-        {
-            // return the first terrain type whose height is higher than the generated one
-            if (noise < terrainType.threshold)
-            {
-                return terrainType;
-            }
-        }
-        return terrainTypes[^1];
-    }
-
-    private void GetHeightMap(Wave[] waves){
         int heightMapDepth = tileDepth + 1;
         int heightMapWidth = tileWidth + 1;
-        heightMap = new float[heightMapDepth,heightMapWidth];
+        heightMap = new float[heightMapDepth, heightMapWidth];
+        colorMapa = new Color32[heightMapDepth, heightMapWidth];
 
+        chosenHeightTerrainTypes = new string[heightMapDepth, heightMapWidth];
         Vector3[] meshVertices = meshFilter.mesh.vertices;
 
         int offsetX = (int)(transform.position.x / 20);
         int offsetZ = (int)(transform.position.z / 20);
 
-        // iterate through all the heightMap coordinates, updating the vertex index
         int vertexIndex = 0;
+        
+
         for (int xIndex = 0; xIndex < heightMapDepth; xIndex++)
         {
             for (int zIndex = 0; zIndex < heightMapWidth; zIndex++)
             {
                 Vector3 vertex = meshVertices[vertexIndex];
-                
-                int vertexX = (int)vertex.x + sizeTerrainInVertices /2 + offsetX; 
-                int vertexZ = (int)vertex.z + sizeTerrainInVertices /2 + offsetZ; 
-              // Debug.Log("vertexX: "+vertexX+" vertexZ: "+vertexZ);
-                heightMap[xIndex, zIndex] = noiseGeneration.GetHeight(vertexX, vertexZ, waves);
-                
+
+                int vertexX = (int)vertex.x + tileDepth / 2 + offsetX;
+                int vertexZ = (int)vertex.z + tileWidth / 2 + offsetZ;
+
+                Tuple<float, Color32, string> datosEscaque = noiseGeneration.GetHeight(vertexX, vertexZ);
+                heightMap[xIndex, zIndex] = datosEscaque.Item1;
+                colorMapa[xIndex, zIndex] = datosEscaque.Item2;
+
+                if (datosEscaque.Item3.Length > 0)
+                {
+                    Vector3 positionResource = new(vertexX * 20 - 190, datosEscaque.Item1 * heightMultiplier * 20, vertexZ * 20 - 190);
+                    int indexPrefabResource = GetModelFromResource(datosEscaque.Item3);
+                    int numericIndexResource = SubTerrainAdmReference.GetNumericIndexFromGlobalPosition(positionResource, terreno);
+
+                    if (!SubResourcesObjAdmin.resources.ContainsKey(numericIndexResource))
+                    {
+                        GameObject resource = Instantiate(terrainAdministrator.prefabsResources[indexPrefabResource].Item1, positionResource, Quaternion.Euler(0, Random.Range(0, 4) * 90, 0), objetsAdministrator.containerResources.transform);
+                        ResourcesClass resourceInfo = terrainAdministrator.prefabsResources[indexPrefabResource].Item2.Clone();
+                        resourceInfo.numericIndex = numericIndexResource;
+                        resourceInfo.globalPosition = positionResource;
+
+                        SubResourcesObjAdmin.AddResource(resource, resourceInfo, numericIndexResource);
+                    }
+                }
+                if (datosEscaque.Item1 == noiseGeneration.nAgua)
+                {
+                    chosenHeightTerrainTypes[xIndex, zIndex] = "water";
+                }
+                else
+                {
+                    chosenHeightTerrainTypes[xIndex, zIndex] = "notWater";
+                }
                 vertexIndex++;
             }
+        }
+    }
+
+  
+
+    private int GetModelFromResource(string rec)
+    {
+        if (terrainAdministrator.modelosRecursos.ContainsKey(rec))
+        {
+            return terrainAdministrator.modelosRecursos[rec][Random.Range(0, terrainAdministrator.modelosRecursos[rec].Count)];
+        }
+        else
+        {
+            return 0;
         }
     }
 
@@ -212,7 +160,7 @@ public class TerrainGeneration : MonoBehaviour
     {
         int heightMapDepth = heightMap.GetLength(0);
         int heightMapWidth = heightMap.GetLength(1);
-
+        //Debug.Log("Map Depth: " + heightMap.GetLength(0) + " Map Width: " + heightMap.GetLength(1));
         Vector3[] meshVertices = meshFilter.mesh.vertices;
 
         // iterate through all the heightMap coordinates, updating the vertex index
@@ -224,7 +172,8 @@ public class TerrainGeneration : MonoBehaviour
                 float height = heightMap[zIndex, xIndex];
                 Vector3 vertex = meshVertices[vertexIndex];
                 // change the vertex Y coordinate, proportional to the height value
-                meshVertices[vertexIndex] = new Vector3(vertex.x, heightCurve.Evaluate(height) * heightMultiplier, vertex.z);
+                
+                meshVertices[vertexIndex] = new Vector3(vertex.x, height * heightMultiplier, vertex.z);
 
                 vertexIndex++;
             }
@@ -258,7 +207,6 @@ public class TerrainGeneration : MonoBehaviour
                 vertices[index] = new Vector3(posX, 0f, posY);
                 uvs[index] = new Vector2(x / (float)divisionesX, y / (float)divisionesY);
                 normals[index] = Vector3.up; // Asigna una normal vertical
-
             }
         }
 
@@ -287,7 +235,6 @@ public class TerrainGeneration : MonoBehaviour
                 triangles[trianguloIndex++] = vertexIndex3;
             }
         }
-
         mesh.triangles = triangles;
         mesh.uv = uvs;
         mesh.normals = normals;
@@ -297,19 +244,20 @@ public class TerrainGeneration : MonoBehaviour
 
     public float GetHeight(Vector3 relativePositionInVertices)
     {
-        int xIndex = (int)(relativePositionInVertices.x + sizeTerrainInVertices / 2);
-        int zIndex = (int)(relativePositionInVertices.z + sizeTerrainInVertices / 2);
+        int xIndex = (int)(relativePositionInVertices.x + tileDepth / 2);
+        int zIndex = (int)(relativePositionInVertices.z + tileWidth / 2);
 
         float meanHeight = (heightMap[zIndex, xIndex] + heightMap[zIndex + 1, xIndex] + heightMap[zIndex, xIndex + 1] + heightMap[zIndex + 1, xIndex + 1]) / 4;
 
-        return heightCurve.Evaluate(meanHeight) * heightMultiplier * gameObject.transform.localScale.y;
+        return meanHeight * heightMultiplier * gameObject.transform.localScale.y;
     }
 
-    public string GetTerrainType(Vector3 relativePositionInVertices){
-        int xIndex = (int)(relativePositionInVertices.x + sizeTerrainInVertices / 2);
-        int zIndex = (int)(relativePositionInVertices.z + sizeTerrainInVertices / 2);
+    public string GetTerrainType(Vector3 relativePositionInVertices)
+    {
+        int xIndex = (int)(relativePositionInVertices.x + tileDepth / 2);
+        int zIndex = (int)(relativePositionInVertices.z + tileWidth / 2);
 
-        return chosenHeightTerrainTypes[zIndex, xIndex].name;
+        return chosenHeightTerrainTypes[zIndex, xIndex];
     }
 }
 

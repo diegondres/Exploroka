@@ -14,6 +14,7 @@ public class Town : MonoBehaviour
     private ObjetsAdministrator objetsAdministrator;
     private readonly int sizeInfluence = 15;
     public List<Tuple<int, Terreno>> influencedEscaques = new();
+    private readonly Dictionary<int,ResourcesClass> resourcesAvailable = new();
     public City city;
 
     void Start()
@@ -35,16 +36,22 @@ public class Town : MonoBehaviour
                 {
                     Vector3 relativePositionIJ = new(relativePosition.x + i, relativePosition.y, relativePosition.z + j);
                     Tuple<int, Terreno> index = SubTerrainAdmReference.terrainOfHero.GetIndexGlobal(relativePositionIJ);
-                    int indexNumeric = SubObjectsAdmReferences.GetNumericIndex(index);
+                    int indexNumeric = SubTerrainAdmReference.GetNumericIndex(index);
 
                     if (!SubTerrainAdmReference.influencedEscaques.ContainsKey(indexNumeric))
                     {
                         SubTerrainAdmReference.influencedEscaques.Add(indexNumeric, this);
                         influencedEscaques.Add(index);
                     }
+                    if(SubResourcesObjAdmin.IsAResourceHere(indexNumeric) != null){
+                        resourcesAvailable.Add(indexNumeric, SubResourcesObjAdmin.IsAResourceHere(indexNumeric));
+                    }
                 }
             }
-        }
-        terrainAdministrator.PaintInfluenceTown();
+        }   
+    }
+
+    public void RemoveResourceAvailable(int numericIndex){
+        resourcesAvailable.Remove(numericIndex);
     }
 }

@@ -17,7 +17,7 @@ public class Terreno : MonoBehaviour
 
   public int id;
   private TerrainAdministrator terrainAdministrator;
-  private TerrainGeneration terrainGeneration;
+  public TerrainGeneration terrainGeneration;
 
   //GENERACION PROCEDURAL
   [NonSerialized]

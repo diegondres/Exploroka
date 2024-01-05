@@ -252,6 +252,37 @@ public class TerrainGeneration : MonoBehaviour
         return meanHeight * heightMultiplier * gameObject.transform.localScale.y;
     }
 
+    public float GetHeightFrontierEscaque(Vector3 relativePositionInVertices, string caso)
+    {
+        float height1=0f;
+        float height2=0f;
+        int xIndex = (int)(relativePositionInVertices.x + tileDepth / 2);
+        int zIndex = (int)(relativePositionInVertices.z + tileWidth / 2);
+
+        if(caso=="Up"){
+        height1=heightMap[zIndex, xIndex + 1];
+        height2=heightMap[zIndex+1, xIndex+1];
+        }
+        else if(caso=="Down"){
+        height1=heightMap[zIndex, xIndex];
+        height2=heightMap[zIndex + 1, xIndex];
+        
+        }
+        else if(caso=="Right"){
+        height1=heightMap[zIndex+1, xIndex];
+        height2=heightMap[zIndex+1, xIndex+1];
+        }
+        else if(caso=="Left"){
+        height1=heightMap[zIndex, xIndex];
+        height2=heightMap[zIndex, xIndex+1];
+        }
+        
+        height1= height1 * heightMultiplier * gameObject.transform.localScale.y;
+        height2= height2 * heightMultiplier * gameObject.transform.localScale.y;
+
+        return 2.2f*(height2-height1);
+    }
+
     public string GetTerrainType(Vector3 relativePositionInVertices)
     {
         int xIndex = (int)(relativePositionInVertices.x + tileDepth / 2);

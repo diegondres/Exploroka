@@ -191,23 +191,28 @@ static class SubTerrainAdmReference
       Vector3 relativePosition = newInfluencedEscaque.Item2.GetRelativePositionFromGlobalIndex(newInfluencedEscaque);
 
       if (!IsThisEscaqueInfluenced(relativePosition + new Vector3(-1, 0, 0), newInfluencedEscaque.Item2, city))
-      {
-        terrainAdministrator.PutFrontierInEscaque(newInfluencedEscaque, new Vector3(-9, 0, 0), Quaternion.identity, city);
+      { 
+        Vector3 newRotation = new Vector3(newInfluencedEscaque.Item2.terrainGeneration.GetHeightFrontierEscaque(relativePosition, "Down"),0,0);
+        terrainAdministrator.PutFrontierInEscaque(newInfluencedEscaque, new Vector3(-9, 0, 0), Quaternion.Euler(newRotation), city);
       }
 
       if (!IsThisEscaqueInfluenced(relativePosition + new Vector3(1, 0, 0), newInfluencedEscaque.Item2, city))
-      {
-        terrainAdministrator.PutFrontierInEscaque(newInfluencedEscaque, new Vector3(9, 0, 0), Quaternion.identity, city);
+      { 
+        Vector3 newRotation = new Vector3(newInfluencedEscaque.Item2.terrainGeneration.GetHeightFrontierEscaque(relativePosition, "Up"),0,0);
+        terrainAdministrator.PutFrontierInEscaque(newInfluencedEscaque, new Vector3(9, 0, 0), Quaternion.Euler(newRotation), city);
       }
 
       if (!IsThisEscaqueInfluenced(relativePosition + new Vector3(0, 0, -1), newInfluencedEscaque.Item2, city))
-      {
-        terrainAdministrator.PutFrontierInEscaque(newInfluencedEscaque, new Vector3(0, 0, -9), Quaternion.Euler(new Vector3(0, -90, 0)), city);
+      { 
+        Vector3 newRotation = new Vector3(newInfluencedEscaque.Item2.terrainGeneration.GetHeightFrontierEscaque(relativePosition, "Right"),-90,0);
+         
+        terrainAdministrator.PutFrontierInEscaque(newInfluencedEscaque, new Vector3(0, 0, -9), Quaternion.Euler(newRotation), city);
       }
 
       if (!IsThisEscaqueInfluenced(relativePosition + new Vector3(0, 0, 1), newInfluencedEscaque.Item2, city))
       {
-        terrainAdministrator.PutFrontierInEscaque(newInfluencedEscaque, new Vector3(0, 0, 9), Quaternion.Euler(new Vector3(0, 90, 0)), city);
+        Vector3 newRotation = new Vector3(-newInfluencedEscaque.Item2.terrainGeneration.GetHeightFrontierEscaque(relativePosition, "Left"),90,0);
+        terrainAdministrator.PutFrontierInEscaque(newInfluencedEscaque, new Vector3(0, 0, 9), Quaternion.Euler(newRotation), city);
       }
 
     }

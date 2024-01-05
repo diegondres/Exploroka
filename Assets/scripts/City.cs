@@ -20,6 +20,7 @@ public class City : MonoBehaviour
     {
         objetsAdministrator = FindObjectOfType<ObjetsAdministrator>();
         terrainAdministrator = FindAnyObjectByType<TerrainAdministrator>();
+        
     }
 
 
